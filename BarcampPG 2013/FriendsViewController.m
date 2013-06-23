@@ -163,16 +163,17 @@
 
 // Override to support editing the table view.
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    [self.tableView beginUpdates];
+//    [self.tableView beginUpdates];
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         //add code here for when you hit delete
         Friend *row = [self.friends objectAtIndex:indexPath.row];
         [row destroy];
         [[IBCoreDataStore mainStore] save];
         [self.friends removeObjectAtIndex:indexPath.row];
-        [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+//        [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        [self.tableView reloadData];
     }
-    [self.tableView endUpdates];
+//    [self.tableView endUpdates];
 }
 
 #pragma mark - observer
