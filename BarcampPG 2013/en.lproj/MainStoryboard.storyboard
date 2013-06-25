@@ -65,7 +65,7 @@
                                 </subviews>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="0.40000000000000002" colorSpace="calibratedWhite"/>
                             </view>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="XMh-VR-VXi">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" id="XMh-VR-VXi">
                                 <rect key="frame" x="19" y="228" width="281" height="227"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -218,7 +218,7 @@ Sponsors (scroll down)</string>
             </objects>
             <point key="canvasLocation" x="1209" y="185"/>
         </scene>
-        <!--Friend Detail View Controller-->
+        <!--Friend Detail View Controller - Profile-->
         <scene sceneID="1tf-jq-IMv">
             <objects>
                 <viewController id="BZR-cF-pmk" customClass="FriendDetailViewController" sceneMemberID="viewController">
@@ -235,21 +235,21 @@ Sponsors (scroll down)</string>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Name" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" id="o6R-0S-vTu">
-                                        <rect key="frame" x="92" y="15" width="208" height="40"/>
+                                        <rect key="frame" x="92" y="15" width="208" height="64"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     </label>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Profession" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="uFh-yZ-rdA">
-                                        <rect key="frame" x="92" y="58" width="203" height="21"/>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Profession" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="uFh-yZ-rdA">
+                                        <rect key="frame" x="25" y="87" width="275" height="66"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" red="0.29019609089999998" green="0.4784313738" blue="0.61568629740000003" alpha="1" colorSpace="calibratedRGB"/>
                                         <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="f2X-Y9-44l">
-                                        <rect key="frame" x="20" y="118" width="275" height="44"/>
+                                        <rect key="frame" x="25" y="171" width="275" height="44"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                         <state key="normal" title="Phone +60124830212">
@@ -264,7 +264,7 @@ Sponsors (scroll down)</string>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="KJJ-sT-enp">
-                                        <rect key="frame" x="20" y="183" width="275" height="44"/>
+                                        <rect key="frame" x="25" y="229" width="275" height="44"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                         <state key="normal" title="Email yinsee@gmail.com">
@@ -279,7 +279,7 @@ Sponsors (scroll down)</string>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="nVp-AV-ZGK">
-                                        <rect key="frame" x="20" y="252" width="275" height="44"/>
+                                        <rect key="frame" x="25" y="287" width="275" height="44"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                         <state key="normal" title="View Facebook Profile">
@@ -298,7 +298,7 @@ Sponsors (scroll down)</string>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" id="AKf-Ll-YKR"/>
+                    <navigationItem key="navigationItem" title="Profile" id="AKf-Ll-YKR"/>
                     <connections>
                         <outlet property="email" destination="KJJ-sT-enp" id="TlS-eA-SRx"/>
                         <outlet property="facebook" destination="nVp-AV-ZGK" id="60F-UP-1uK"/>
@@ -462,7 +462,7 @@ Sponsors (scroll down)</string>
         <scene sceneID="i3L-kH-bLd">
             <objects>
                 <navigationController id="GKF-EW-BEf" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Profile" id="5Yu-UY-Nqf"/>
+                    <tabBarItem key="tabBarItem" title="Profile" image="6_social_person.png" id="5Yu-UY-Nqf"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="tyF-OL-dU1">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -608,7 +608,7 @@ Sponsors (scroll down)</string>
         <scene sceneID="eko-PC-77d">
             <objects>
                 <navigationController id="Dlr-YK-1UH" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Friends" id="cwY-O7-qNP"/>
+                    <tabBarItem key="tabBarItem" title="Friends" image="6_social_group.png" id="cwY-O7-qNP"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Z5K-DP-jTp">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -627,7 +627,7 @@ Sponsors (scroll down)</string>
         <scene sceneID="rLP-Ye-doV">
             <objects>
                 <navigationController id="JJu-Tv-Ce4" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Info" id="7"/>
+                    <tabBarItem key="tabBarItem" title="Info" image="2_action_about.png" id="7"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="1hS-Qg-rg0">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -693,7 +693,7 @@ Sponsors (scroll down)</string>
         <scene sceneID="AEt-gJ-xzE">
             <objects>
                 <navigationController id="okO-J8-2Oq" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Agenda" id="1q3-lF-4Eh"/>
+                    <tabBarItem key="tabBarItem" title="Agenda" image="4_collections_go_to_today.png" id="1q3-lF-4Eh"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="byz-18-L8a">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -710,6 +710,10 @@ Sponsors (scroll down)</string>
         </scene>
     </scenes>
     <resources>
+        <image name="2_action_about.png" width="32" height="32"/>
+        <image name="4_collections_go_to_today.png" width="32" height="32"/>
+        <image name="6_social_group.png" width="32" height="32"/>
+        <image name="6_social_person.png" width="32" height="32"/>
         <image name="map.png" width="272" height="194"/>
         <image name="mike.png" width="294" height="332"/>
         <image name="sully.jpg" width="800" height="800"/>

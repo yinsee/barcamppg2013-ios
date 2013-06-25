@@ -28,6 +28,12 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    
+    if (![[NSUserDefaults standardUserDefaults] objectForKey:kUserDefaultProfileQRCode])
+    {
+        [Utility prompt:@"Welcome!" message:@"Please update your profile"];   
+        [self performSegueWithIdentifier:@"segueUpdateProfile" sender:self];
+    }
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -44,9 +50,6 @@
     NSString *data = [[NSUserDefaults standardUserDefaults] objectForKey:kUserDefaultProfileQRCode];
     if (!data || [data isEqualToString:@""])
     {
-        [Utility prompt:@"Welcome!" message:@"Please update your profile"];
-        
-        [self performSegueWithIdentifier:@"segueUpdateProfile" sender:self];
         return;
     }
     
