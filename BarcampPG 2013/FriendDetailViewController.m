@@ -27,10 +27,11 @@
 {
     self.title = self.name.text = self.data.name;
     self.profession.text = self.data.profession;
-    [self.phone setTitle:[NSString stringWithFormat:@"Call %@", self.data.phone] forState:UIControlStateNormal];
-    [self.email setTitle:[NSString stringWithFormat:@"Email %@", self.data.email]  forState:UIControlStateNormal];
+    [self.phone setTitle:self.data.phone forState:UIControlStateNormal];
+    [self.sms setTitle:self.data.phone  forState:UIControlStateNormal];
+    [self.email setTitle:self.data.email  forState:UIControlStateNormal];
     
-    [self.photo setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:kURLFacebookPicture, self.data.fbuid]]  placeholderImage:[UIImage imageNamed:@"mike.png"]];
+    [self.photo setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:kURLFacebookPicture, self.data.fbuid]]  placeholderImage:[UIImage imageNamed:@"profile_placeholder.png"]];
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -60,6 +61,7 @@
     [self setPhone:nil];
     [self setFacebook:nil];
     [self setPhoto:nil];
+    [self setSms:nil];
     [super viewDidUnload];
 }
 
@@ -74,6 +76,16 @@
         [Utility prompt:@"Can't email" message:@"Make sure your email app is setup correctly"];
 }
 
+- (IBAction)sendsms:(id)sender {
+    [[[GAI sharedInstance] defaultTracker] trackEventWithCategory:@"Friend" withAction:@"Open" withLabel:@"SMS" withValue:nil];
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"sms:%@", self.data.phone]];
+    if([[UIApplication sharedApplication] canOpenURL:url])
+        [[UIApplication sharedApplication] openURL:url];
+    else
+        [Utility prompt:@"Can't call" message:@"This device cannot send sms"];
+}
+
 -(void)phonecall:(id)sender
 {
     [[[GAI sharedInstance] defaultTracker] trackEventWithCategory:@"Friend" withAction:@"Open" withLabel:@"Phone" withValue:nil];
@@ -83,6 +95,10 @@
         [[UIApplication sharedApplication] openURL:url];
     else
         [Utility prompt:@"Can't call" message:@"This device cannot make phone call"];
+}
+
+- (IBAction)pop:(id)sender {
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 -(void)openfacebook:(id)sender

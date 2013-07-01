@@ -14,15 +14,18 @@
 
 @implementation AgendaViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+
+- (id)initWithCoder:(NSCoder *)aDecoder
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    self = [super initWithCoder:aDecoder];
     if (self) {
         // Custom initialization
+        self.tabBarItem = [[UITabBarItem alloc] init];
+        [[self tabBarItem] setFinishedSelectedImage:[UIImage imageNamed:@"tab_agenda_down"] withFinishedUnselectedImage:[UIImage imageNamed:@"tab_agenda"]];
+        
     }
     return self;
 }
-
 
 -(void)loadFromCache
 {
@@ -38,6 +41,15 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    
+    // clear webview shadow
+    for (UIView* shadowView in [self.webview.scrollView subviews])
+    {
+        if ([shadowView isKindOfClass:[UIImageView class]]) {
+            [shadowView setHidden:YES];
+        }
+    }
+
 }
 
 -(void)viewDidAppear:(BOOL)animated
@@ -50,9 +62,9 @@
     if (firsttime)
     {
         firsttime = NO;
-        [self loadFromCache];
+        [self reload:nil];
     }
-    [self reload:nil];
+    [self loadFromCache];
 }
 
 - (void)didReceiveMemoryWarning

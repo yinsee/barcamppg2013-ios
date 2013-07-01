@@ -28,7 +28,7 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     NSDictionary *profile = [[NSUserDefaults standardUserDefaults] objectForKey:kUserDefaultProfile];
-    
+        
     self.txtName.text = [profile valueForKey:@"name"];
     if (!self.txtName.text) self.txtName.text = @"";
     self.txtEmail.text = [profile valueForKey:@"email"];
@@ -42,7 +42,7 @@
     
     if ([profile valueForKey:@"fbuid"])
     {
-        [self.photo setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:kURLFacebookPicture, [profile valueForKey:@"fbuid"]]]  placeholderImage:[UIImage imageNamed:@"mike.png"]];
+        [self.photo setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:kURLFacebookPicture, [profile valueForKey:@"fbuid"]]]  placeholderImage:[UIImage imageNamed:@"profile_placeholder.png"]];
     }
 }
 
@@ -55,7 +55,7 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self.scrollView setContentSize:CGSizeMake(320, 240)];
+    [self.scrollView setContentSize:CGSizeMake(320, 500)];
 }
 
 - (void)didReceiveMemoryWarning
@@ -66,6 +66,13 @@
 
 - (IBAction)saveProfile:(id)sender {
     
+    if([self.txtName.text isEqualToString:@""]||[self.txtEmail.text isEqualToString:@""]||[self.txtPhone.text isEqualToString:@""]||[self.txtProfession.text isEqualToString:@""]){
+        
+        [[[UIAlertView alloc] initWithTitle:@"Error" message:@"You have to fill up all information" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+        
+        return;
+    }
+
     NSMutableDictionary *profile = [[NSMutableDictionary alloc] init];
     
     [profile setValue:self.txtName.text forKey:@"name"];
@@ -123,7 +130,7 @@
                      }
                  }
              }
-             [self.photo setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:kURLFacebookPicture, self.fbuid.text]]  placeholderImage:[UIImage imageNamed:@"mike.png"]];
+             [self.photo setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:kURLFacebookPicture, self.fbuid.text]]  placeholderImage:[UIImage imageNamed:@"profile_placeholder.png"]];
          }
          else {
              [Utility prompt:@"FBGraph Error" message:error.localizedDescription];
@@ -214,5 +221,9 @@
     }
     else
         [self updateAndPublish];
+}
+
+- (IBAction)pop:(id)sender {
+    [[self navigationController] popViewControllerAnimated:YES];
 }
 @end

@@ -24,14 +24,21 @@
 #define kAnalyticsDispatchInterval 30
 #define kAppID @"665652007"
 
+#define kBarcampDate @"20130727"
+
 #define APN_TOKEN()    [[NSUserDefaults standardUserDefaults] objectForKey:@"APNToken"]
-#if (TARGET_IPHONE_SIMULATOR)
+#if (TARGET_IPHONE_SIMULATOR1)
 #define __DOMAIN__ @"http://localhost/~yinsee/"
 #else
 #define __DOMAIN__ @"http://barcamppenang.org/"
 #endif
 
 #define kURLAgenda __DOMAIN__ @"agenda.html"
+#define kURLSponsor __DOMAIN__ @"sponsors.html"
+
+#define kMapLocationCoordinate CLLocationCoordinate2DMake(5.333756, 100.306691)
+#define kMapPinTitle @"Barcamp 2013"
+#define kMapPinSubTitle @"Info Trek Penang, Queensbay Mall. Tel: ‎04-646 8488"
 #define kURLFacebookPicture @"http://graph.facebook.com/%@/picture"
 //
 #define FBSessionStateChangedNotification @"FBSessionStateChangedNotification"

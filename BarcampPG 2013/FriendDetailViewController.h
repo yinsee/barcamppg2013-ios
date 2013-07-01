@@ -17,8 +17,11 @@
 @property (strong, nonatomic) IBOutlet UILabel *profession;
 @property (strong, nonatomic) IBOutlet UIButton *email;
 @property (strong, nonatomic) IBOutlet UIButton *phone;
+@property (strong, nonatomic) IBOutlet UIButton *sms;
 @property (strong, nonatomic) IBOutlet UIButton *facebook;
 - (IBAction)sendmail:(id)sender;
+- (IBAction)sendsms:(id)sender;
 - (IBAction)phonecall:(id)sender;
+- (IBAction)pop:(id)sender;
 - (IBAction)openfacebook:(id)sender;
 @end

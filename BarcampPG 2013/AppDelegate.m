@@ -30,7 +30,11 @@
     [GAI sharedInstance].debug = YES;
 #endif
     [GAI sharedInstance].dispatchInterval = 30;
-        
+    
+    // skin tabbar
+//    [[UITabBar appearance] setBackgroundImage:[UIImage imageNamed:@"tab_agenda.jpg"]];
+//    [[UITabBar appearance] setSelectionIndicatorImage:[UIImage imageNamed:@"tab_agenda_down.jpg"]];
+    
     return YES;
 }
 							

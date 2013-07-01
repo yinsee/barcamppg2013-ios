@@ -15,11 +15,14 @@
 
 @implementation ProfileQRCodeViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (id)initWithCoder:(NSCoder *)aDecoder
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    self = [super initWithCoder:aDecoder];
     if (self) {
         // Custom initialization
+        self.tabBarItem = [[UITabBarItem alloc] init];
+        [[self tabBarItem] setFinishedSelectedImage:[UIImage imageNamed:@"tab_profile_down"] withFinishedUnselectedImage:[UIImage imageNamed:@"tab_profile"]];
+        
     }
     return self;
 }

@@ -18,11 +18,14 @@
 
 @implementation FriendsViewController
 
-- (id)initWithStyle:(UITableViewStyle)style
+- (id)initWithCoder:(NSCoder *)aDecoder
 {
-    self = [super initWithStyle:style];
+    self = [super initWithCoder:aDecoder];
     if (self) {
         // Custom initialization
+        self.tabBarItem = [[UITabBarItem alloc] init];
+        [[self tabBarItem] setFinishedSelectedImage:[UIImage imageNamed:@"tab_friends_down"] withFinishedUnselectedImage:[UIImage imageNamed:@"tab_friends"]];
+
     }
     return self;
 }
@@ -81,7 +84,7 @@
 {
     static UIImage *defaultPhoto = nil;
     
-    if (!defaultPhoto) defaultPhoto = [UIImage imageNamed:@"mike.png"];
+    if (!defaultPhoto) defaultPhoto = [UIImage imageNamed:@"profile_placeholder.png"];
     
     if (!self.friends || [self.friends count]<1)
     {
@@ -212,5 +215,9 @@
     
     [self reloadData];
     [self.tableView reloadData];
+}
+- (void)viewDidUnload {
+    [self setTableView:nil];
+    [super viewDidUnload];
 }
 @end

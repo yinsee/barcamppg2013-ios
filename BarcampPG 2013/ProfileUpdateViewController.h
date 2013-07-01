@@ -17,5 +17,6 @@
 @property (strong, nonatomic) IBOutlet UIImageView *photo;
 @property (strong, nonatomic) IBOutlet UILabel *fbuid;
 - (IBAction)linkFacebook:(id)sender;
+- (IBAction)pop:(id)sender;
 -(void)updateAndPublish;
 @end

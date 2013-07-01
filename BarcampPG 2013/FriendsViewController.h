@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "Utility.h"
 
-@interface FriendsViewController : UITableViewController
+@interface FriendsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+@property (strong, nonatomic) IBOutlet UITableView *tableView;
 @property NSMutableArray *friends;
 @end
