@@ -17,7 +17,7 @@
                BlueprintIdentifier = "6CF3FD8B1749E1760051A2F1"
                BuildableName = "BarCampPenang.app"
                BlueprintName = "BarCampPenang"
-               ReferencedContainer = "container:BarCampPenang.xcodeproj">
+               ReferencedContainer = "container:BarcampPenang.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -35,7 +35,7 @@
             BlueprintIdentifier = "6CF3FD8B1749E1760051A2F1"
             BuildableName = "BarCampPenang.app"
             BlueprintName = "BarCampPenang"
-            ReferencedContainer = "container:BarCampPenang.xcodeproj">
+            ReferencedContainer = "container:BarcampPenang.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
@@ -54,7 +54,7 @@
             BlueprintIdentifier = "6CF3FD8B1749E1760051A2F1"
             BuildableName = "BarCampPenang.app"
             BlueprintName = "BarCampPenang"
-            ReferencedContainer = "container:BarCampPenang.xcodeproj">
+            ReferencedContainer = "container:BarcampPenang.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -72,7 +72,7 @@
             BlueprintIdentifier = "6CF3FD8B1749E1760051A2F1"
             BuildableName = "BarCampPenang.app"
             BlueprintName = "BarCampPenang"
-            ReferencedContainer = "container:BarCampPenang.xcodeproj">
+            ReferencedContainer = "container:BarcampPenang.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

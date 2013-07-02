@@ -118,6 +118,12 @@
     
     if (isLargeMap)
     {
+        // show callout
+        for (id currentAnnotation in self.mapView.annotations) {
+            if ([currentAnnotation isKindOfClass:[MKPointAnnotation class]]) {
+                [self.mapView selectAnnotation:currentAnnotation animated:YES];
+            }
+        }
    
         // show myself and pin if possible
         if (CLLocationCoordinate2DIsValid(self.mapView.userLocation.coordinate))
@@ -185,6 +191,22 @@
     }];
 }
 
+- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
+    static NSString *identifier = @"pin";
+    MKPinAnnotationView* pinView = [[MKPinAnnotationView alloc]
+                                    initWithAnnotation:annotation reuseIdentifier:identifier] ;
+    
+    pinView.canShowCallout=YES;
+    
+    UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+    pinView.rightCalloutAccessoryView = rightButton;
+    
+    return pinView;
+}
+
+- (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control{
+    [self performSegueWithIdentifier:@"showIndoorMap" sender:view];
+}
 
 #pragma mark -- html
 

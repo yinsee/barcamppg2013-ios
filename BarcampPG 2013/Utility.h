@@ -37,8 +37,8 @@
 #define kURLSponsor __DOMAIN__ @"sponsors.html"
 
 #define kMapLocationCoordinate CLLocationCoordinate2DMake(5.333756, 100.306691)
-#define kMapPinTitle @"Barcamp 2013"
-#define kMapPinSubTitle @"Info Trek Penang, Queensbay Mall. Tel: ‎04-646 8488"
+#define kMapPinTitle @"Info Trek Penang"
+#define kMapPinSubTitle @"Queensbay Mall. Tel: ‎04-646 8488"
 #define kURLFacebookPicture @"http://graph.facebook.com/%@/picture"
 //
 #define FBSessionStateChangedNotification @"FBSessionStateChangedNotification"
