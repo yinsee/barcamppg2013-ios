@@ -12,3 +12,6 @@
 and all the Barcamp Penang 2013 crews :-)
 </p>
 <p>Feel free to fork this for your own Barcamp of similar events. </p>
+
+<h1>Barcamp Penang 2013</h1>
+<img src="http://sphotos-f.ak.fbcdn.net/hphotos-ak-ash4/1001660_599400156766724_949979057_n.jpg">
