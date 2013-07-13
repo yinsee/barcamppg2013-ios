@@ -12,5 +12,6 @@
 @interface ProfileQRCodeViewController : UIViewController
 @property (strong, nonatomic) IBOutlet UIImageView *qrcode;
 - (IBAction)updateProfile:(id)sender;
+@property (weak, nonatomic) IBOutlet UIImageView *profilephoto;
 
 @end

@@ -28,16 +28,17 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     
-    UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideKeyboard)];
+    gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideKeyboard)];
     [self.view addGestureRecognizer:gestureRecognizer];
     gestureRecognizer.cancelsTouchesInView = NO;  // this prevents the gesture recognizers to 'block' touches
+    
     
 }
 
 -(UIView *)firstResponder
 {
     for (UIView *subview in self.scrollView.subviews) {
-
+        
         if ([subview isFirstResponder]) return subview;
         
         if (subview.subviews)
@@ -78,36 +79,29 @@
 }
 
 - (void)keyboardWasShown:(NSNotification*)aNotification {
-//    CGRect viewFrame = [self.view frame];
-    NSDictionary * info = [aNotification userInfo];
-    CGSize keyboardSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
     
-//    if (self.tabBarController)
-//        viewFrame.size.height -= keyboardSize.height - self.tabBarController.tabBar.frame.size.height;
-//    else
-//        viewFrame.size.height -= keyboardSize.height;
-    [self.scrollView setContentInset:UIEdgeInsetsMake(0, 0, keyboardSize.height, 0)];
+    NSDictionary * info = [aNotification userInfo];
+    CGSize keyboardSize = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
+    
+    int tabheight;
+    if (self.tabBarController)
+        tabheight = self.tabBarController.tabBar.frame.size.height;
+    else
+        tabheight = 0;
+    
+    [self.scrollView setContentInset:UIEdgeInsetsMake(0, 0, keyboardSize.height - tabheight, 0)];
     
     if ([self firstResponder].superview!=self.scrollView) // if textfield is 2nd level
         [self.scrollView scrollRectToVisible:[self firstResponder].superview.frame animated:YES];
     else
         [self.scrollView scrollRectToVisible:[self firstResponder].frame animated:YES];
-
+    gestureRecognizer.cancelsTouchesInView = YES;
+    
 }
 
 - (void)keyboardWasHidden:(NSNotification*)aNotification {
     [self.scrollView setContentInset:UIEdgeInsetsZero];
-//    
-//    CGRect viewFrame = [self.view frame];
-//    NSDictionary * info = [aNotification userInfo];
-//    CGSize keyboardSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-//    
-//    if (self.tabBarController)
-//        viewFrame.size.height += keyboardSize.height - self.tabBarController.tabBar.frame.size.height;
-//    else
-//        viewFrame.size.height += keyboardSize.height;
-//
-//    self.view.frame = viewFrame;
+    gestureRecognizer.cancelsTouchesInView = NO;
 }
 
 

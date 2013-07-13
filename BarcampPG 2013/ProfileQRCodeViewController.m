@@ -60,8 +60,18 @@
     ZXBitMatrix* result = [writer encode:data format:kBarcodeFormatQRCode width:self.qrcode.frame.size.width height:self.qrcode.frame.size.width error:nil];
     if (result) {
         self.qrcode.image = [UIImage imageWithCGImage:[ZXImage imageWithMatrix:result].cgimage];
-    } 
-
+    }
+    
+    NSDictionary *profile = [[NSUserDefaults standardUserDefaults] objectForKey:kUserDefaultProfile];
+    if ([profile valueForKey:@"fbuid"])
+    {
+        self.profilephoto.hidden = NO;
+        [self.profilephoto setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:kURLFacebookPicture, [profile valueForKey:@"fbuid"]]]  placeholderImage:[UIImage imageNamed:@"profile_placeholder.png"] options:SDWebImageRefreshCached];
+    }
+    else
+    {
+        self.profilephoto.hidden = YES;
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -72,6 +82,7 @@
 
 - (void)viewDidUnload {
     [self setQrcode:nil];
+    [self setProfilephoto:nil];
     [super viewDidUnload];
 }
 

@@ -31,7 +31,7 @@
     [self.sms setTitle:self.data.phone  forState:UIControlStateNormal];
     [self.email setTitle:self.data.email  forState:UIControlStateNormal];
     
-    [self.photo setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:kURLFacebookPicture, self.data.fbuid]]  placeholderImage:[UIImage imageNamed:@"profile_placeholder.png"]];
+    [self.photo setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:kURLFacebookPicture, self.data.fbuid]]  placeholderImage:[UIImage imageNamed:@"profile_placeholder.png"] options:SDWebImageRefreshCached];
 }
 
 -(void)viewDidAppear:(BOOL)animated

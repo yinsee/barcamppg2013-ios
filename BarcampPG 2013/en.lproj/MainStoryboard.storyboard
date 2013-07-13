@@ -222,7 +222,7 @@
                                                     <rect key="frame" x="4" y="4" width="64" height="64"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 </imageView>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="James P. Sullivan" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" id="h6v-ho-cFp">
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="James P. Sullivan" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" adjustsLetterSpacingToFitWidth="YES" id="h6v-ho-cFp">
                                                     <rect key="frame" x="83" y="4" width="207" height="34"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -276,7 +276,7 @@
                                                         <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
                                                     <connections>
-                                                        <action selector="pop:" destination="BZR-cF-pmk" eventType="touchUpInside" id="0kK-GT-1T9"/>
+                                                        <segue destination="S6e-f9-VVA" kind="modal" id="rDF-gI-GCa"/>
                                                     </connections>
                                                 </button>
                                             </subviews>
@@ -305,7 +305,6 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="pop:" destination="BZR-cF-pmk" eventType="touchUpInside" id="mBi-9R-WsZ"/>
                                     <segue destination="S6e-f9-VVA" kind="modal" id="3tX-lR-3DU"/>
                                 </connections>
                             </button>
@@ -882,11 +881,16 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="profile_placeholder.png" id="OIY-wu-dba" customClass="ProfileImageView">
+                                <rect key="frame" x="133" y="238" width="54" height="54"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" title="Get Scanned!" id="paz-qf-lvA"/>
                     <connections>
+                        <outlet property="profilephoto" destination="OIY-wu-dba" id="JYQ-LA-pJl"/>
                         <outlet property="qrcode" destination="wQq-9o-xbo" id="be4-vP-8hK"/>
                         <segue destination="Uub-6o-QVp" kind="push" identifier="segueUpdateProfile" id="w8X-le-cZf"/>
                     </connections>
@@ -1004,6 +1008,7 @@
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ProfileQRCodeViewController.h"/>
             <relationships>
                 <relationship kind="action" name="updateProfile:"/>
+                <relationship kind="outlet" name="profilephoto" candidateClass="UIImageView"/>
                 <relationship kind="outlet" name="qrcode" candidateClass="UIImageView"/>
             </relationships>
         </class>
@@ -1039,4 +1044,7 @@
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
+    <inferredMetricsTieBreakers>
+        <segue reference="rDF-gI-GCa"/>
+    </inferredMetricsTieBreakers>
 </document>

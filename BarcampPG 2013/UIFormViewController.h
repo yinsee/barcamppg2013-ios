@@ -7,11 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
-//#import "GAI.h"
 
 @interface UIFormViewController : UIViewController <UIGestureRecognizerDelegate, UITextFieldDelegate>
-
+{
+    UITapGestureRecognizer *gestureRecognizer;
+}
 @property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
 
 -(UIView *)firstResponder;
+- (void)hideKeyboard;
 @end

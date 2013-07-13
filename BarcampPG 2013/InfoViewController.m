@@ -131,8 +131,8 @@
             MKMapPoint userPoint = MKMapPointForCoordinate(self.mapView.userLocation.coordinate);
             MKMapPoint annotationPoint = MKMapPointForCoordinate(kMapLocationCoordinate);
             // Make map rects with 0 size
-            MKMapRect userRect = MKMapRectMake(userPoint.x, userPoint.y, 0, 0);
-            MKMapRect annotationRect = MKMapRectMake(annotationPoint.x, annotationPoint.y, 0, 0);
+            MKMapRect userRect = MKMapRectMake(userPoint.x, userPoint.y, 500, 500);
+            MKMapRect annotationRect = MKMapRectMake(annotationPoint.x, annotationPoint.y, 500, 500);
             // Make union of those two rects
             MKMapRect unionRect = MKMapRectUnion(userRect, annotationRect);
             // You have the smallest possible rect containing both locations
@@ -192,6 +192,11 @@
 }
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
+    if ([annotation isKindOfClass:[MKUserLocation class]]) {
+        //Don't trample the user location annotation (pulsing blue dot).
+        return nil;
+    }
+
     static NSString *identifier = @"pin";
     MKPinAnnotationView* pinView = [[MKPinAnnotationView alloc]
                                     initWithAnnotation:annotation reuseIdentifier:identifier] ;

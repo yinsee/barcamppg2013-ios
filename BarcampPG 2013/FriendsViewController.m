@@ -99,7 +99,7 @@
     cell.tag = indexPath.row;
     cell.name.text = row.name;
     cell.profession.text = row.profession;
-    [cell.photo setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:kURLFacebookPicture, row.fbuid]]  placeholderImage:defaultPhoto];
+    [cell.photo setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:kURLFacebookPicture, row.fbuid]]  placeholderImage:defaultPhoto options:SDWebImageRefreshCached];
     
     return cell;
 }

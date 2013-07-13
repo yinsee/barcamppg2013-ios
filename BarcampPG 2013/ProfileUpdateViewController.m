@@ -42,7 +42,7 @@
     
     if ([profile valueForKey:@"fbuid"])
     {
-        [self.photo setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:kURLFacebookPicture, [profile valueForKey:@"fbuid"]]]  placeholderImage:[UIImage imageNamed:@"profile_placeholder.png"]];
+        [self.photo setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:kURLFacebookPicture, [profile valueForKey:@"fbuid"]]]  placeholderImage:[UIImage imageNamed:@"profile_placeholder.png"] options:SDWebImageRefreshCached];
     }
 }
 
@@ -130,7 +130,7 @@
                      }
                  }
              }
-             [self.photo setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:kURLFacebookPicture, self.fbuid.text]]  placeholderImage:[UIImage imageNamed:@"profile_placeholder.png"]];
+             [self.photo setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:kURLFacebookPicture, self.fbuid.text]]  placeholderImage:[UIImage imageNamed:@"profile_placeholder.png"] options:SDWebImageRefreshCached];
          }
          else {
              [Utility prompt:@"FBGraph Error" message:error.localizedDescription];
