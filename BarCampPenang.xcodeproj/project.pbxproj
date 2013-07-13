@@ -254,6 +254,7 @@
 		6C7395CF177C220400DAD59B /* top-Friends.png in Resources */ = {isa = PBXBuildFile; fileRef = 6C7395B2177C220400DAD59B /* top-Friends.png */; };
 		6C7395D0177C220400DAD59B /* top-Profile.png in Resources */ = {isa = PBXBuildFile; fileRef = 6C7395B3177C220400DAD59B /* top-Profile.png */; };
 		6C7395D1177C220400DAD59B /* top.png in Resources */ = {isa = PBXBuildFile; fileRef = 6C7395B4177C220400DAD59B /* top.png */; };
+		6CB03B2017916CED00B6CA43 /* laugh.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 6CB03B1F17916CED00B6CA43 /* laugh.mp3 */; };
 		6CD0C2A5177CB6BE00273E3D /* ProfileImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CD0C2A4177CB6BE00273E3D /* ProfileImageView.m */; };
 		6CD0C2B01781522800273E3D /* InfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CD0C2AF1781522800273E3D /* InfoViewController.m */; };
 		6CD0C2B2178154ED00273E3D /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6CD0C2B1178154ED00273E3D /* MapKit.framework */; };
@@ -801,6 +802,7 @@
 		6C7395B2177C220400DAD59B /* top-Friends.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "top-Friends.png"; sourceTree = "<group>"; };
 		6C7395B3177C220400DAD59B /* top-Profile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "top-Profile.png"; sourceTree = "<group>"; };
 		6C7395B4177C220400DAD59B /* top.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = top.png; sourceTree = "<group>"; };
+		6CB03B1F17916CED00B6CA43 /* laugh.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = laugh.mp3; sourceTree = "<group>"; };
 		6CD0C2A3177CB6BE00273E3D /* ProfileImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProfileImageView.h; path = "BarcampPG 2013/ProfileImageView.h"; sourceTree = SOURCE_ROOT; };
 		6CD0C2A4177CB6BE00273E3D /* ProfileImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ProfileImageView.m; path = "BarcampPG 2013/ProfileImageView.m"; sourceTree = SOURCE_ROOT; };
 		6CD0C2AE1781522800273E3D /* InfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InfoViewController.h; sourceTree = "<group>"; };
@@ -1914,6 +1916,7 @@
 				6C624AE117760196008EEAB6 /* AgendaViewController.m */,
 				6CD0C2A3177CB6BE00273E3D /* ProfileImageView.h */,
 				6CD0C2A4177CB6BE00273E3D /* ProfileImageView.m */,
+				6CB03B1F17916CED00B6CA43 /* laugh.mp3 */,
 				6C739592177C220400DAD59B /* images */,
 				6C624ABE1775F0C5008EEAB6 /* Classes */,
 				6CF3FD961749E1760051A2F1 /* Supporting Files */,
@@ -1967,7 +1970,7 @@
 				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = chimou;
 			};
-			buildConfigurationList = 6CF3FD871749E1760051A2F1 /* Build configuration list for PBXProject "BarcampPenang" */;
+			buildConfigurationList = 6CF3FD871749E1760051A2F1 /* Build configuration list for PBXProject "BarCampPenang" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -2041,6 +2044,7 @@
 				6CD0C2EB17817FD500273E3D /* tab_profile_down@2x.png in Resources */,
 				6CD0C2ED178183DA00273E3D /* btn_scan2.png in Resources */,
 				6CD0C2F117828C7D00273E3D /* indoormap.png in Resources */,
+				6CB03B2017916CED00B6CA43 /* laugh.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2427,7 +2431,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		6CF3FD871749E1760051A2F1 /* Build configuration list for PBXProject "BarcampPenang" */ = {
+		6CF3FD871749E1760051A2F1 /* Build configuration list for PBXProject "BarCampPenang" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6CF3FDB81749E1760051A2F1 /* Debug */,

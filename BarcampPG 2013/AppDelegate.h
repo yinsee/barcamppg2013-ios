@@ -7,9 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <AVFoundation/AVFoundation.h>
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate, UIAccelerometerDelegate>
+{
+    BOOL histeresisExcited;
+    AVAudioPlayer *laughter; // is the best medicine
+}
 
 @property (strong, nonatomic) UIWindow *window;
-
+@property(retain) UIAcceleration* lastAcceleration;
 @end
