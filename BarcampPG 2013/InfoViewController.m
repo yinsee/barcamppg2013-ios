@@ -101,6 +101,8 @@
     int secondsTarget = [[formatter dateFromString:kBarcampDate] timeIntervalSince1970];
     
     int differenceSeconds = secondsTarget - secondsNow;
+    if (differenceSeconds<=0) differenceSeconds = 0;
+    
     int days = (int)((double)differenceSeconds/(3600.0*24.00));
     int diffDay = differenceSeconds-(days*3600*24);
     int hours = (int)((double)diffDay/3600.00);

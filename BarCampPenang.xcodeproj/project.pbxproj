@@ -260,6 +260,7 @@
 		6C6C63FB18E0189000C5D036 /* ZXResult.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C6C632218E0188F00C5D036 /* ZXResult.m */; };
 		6C6C63FC18E0189000C5D036 /* ZXResultPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C6C632518E0188F00C5D036 /* ZXResultPoint.m */; };
 		6C6C63FD18E0189000C5D036 /* ZXRGBLuminanceSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C6C632818E0188F00C5D036 /* ZXRGBLuminanceSource.m */; };
+		6C6C640018E01E6800C5D036 /* LeaderboardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C6C63FF18E01E6800C5D036 /* LeaderboardViewController.m */; };
 		6C7395B5177C220400DAD59B /* btn_add_edit_profile.png in Resources */ = {isa = PBXBuildFile; fileRef = 6C739594177C220400DAD59B /* btn_add_edit_profile.png */; };
 		6C7395B6177C220400DAD59B /* btn_back.png in Resources */ = {isa = PBXBuildFile; fileRef = 6C739595177C220400DAD59B /* btn_back.png */; };
 		6C7395B7177C220400DAD59B /* btn_call.png in Resources */ = {isa = PBXBuildFile; fileRef = 6C739596177C220400DAD59B /* btn_call.png */; };
@@ -861,6 +862,8 @@
 		6C6C632718E0188F00C5D036 /* ZXRGBLuminanceSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZXRGBLuminanceSource.h; sourceTree = "<group>"; };
 		6C6C632818E0188F00C5D036 /* ZXRGBLuminanceSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZXRGBLuminanceSource.m; sourceTree = "<group>"; };
 		6C6C632918E0188F00C5D036 /* ZXWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZXWriter.h; sourceTree = "<group>"; };
+		6C6C63FE18E01E6800C5D036 /* LeaderboardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LeaderboardViewController.h; sourceTree = "<group>"; };
+		6C6C63FF18E01E6800C5D036 /* LeaderboardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LeaderboardViewController.m; sourceTree = "<group>"; };
 		6C739594177C220400DAD59B /* btn_add_edit_profile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_add_edit_profile.png; sourceTree = "<group>"; };
 		6C739595177C220400DAD59B /* btn_back.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_back.png; sourceTree = "<group>"; };
 		6C739596177C220400DAD59B /* btn_call.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_call.png; sourceTree = "<group>"; };
@@ -2023,6 +2026,8 @@
 				6CD0C2AE1781522800273E3D /* InfoViewController.h */,
 				6CD0C2AF1781522800273E3D /* InfoViewController.m */,
 				6CF3FDA71749E1760051A2F1 /* MainStoryboard.storyboard */,
+				6C6C63FE18E01E6800C5D036 /* LeaderboardViewController.h */,
+				6C6C63FF18E01E6800C5D036 /* LeaderboardViewController.m */,
 				6CD0C2F217828DA100273E3D /* IndoorMapViewController.h */,
 				6CD0C2F317828DA100273E3D /* IndoorMapViewController.m */,
 				6CE54D5317763F2500D434C2 /* FriendDetailViewController.h */,
@@ -2383,6 +2388,7 @@
 				6CE54D3417762B3900D434C2 /* NSMutableString+InnerBand.m in Sources */,
 				6CE54D3517762B3900D434C2 /* NSNumber+InnerBand.m in Sources */,
 				6C6C636E18E0188F00C5D036 /* ZXDataMatrixDecoder.m in Sources */,
+				6C6C640018E01E6800C5D036 /* LeaderboardViewController.m in Sources */,
 				6C6C63EF18E0189000C5D036 /* ZXQRCodeWriter.m in Sources */,
 				6C6C633718E0188F00C5D036 /* ZXCalendarParsedResult.m in Sources */,
 				6CE54D3617762B3900D434C2 /* NSObject+InnerBand.m in Sources */,

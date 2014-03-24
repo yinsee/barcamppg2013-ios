@@ -175,6 +175,7 @@
         [self.friends removeObjectAtIndex:indexPath.row];
 //        [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
         [self.tableView reloadData];
+        [self updateLeaderboard];
     }
 //    [self.tableView endUpdates];
 }
@@ -183,6 +184,7 @@
 -(void)reloadData
 {
     self.friends = [NSMutableArray arrayWithArray:[Friend allOrderedBy:@"name" ascending:YES]];
+    
 }
 
 -(void)qrcodeSuccess:(NSNotification *)notification
@@ -196,7 +198,7 @@
     // check phone
     if (!f) f = [Friend firstWithKey:@"phone" value:[data objectAtIndex:2]];
     // check facebook
-    if (!f) f = [Friend firstWithKey:@"fbuid" value:[data objectAtIndex:4]];
+    if (!f && ![[data objectAtIndex:4] isEqualToString:@""]) f = [Friend firstWithKey:@"fbuid" value:[data objectAtIndex:4]];
     // create new if not found
     if (!f) f = [Friend create];
     
@@ -211,9 +213,30 @@
     
     [self reloadData];
     [self.tableView reloadData];
+    
+    [self updateLeaderboard];
+
 }
 - (void)viewDidUnload {
     [self setTableView:nil];
     [super viewDidUnload];
+}
+
+-(void)updateLeaderboard
+{
+    // save to leaderboard
+    NSString *email, *fbuid;
+    NSDictionary *profile = [[NSUserDefaults standardUserDefaults] objectForKey:kUserDefaultProfile];
+    email = [profile valueForKey:@"email"];
+    fbuid = [profile valueForKey:@"fbuid"];
+    
+    [[AsyncConnection alloc] startPostJSONWithURL:kURLLeaderboardUpdate params:@{@"count":[NSNumber numberWithUnsignedInteger:[self.friends count]],@"fbuid":fbuid, @"email":email} complete:^(AsyncConnection *conn) {
+        //
+    } failed:^(AsyncConnection *conn) {
+        //
+        [[iToast makeText:@"Update to leaderboard has failed. Keep Calm and Scan More."] show];
+    } finished:^(AsyncConnection *conn) {
+        //
+    }];
 }
 @end

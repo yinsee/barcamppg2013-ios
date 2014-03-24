@@ -24,7 +24,7 @@
 #define kAnalyticsDispatchInterval 30
 #define kAppID @"665652007"
 
-#define kBarcampDate @"20130727"
+#define kBarcampDate @"20140517"
 
 #define APN_TOKEN()    [[NSUserDefaults standardUserDefaults] objectForKey:@"APNToken"]
 #if (TARGET_IPHONE_SIMULATOR1)
@@ -35,6 +35,8 @@
 
 #define kURLAgenda __DOMAIN__ @"agenda.html"
 #define kURLSponsor __DOMAIN__ @"sponsors.html"
+#define kURLLeaderboard @"http://chimou.com/barcamppg/leaderboard.php"
+#define kURLLeaderboardUpdate @"http://chimou.com/barcamppg/leaderboard.php?a=update"
 
 #define kMapLocationCoordinate CLLocationCoordinate2DMake(5.333756, 100.306691)
 #define kMapPinTitle @"Info Trek Penang"
