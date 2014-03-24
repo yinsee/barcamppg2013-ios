@@ -29,6 +29,7 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    self.screenName = @"QR Scanner";
 }
 
 - (void)didReceiveMemoryWarning
@@ -40,7 +41,6 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    [[[GAI sharedInstance] defaultTracker] trackView:@"QR Scanner"];
 
     self.capture = [[ZXCapture alloc] init];
 //    self.capture.rotation = 90.0f;
@@ -165,7 +165,7 @@
             // play camera shutter sound
             AudioServicesPlaySystemSound(1108);
 
-            [[[GAI sharedInstance] defaultTracker] trackEventWithCategory:@"QRScanner" withAction:@"Scanned" withLabel:@"" withValue:nil];
+//            [[[GAI sharedInstance] defaultTracker] trackEventWithCategory:@"QRScanner" withAction:@"Scanned" withLabel:@"" withValue:nil];
             
             // post the notification
             [[NSNotificationCenter defaultCenter] postNotificationName:kNotifQRCodeSuccess object:nil userInfo:[NSDictionary dictionaryWithObject:data forKey:@"data"]];

@@ -28,7 +28,10 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     NSDictionary *profile = [[NSUserDefaults standardUserDefaults] objectForKey:kUserDefaultProfile];
-        
+    
+    self.screenName = @"Update Profile";
+
+    
     self.txtName.text = [profile valueForKey:@"name"];
     if (!self.txtName.text) self.txtName.text = @"";
     self.txtEmail.text = [profile valueForKey:@"email"];
@@ -44,12 +47,6 @@
     {
         [self.photo setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:kURLFacebookPicture, [profile valueForKey:@"fbuid"]]]  placeholderImage:[UIImage imageNamed:@"profile_placeholder.png"] options:SDWebImageRefreshCached];
     }
-}
-
--(void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    [[[GAI sharedInstance] defaultTracker] trackView:@"Update Profile"];
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -86,7 +83,7 @@
     NSString *qrcode = [[NSArray arrayWithObjects:self.txtName.text, self.txtEmail.text, self.txtPhone.text, self.txtProfession.text, self.fbuid.text, nil] componentsJoinedByString:kQRCodeDelimiter];
     [[NSUserDefaults standardUserDefaults] setObject:qrcode forKey:kUserDefaultProfileQRCode];
 
-    [[[GAI sharedInstance] defaultTracker] trackEventWithCategory:@"Profile" withAction:@"Update" withLabel:@"" withValue:nil];
+//    [[[GAI sharedInstance] defaultTracker] trackEventWithCategory:@"Profile" withAction:@"Update" withLabel:@"" withValue:nil];
     
     [[self navigationController] popViewControllerAnimated:YES];
 }
@@ -153,7 +150,7 @@
 
 -(void)updateAndPublish
 {
-    [[[GAI sharedInstance] defaultTracker] trackEventWithCategory:@"Profile" withAction:@"Link Facebook" withLabel:@"" withValue:nil];
+//    [[[GAI sharedInstance] defaultTracker] trackEventWithCategory:@"Profile" withAction:@"Link Facebook" withLabel:@"" withValue:nil];
 
     [self getFBuserid];
     [self publishStory];

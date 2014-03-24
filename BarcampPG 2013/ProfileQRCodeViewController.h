@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "Utility.h"
 
-@interface ProfileQRCodeViewController : UIViewController
+@interface ProfileQRCodeViewController : GAITrackedViewController
 @property (strong, nonatomic) IBOutlet UIImageView *qrcode;
 - (IBAction)updateProfile:(id)sender;
 @property (weak, nonatomic) IBOutlet UIImageView *profilephoto;

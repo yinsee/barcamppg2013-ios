@@ -32,17 +32,13 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     
+    self.screenName = @"Profile";
+
     if (![[NSUserDefaults standardUserDefaults] objectForKey:kUserDefaultProfileQRCode])
     {
         [Utility prompt:@"Welcome!" message:@"Please update your profile"];   
         [self performSegueWithIdentifier:@"segueUpdateProfile" sender:self];
     }
-}
-
--(void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    [[[GAI sharedInstance] defaultTracker] trackView:@"Profile"];
 }
 
 -(void)viewWillAppear:(BOOL)animated

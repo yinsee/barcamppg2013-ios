@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "Utility.h"
 
-@interface AgendaViewController : UIViewController
+@interface AgendaViewController : GAITrackedViewController
 - (IBAction)reload:(id)sender;
 @property (strong, nonatomic) IBOutlet UIWebView *webview;
 

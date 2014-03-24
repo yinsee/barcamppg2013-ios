@@ -10,7 +10,7 @@
 #import "Utility.h"
 #import "Friend.h"
 
-@interface FriendDetailViewController : UIViewController
+@interface FriendDetailViewController : GAITrackedViewController
 @property Friend *data;
 @property (strong, nonatomic) IBOutlet UIImageView *photo;
 @property (strong, nonatomic) IBOutlet UILabel *name;

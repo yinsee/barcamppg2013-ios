@@ -7,8 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Utility.h"
+#import "GAITrackedViewController.h"
 
-@interface UIFormViewController : UIViewController <UIGestureRecognizerDelegate, UITextFieldDelegate>
+@interface UIFormViewController : GAITrackedViewController <UIGestureRecognizerDelegate, UITextFieldDelegate>
 {
     UITapGestureRecognizer *gestureRecognizer;
 }

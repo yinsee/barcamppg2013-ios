@@ -10,7 +10,7 @@
 #import "Utility.h"
 #import <MapKit/MapKit.h>
 
-@interface InfoViewController : UIViewController<MKMapViewDelegate, UIWebViewDelegate, UIScrollViewDelegate>
+@interface InfoViewController : GAITrackedViewController <MKMapViewDelegate, UIWebViewDelegate, UIScrollViewDelegate>
 
 
 - (IBAction)reload:(id)sender;

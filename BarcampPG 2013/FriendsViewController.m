@@ -39,15 +39,11 @@
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    self.screenName = @"Friends";
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(qrcodeSuccess:) name:kNotifQRCodeSuccess object:nil];
 
     [self reloadData];
-}
-
--(void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    [[[GAI sharedInstance] defaultTracker] trackView:@"Friends"];
 }
 
 - (void)didReceiveMemoryWarning

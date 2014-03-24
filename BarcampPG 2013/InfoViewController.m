@@ -33,7 +33,7 @@
     self.webView.delegate = self;
     self.scrollView.delegate = self;
     [self.mapButton setTitle:@"" forState:UIControlStateNormal];
-    
+    self.screenName = @"Agenda";
     
     // clear webview shadow
     for (UIView* shadowView in [self.webView.scrollView subviews])
@@ -58,7 +58,6 @@
 
 -(void) viewWillAppear:(BOOL)animated{
     
-    [[[GAI sharedInstance] defaultTracker] trackView:@"Agenda"];
     
     [self updateClock];
     

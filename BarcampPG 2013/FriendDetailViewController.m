@@ -34,17 +34,11 @@
     [self.photo setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:kURLFacebookPicture, self.data.fbuid]]  placeholderImage:[UIImage imageNamed:@"profile_placeholder.png"] options:SDWebImageRefreshCached];
 }
 
--(void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    [[[GAI sharedInstance] defaultTracker] trackView:@"Friend Detail"];
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    
+    self.screenName = @"Friend Detail";
     [self layoutSubviews];
 }
 
@@ -67,7 +61,7 @@
 
 - (IBAction)sendmail:(id)sender
 {
-    [[[GAI sharedInstance] defaultTracker] trackEventWithCategory:@"Friend" withAction:@"Open" withLabel:@"Email" withValue:nil];
+//    [[[GAI sharedInstance] defaultTracker] trackEventWithCategory:@"Friend" withAction:@"Open" withLabel:@"Email" withValue:nil];
 
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"mailto:%@", self.data.email]];
     if([[UIApplication sharedApplication] canOpenURL:url])
@@ -77,7 +71,7 @@
 }
 
 - (IBAction)sendsms:(id)sender {
-    [[[GAI sharedInstance] defaultTracker] trackEventWithCategory:@"Friend" withAction:@"Open" withLabel:@"SMS" withValue:nil];
+//    [[[GAI sharedInstance] defaultTracker] trackEventWithCategory:@"Friend" withAction:@"Open" withLabel:@"SMS" withValue:nil];
     
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"sms:%@", self.data.phone]];
     if([[UIApplication sharedApplication] canOpenURL:url])
@@ -88,7 +82,7 @@
 
 -(void)phonecall:(id)sender
 {
-    [[[GAI sharedInstance] defaultTracker] trackEventWithCategory:@"Friend" withAction:@"Open" withLabel:@"Phone" withValue:nil];
+//    [[[GAI sharedInstance] defaultTracker] trackEventWithCategory:@"Friend" withAction:@"Open" withLabel:@"Phone" withValue:nil];
 
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"tel:%@", self.data.phone]];
     if([[UIApplication sharedApplication] canOpenURL:url])
@@ -105,7 +99,7 @@
 {
     NSString *fbURL = [NSString stringWithFormat:@"fb://profile/%@", self.data.fbuid];
 
-    [[[GAI sharedInstance] defaultTracker] trackEventWithCategory:@"Friend" withAction:@"Open" withLabel:@"Facebook" withValue:nil];
+//    [[[GAI sharedInstance] defaultTracker] trackEventWithCategory:@"Friend" withAction:@"Open" withLabel:@"Facebook" withValue:nil];
 
     if([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:fbURL]])
     {

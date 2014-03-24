@@ -10,7 +10,7 @@
 #import "Utility.h"
 #import "ZXingObjC.h"
 
-@interface QRScannerViewController : UIViewController <ZXCaptureDelegate>
+@interface QRScannerViewController : GAITrackedViewController <ZXCaptureDelegate>
 - (IBAction)cancel:(id)sender;
 
 @end

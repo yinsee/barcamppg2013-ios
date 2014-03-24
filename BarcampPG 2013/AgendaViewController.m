@@ -55,7 +55,8 @@
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [[[GAI sharedInstance] defaultTracker] trackView:@"Agenda"];
+
+    self.screenName = @"Agenda";
 
     // auto reload each time view-did-appear
     static BOOL firsttime = YES;
