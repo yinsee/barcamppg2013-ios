@@ -21,13 +21,17 @@
 #import <ImageIO/ImageIO.h>
 #endif
 
-@implementation ZXImage
+@interface ZXImage ()
 
-@synthesize cgimage;
+@property (nonatomic, assign) CGImageRef cgimage;
+
+@end
+
+@implementation ZXImage
 
 - (ZXImage *)initWithCGImageRef:(CGImageRef)image {
   if (self = [super init]) {
-    cgimage = CGImageRetain(image);
+    _cgimage = CGImageRetain(image);
   }
 
   return self;
@@ -41,8 +45,7 @@
       CGImageSourceRef source = CGImageSourceCreateWithDataProvider(provider, 0);
 
       if (source) {
-        cgimage = CGImageSourceCreateImageAtIndex(source, 0, 0);
-
+        _cgimage = CGImageSourceCreateImageAtIndex(source, 0, 0);
         CFRelease(source);
       }
 
@@ -54,28 +57,27 @@
 }
 
 - (size_t)width {
-  return CGImageGetWidth(cgimage);
+  return CGImageGetWidth(self.cgimage);
 }
 
 - (size_t)height {
-  return CGImageGetHeight(cgimage);
+  return CGImageGetHeight(self.cgimage);
 }
 
 - (void)dealloc {
-  if (cgimage) {
-    CGImageRelease(cgimage);
+  if (_cgimage) {
+    CGImageRelease(_cgimage);
   }
-  
 }
 
 + (ZXImage *)imageWithMatrix:(ZXBitMatrix *)matrix {
   int width = matrix.width;
   int height = matrix.height;
-  unsigned char *bytes = (unsigned char *)malloc(width * height * 4);
+  int8_t *bytes = (int8_t *)malloc(width * height * 4);
   for(int y = 0; y < height; y++) {
     for(int x = 0; x < width; x++) {
       BOOL bit = [matrix getX:x y:y];
-      unsigned char intensity = bit ? 0 : 255;
+      int8_t intensity = bit ? 0 : 255;
       for(int i = 0; i < 3; i++) {
         bytes[y * width * 4 + x * 4 + i] = intensity;
       }
@@ -84,13 +86,16 @@
   }
 
   CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-  CGContextRef c = CGBitmapContextCreate(bytes, width, height, 8, 4 * width, colorSpace, kCGImageAlphaPremultipliedLast);
+  CGContextRef c = CGBitmapContextCreate(bytes, width, height, 8, 4 * width, colorSpace, kCGBitmapAlphaInfoMask & kCGImageAlphaPremultipliedLast);
   CFRelease(colorSpace);
   CGImageRef image = CGBitmapContextCreateImage(c);
   CFRelease(c);
   free(bytes);
 
-  return [[ZXImage alloc] initWithCGImageRef:image];
+  ZXImage *zxImage = [[ZXImage alloc] initWithCGImageRef:image];
+
+  CFRelease(image);
+  return zxImage;
 }
 
 @end

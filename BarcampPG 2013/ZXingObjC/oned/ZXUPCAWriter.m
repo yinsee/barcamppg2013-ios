@@ -17,20 +17,14 @@
 #import "ZXEAN13Writer.h"
 #import "ZXUPCAWriter.h"
 
-@interface ZXUPCAWriter ()
-
-- (ZXEAN13Writer *)subWriter;
-- (NSString *)preencode:(NSString *)contents;
-
-@end
-
 @implementation ZXUPCAWriter
 
 - (ZXEAN13Writer *)subWriter {
   static ZXEAN13Writer *subWriter = nil;
-  if (!subWriter) {
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
     subWriter = [[ZXEAN13Writer alloc] init];
-  }
+  });
 
   return subWriter;
 }
@@ -53,7 +47,7 @@
  * already present.
  */
 - (NSString *)preencode:(NSString *)contents {
-  int length = [contents length];
+  NSUInteger length = [contents length];
   if (length == 11) {
     int sum = 0;
 
@@ -64,7 +58,7 @@
     contents = [contents stringByAppendingFormat:@"%d", (1000 - sum) % 10];
   } else if (length != 12) {
      @throw [NSException exceptionWithName:NSInvalidArgumentException
-                                    reason:[NSString stringWithFormat:@"Requested contents should be 11 or 12 digits long, but got %d", [contents length]]
+                                    reason:[NSString stringWithFormat:@"Requested contents should be 11 or 12 digits long, but got %ld", (unsigned long)[contents length]]
                                   userInfo:nil];
   }
   return [NSString stringWithFormat:@"0%@", contents];

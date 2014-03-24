@@ -25,13 +25,6 @@
 #import "ZXSymbolInfo.h"
 #import "ZXSymbolShapeHint.h"
 
-@interface ZXDataMatrixWriter ()
-
-- (ZXBitMatrix *)encodeLowLevel:(ZXDefaultPlacement *)placement symbolInfo:(ZXSymbolInfo *)symbolInfo;
-- (ZXBitMatrix *)convertByteMatrixToBitMatrix:(ZXByteMatrix *)matrix;
-
-@end
-
 @implementation ZXDataMatrixWriter
 
 - (ZXBitMatrix *)encode:(NSString *)contents format:(ZXBarcodeFormat)format width:(int)width height:(int)height error:(NSError **)error {
@@ -74,7 +67,7 @@
   //1. step: Data encodation
   NSString *encoded = [ZXHighLevelEncoder encodeHighLevel:contents shape:shape minSize:minSize maxSize:maxSize];
 
-  ZXSymbolInfo *symbolInfo = [ZXSymbolInfo lookup:encoded.length shape:shape minSize:minSize maxSize:maxSize fail:YES];
+  ZXSymbolInfo *symbolInfo = [ZXSymbolInfo lookup:(int)encoded.length shape:shape minSize:minSize maxSize:maxSize fail:YES];
 
   //2. step: ECC generation
   NSString *codewords = [ZXDataMatrixErrorCorrection encodeECC200:encoded symbolInfo:symbolInfo];

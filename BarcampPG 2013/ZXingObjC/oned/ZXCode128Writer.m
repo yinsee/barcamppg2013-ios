@@ -23,12 +23,6 @@ const unichar ESCAPE_FNC_2 = L'\u00f2';
 const unichar ESCAPE_FNC_3 = L'\u00f3';
 const unichar ESCAPE_FNC_4 = L'\u00f4';
 
-@interface ZXCode128Writer ()
-
-- (BOOL)isDigits:(NSString *)value start:(int)start length:(unsigned int)length;
-
-@end
-
 @implementation ZXCode128Writer
 
 - (ZXBitMatrix *)encode:(NSString *)contents format:(ZXBarcodeFormat)format width:(int)width height:(int)height hints:(ZXEncodeHints *)hints error:(NSError **)error {
@@ -128,7 +122,7 @@ const unichar ESCAPE_FNC_4 = L'\u00f4';
     // Get the pattern
     NSMutableArray *pattern = [NSMutableArray array];
     for (int i = 0; i < sizeof(CODE_PATTERNS[patternIndex]) / sizeof(int); i++) {
-      [pattern addObject:[NSNumber numberWithInt:CODE_PATTERNS[patternIndex][i]]];
+      [pattern addObject:@(CODE_PATTERNS[patternIndex][i])];
     }
     [patterns addObject:pattern];
 
@@ -143,14 +137,14 @@ const unichar ESCAPE_FNC_4 = L'\u00f4';
   checkSum %= 103;
   NSMutableArray *pattern = [NSMutableArray array];
   for (int i = 0; i < sizeof(CODE_PATTERNS[checkSum]) / sizeof(int); i++) {
-    [pattern addObject:[NSNumber numberWithInt:CODE_PATTERNS[checkSum][i]]];
+    [pattern addObject:@(CODE_PATTERNS[checkSum][i])];
   }
   [patterns addObject:pattern];
 
   // Append stop code
   pattern = [NSMutableArray array];
   for (int i = 0; i < sizeof(CODE_PATTERNS[CODE_STOP]) / sizeof(int); i++) {
-    [pattern addObject:[NSNumber numberWithInt:CODE_PATTERNS[CODE_STOP][i]]];
+    [pattern addObject:@(CODE_PATTERNS[CODE_STOP][i])];
   }
   [patterns addObject:pattern];
 
@@ -158,7 +152,7 @@ const unichar ESCAPE_FNC_4 = L'\u00f4';
   int codeWidth = 0;
   for (pattern in patterns) {
     for (int i = 0; i < pattern.count; i++) {
-      codeWidth += [[pattern objectAtIndex:i] intValue];
+      codeWidth += [pattern[i] intValue];
     }
   }
 
@@ -170,7 +164,7 @@ const unichar ESCAPE_FNC_4 = L'\u00f4';
     int patternLen = (int)[patternArray count];
     int pattern[patternLen];
     for(int i = 0; i < patternLen; i++) {
-      pattern[i] = [[patternArray objectAtIndex:i] intValue];
+      pattern[i] = [patternArray[i] intValue];
     }
 
     pos += [super appendPattern:result pos:pos pattern:pattern patternLen:patternLen startColor:TRUE];

@@ -53,7 +53,8 @@
     }
     
     ZXMultiFormatWriter* writer = [[ZXMultiFormatWriter alloc] init];
-    ZXBitMatrix* result = [writer encode:data format:kBarcodeFormatQRCode width:self.qrcode.frame.size.width height:self.qrcode.frame.size.width error:nil];
+    NSError *error = nil;
+    ZXBitMatrix* result = [writer encode:data format:kBarcodeFormatQRCode width:self.qrcode.frame.size.width height:self.qrcode.frame.size.width error:&error];
     if (result) {
         self.qrcode.image = [UIImage imageWithCGImage:[ZXImage imageWithMatrix:result].cgimage];
     }

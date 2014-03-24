@@ -43,16 +43,6 @@ float const DIFF_MODSIZE_CUTOFF_PERCENT = 0.05f;
  */
 float const DIFF_MODSIZE_CUTOFF = 0.5f;
 
-
-@interface ZXMultiFinderPatternFinder ()
-
-NSInteger moduleSizeCompare(id center1, id center2, void *context);
-
-- (NSArray *)selectBestPatternsWithError:(NSError **)error;
-
-@end
-
-
 @implementation ZXMultiFinderPatternFinder
 
 /**
@@ -62,7 +52,7 @@ NSInteger moduleSizeCompare(id center1, id center2, void *context);
  */
 - (NSArray *)selectBestPatternsWithError:(NSError **)error {
   NSMutableArray *_possibleCenters = [NSMutableArray arrayWithArray:[self possibleCenters]];
-  int size = [_possibleCenters count];
+  NSUInteger size = [_possibleCenters count];
 
   if (size < 3) {
     if (error) *error = NotFoundErrorInstance();
@@ -73,9 +63,7 @@ NSInteger moduleSizeCompare(id center1, id center2, void *context);
    * Begin HE modifications to safely detect multiple codes of equal size
    */
   if (size == 3) {
-    return [NSArray arrayWithObjects:[NSArray arrayWithObjects:[_possibleCenters objectAtIndex:0],
-                                      [_possibleCenters objectAtIndex:1],
-                                      [_possibleCenters objectAtIndex:2], nil], nil];
+    return @[@[_possibleCenters[0], _possibleCenters[1], _possibleCenters[2]]];
   }
 
   [_possibleCenters sortUsingFunction:moduleSizeCompare context:nil];
@@ -98,13 +86,13 @@ NSInteger moduleSizeCompare(id center1, id center2, void *context);
   NSMutableArray *results = [NSMutableArray array];
 
   for (int i1 = 0; i1 < (size - 2); i1++) {
-    ZXQRCodeFinderPattern *p1 = [self.possibleCenters objectAtIndex:i1];
+    ZXQRCodeFinderPattern *p1 = self.possibleCenters[i1];
     if (p1 == nil) {
       continue;
     }
 
     for (int i2 = i1 + 1; i2 < (size - 1); i2++) {
-      ZXQRCodeFinderPattern *p2 = [self.possibleCenters objectAtIndex:i2];
+      ZXQRCodeFinderPattern *p2 = self.possibleCenters[i2];
       if (p2 == nil) {
         continue;
       }
@@ -116,7 +104,7 @@ NSInteger moduleSizeCompare(id center1, id center2, void *context);
       }
 
       for (int i3 = i2 + 1; i3 < size; i3++) {
-        ZXQRCodeFinderPattern *p3 = [self.possibleCenters objectAtIndex:i3];
+        ZXQRCodeFinderPattern *p3 = self.possibleCenters[i3];
         if (p3 == nil) {
           continue;
         }

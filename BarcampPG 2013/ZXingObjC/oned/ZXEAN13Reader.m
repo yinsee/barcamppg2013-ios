@@ -55,32 +55,26 @@ int FIRST_DIGIT_ENCODINGS[10] = {
 
 @property (nonatomic, assign) int *decodeMiddleCounters;
 
-- (BOOL)determineFirstDigit:(NSMutableString *)resultString lgPatternFound:(int)lgPatternFound;
-
 @end
 
 @implementation ZXEAN13Reader
 
-@synthesize decodeMiddleCounters;
-
 - (id)init {
   if (self = [super init]) {
-    self.decodeMiddleCounters = (int *)malloc(sizeof(4) * sizeof(int));
-    self.decodeMiddleCounters[0] = 0;
-    self.decodeMiddleCounters[1] = 0;
-    self.decodeMiddleCounters[2] = 0;
-    self.decodeMiddleCounters[3] = 0;
+    _decodeMiddleCounters = (int *)malloc(sizeof(4) * sizeof(int));
+    _decodeMiddleCounters[0] = 0;
+    _decodeMiddleCounters[1] = 0;
+    _decodeMiddleCounters[2] = 0;
+    _decodeMiddleCounters[3] = 0;
   }
   return self;
 }
 
 - (void)dealloc {
-  if (self.decodeMiddleCounters != NULL) {
-    free(self.decodeMiddleCounters);
-    self.decodeMiddleCounters = NULL;
+  if (_decodeMiddleCounters != NULL) {
+    free(_decodeMiddleCounters);
+    _decodeMiddleCounters = NULL;
   }
-
-  
 }
 
 - (int)decodeMiddle:(ZXBitArray *)row startRange:(NSRange)startRange result:(NSMutableString *)result error:(NSError **)error {
@@ -91,7 +85,7 @@ int FIRST_DIGIT_ENCODINGS[10] = {
   counters[3] = 0;
   const int countersLen = 4;
   int end = row.size;
-  int rowOffset = NSMaxRange(startRange);
+  int rowOffset = (int)NSMaxRange(startRange);
 
   int lgPatternFound = 0;
 
@@ -118,7 +112,7 @@ int FIRST_DIGIT_ENCODINGS[10] = {
   if (middleRange.location == NSNotFound) {
     return -1;
   }
-  rowOffset = NSMaxRange(middleRange);
+  rowOffset = (int)NSMaxRange(middleRange);
 
   for (int x = 0; x < 6 && rowOffset < end; x++) {
     int bestMatch = [ZXUPCEANReader decodeDigit:row counters:counters countersLen:countersLen rowOffset:rowOffset patternType:UPC_EAN_PATTERNS_L_PATTERNS error:error];
@@ -137,7 +131,6 @@ int FIRST_DIGIT_ENCODINGS[10] = {
 - (ZXBarcodeFormat)barcodeFormat {
   return kBarcodeFormatEan13;
 }
-
 
 /**
  * Based on pattern of odd-even ('L' and 'G') patterns used to encoded the explicitly-encoded

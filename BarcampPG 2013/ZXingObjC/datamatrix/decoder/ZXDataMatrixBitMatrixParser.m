@@ -21,19 +21,12 @@
 
 @interface ZXDataMatrixBitMatrixParser ()
 
-@property (nonatomic, retain) ZXBitMatrix *mappingBitMatrix;
-@property (nonatomic, retain) ZXBitMatrix *readMappingMatrix;
-@property (nonatomic, retain) ZXDataMatrixVersion *version;
-
-- (ZXDataMatrixVersion *) readVersion:(ZXBitMatrix *)bitMatrix;
+@property (nonatomic, strong) ZXBitMatrix *mappingBitMatrix;
+@property (nonatomic, strong) ZXBitMatrix *readMappingMatrix;
 
 @end
 
 @implementation ZXDataMatrixBitMatrixParser
-
-@synthesize mappingBitMatrix;
-@synthesize readMappingMatrix;
-@synthesize version;
 
 - (id)initWithBitMatrix:(ZXBitMatrix *)bitMatrix error:(NSError **)error {
   if (self = [super init]) {
@@ -42,25 +35,18 @@
       if (error) *error = FormatErrorInstance();
       return nil;
     }
-    self.version = [self readVersion:bitMatrix];
-    if (!self.version) {
+    _version = [self readVersion:bitMatrix];
+    if (!_version) {
       if (error) *error = FormatErrorInstance();
       return nil;
     }
-    self.mappingBitMatrix = [self extractDataRegion:bitMatrix];
-    self.readMappingMatrix = [[ZXBitMatrix alloc] initWithWidth:mappingBitMatrix.width
-                                                          height:mappingBitMatrix.height];
+    _mappingBitMatrix = [self extractDataRegion:bitMatrix];
+    _readMappingMatrix = [[ZXBitMatrix alloc] initWithWidth:_mappingBitMatrix.width
+                                                     height:_mappingBitMatrix.height];
   }
   
   return self;
 }
-
-- (void)dealloc {
-
-  
-  
-}
-
 
 /**
  * Creates the version object based on the dimension of the original bit matrix from 
@@ -81,13 +67,13 @@
  * Data Matrix Code.
  */
 - (NSArray *)readCodewords {
-  NSMutableArray *result = [NSMutableArray arrayWithCapacity:version.totalCodewords];
+  NSMutableArray *result = [NSMutableArray arrayWithCapacity:self.version.totalCodewords];
   
   int row = 4;
   int column = 0;
   
-  int numRows = mappingBitMatrix.height;
-  int numColumns = mappingBitMatrix.width;
+  int numRows = self.mappingBitMatrix.height;
+  int numColumns = self.mappingBitMatrix.width;
   
   BOOL corner1Read = NO;
   BOOL corner2Read = NO;
@@ -96,29 +82,29 @@
   
   do {
     if ((row == numRows) && (column == 0) && !corner1Read) {
-      [result addObject:[NSNumber numberWithInt:[self readCorner1:numRows numColumns:numColumns]]];
+      [result addObject:@([self readCorner1:numRows numColumns:numColumns])];
       row -= 2;
       column += 2;
       corner1Read = YES;
     } else if ((row == numRows - 2) && (column == 0) && ((numColumns & 0x03) != 0) && !corner2Read) {
-      [result addObject:[NSNumber numberWithInt:[self readCorner2:numRows numColumns:numColumns]]];
+      [result addObject:@([self readCorner2:numRows numColumns:numColumns])];
       row -= 2;
       column += 2;
       corner2Read = YES;
     } else if ((row == numRows + 4) && (column == 2) && ((numColumns & 0x07) == 0) && !corner3Read) {
-      [result addObject:[NSNumber numberWithInt:[self readCorner3:numRows numColumns:numColumns]]];
+      [result addObject:@([self readCorner3:numRows numColumns:numColumns])];
       row -= 2;
       column += 2;
       corner3Read = YES;
     } else if ((row == numRows - 2) && (column == 0) && ((numColumns & 0x07) == 4) && !corner4Read) {
-      [result addObject:[NSNumber numberWithInt:[self readCorner4:numRows numColumns:numColumns]]];
+      [result addObject:@([self readCorner4:numRows numColumns:numColumns])];
       row -= 2;
       column += 2;
       corner4Read = YES;
     } else {
       do {
-        if ((row < numRows) && (column >= 0) && ![readMappingMatrix getX:column y:row]) {
-          [result addObject:[NSNumber numberWithInt:[self readUtah:row column:column numRows:numRows numColumns:numColumns]]];
+        if ((row < numRows) && (column >= 0) && ![self.readMappingMatrix getX:column y:row]) {
+          [result addObject:@([self readUtah:row column:column numRows:numRows numColumns:numColumns])];
         }
         row -= 2;
         column += 2;
@@ -127,8 +113,8 @@
       column += 3;
       
       do {
-        if ((row >= 0) && (column < numColumns) && ![readMappingMatrix getX:column y:row]) {
-          [result addObject:[NSNumber numberWithInt:[self readUtah:row column:column numRows:numRows numColumns:numColumns]]];
+        if ((row >= 0) && (column < numColumns) && ![self.readMappingMatrix getX:column y:row]) {
+          [result addObject:@([self readUtah:row column:column numRows:numRows numColumns:numColumns])];
         }
         row += 2;
         column -= 2;
@@ -138,7 +124,7 @@
     }
   } while ((row < numRows) || (column < numColumns));
   
-  if ([result count] != version.totalCodewords) {
+  if ([result count] != self.version.totalCodewords) {
     return nil;
   }
   return result;
@@ -157,8 +143,8 @@
     column += numColumns;
     row += 4 - ((numColumns + 4) & 0x07);
   }
-  [readMappingMatrix setX:column y:row];
-  return [mappingBitMatrix getX:column y:row];
+  [self.readMappingMatrix setX:column y:row];
+  return [self.mappingBitMatrix getX:column y:row];
 }
 
 
@@ -377,15 +363,15 @@
  * alignment patterns.
  */
 - (ZXBitMatrix *)extractDataRegion:(ZXBitMatrix *)bitMatrix {
-  int symbolSizeRows = version.symbolSizeRows;
-  int symbolSizeColumns = version.symbolSizeColumns;
+  int symbolSizeRows = self.version.symbolSizeRows;
+  int symbolSizeColumns = self.version.symbolSizeColumns;
   
   if (bitMatrix.height != symbolSizeRows) {
     [NSException raise:NSInvalidArgumentException format:@"Dimension of bitMatrix must match the version size"];
   }
   
-  int dataRegionSizeRows = version.dataRegionSizeRows;
-  int dataRegionSizeColumns = version.dataRegionSizeColumns;
+  int dataRegionSizeRows = self.version.dataRegionSizeRows;
+  int dataRegionSizeColumns = self.version.dataRegionSizeColumns;
   
   int numDataRegionsRow = symbolSizeRows / dataRegionSizeRows;
   int numDataRegionsColumn = symbolSizeColumns / dataRegionSizeColumns;

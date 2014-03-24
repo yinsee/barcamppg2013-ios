@@ -24,31 +24,28 @@ const int EXTENSION_START_PATTERN[EXTENSION_START_PATTERN_LEN] = {1,1,2};
 
 @interface ZXUPCEANExtensionSupport ()
 
-@property (nonatomic, retain) ZXUPCEANExtension2Support *twoSupport;
-@property (nonatomic, retain) ZXUPCEANExtension5Support *fiveSupport;
+@property (nonatomic, strong) ZXUPCEANExtension2Support *twoSupport;
+@property (nonatomic, strong) ZXUPCEANExtension5Support *fiveSupport;
 
 @end
 
 @implementation ZXUPCEANExtensionSupport
 
-@synthesize twoSupport;
-@synthesize fiveSupport;
-
 - (id)init {
   if (self = [super init]) {
-    self.twoSupport = [[ZXUPCEANExtension2Support alloc] init];
-    self.fiveSupport = [[ZXUPCEANExtension5Support alloc] init];
+    _twoSupport = [[ZXUPCEANExtension2Support alloc] init];
+    _fiveSupport = [[ZXUPCEANExtension5Support alloc] init];
   }
 
   return self;
 }
 
-- (void)dealloc {
-
-}
-
 - (ZXResult *)decodeRow:(int)rowNumber row:(ZXBitArray *)row rowOffset:(int)rowOffset error:(NSError **)error {
   NSRange extensionStartRange = [ZXUPCEANReader findGuardPattern:row rowOffset:rowOffset whiteFirst:NO pattern:(int *)EXTENSION_START_PATTERN patternLen:EXTENSION_START_PATTERN_LEN error:error];
+
+  if (extensionStartRange.location == NSNotFound) {
+    return nil;
+  }
 
   ZXResult *result = [self.fiveSupport decodeRow:rowNumber row:row extensionStartRange:extensionStartRange error:error];
   if (!result) {

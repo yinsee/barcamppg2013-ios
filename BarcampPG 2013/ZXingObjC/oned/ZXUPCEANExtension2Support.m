@@ -23,12 +23,6 @@
 #import "ZXUPCEANExtension2Support.h"
 #import "ZXUPCEANReader.h"
 
-@interface ZXUPCEANExtension2Support ()
-
-- (NSMutableDictionary *)parseExtensionString:(NSString *)raw;
-
-@end
-
 @implementation ZXUPCEANExtension2Support
 
 - (ZXResult *)decodeRow:(int)rowNumber row:(ZXBitArray *)row extensionStartRange:(NSRange)extensionStartRange error:(NSError **)error {
@@ -43,9 +37,8 @@
   ZXResult *extensionResult = [[ZXResult alloc] initWithText:resultString
                                                      rawBytes:nil
                                                        length:0
-                                                 resultPoints:[NSArray arrayWithObjects:
-                                                               [[ZXResultPoint alloc] initWithX:(extensionStartRange.location + NSMaxRange(extensionStartRange)) / 2.0f y:rowNumber],
-                                                               [[ZXResultPoint alloc] initWithX:end y:rowNumber], nil]
+                                                 resultPoints:@[[[ZXResultPoint alloc] initWithX:(extensionStartRange.location + NSMaxRange(extensionStartRange)) / 2.0f y:rowNumber],
+                                                                [[ZXResultPoint alloc] initWithX:end y:rowNumber]]
                                                        format:kBarcodeFormatUPCEANExtension];
   if (extensionData != nil) {
     [extensionResult putAllMetadata:extensionData];
@@ -59,7 +52,7 @@
   memset(counters, 0, countersLen * sizeof(int));
 
   int end = [row size];
-  int rowOffset = NSMaxRange(startRange);
+  int rowOffset = (int)NSMaxRange(startRange);
 
   int checkParity = 0;
 
@@ -99,8 +92,8 @@
   if (raw.length != 2) {
     return nil;
   }
-  return [NSMutableDictionary dictionaryWithObject:[NSNumber numberWithInt:[raw intValue]]
-                                            forKey:[NSNumber numberWithInt:kResultMetadataTypeIssueNumber]];
+  return [NSMutableDictionary dictionaryWithObject:@([raw intValue])
+                                            forKey:@(kResultMetadataTypeIssueNumber)];
 }
 
 @end

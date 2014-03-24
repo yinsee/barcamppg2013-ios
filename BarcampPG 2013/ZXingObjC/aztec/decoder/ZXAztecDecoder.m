@@ -77,43 +77,41 @@ static NSString *DIGIT_TABLE[] = {
 @interface ZXAztecDecoder ()
 
 @property (nonatomic, assign) int codewordSize;
-@property (nonatomic, retain) ZXAztecDetectorResult *ddata;
+@property (nonatomic, strong) ZXAztecDetectorResult *ddata;
 @property (nonatomic, assign) int invertedBitCount;
 @property (nonatomic, assign) int numCodewords;
-
-- (NSString *)character:(int)table code:(int)code;
-- (NSArray *)correctBits:(NSArray *)rawbits error:(NSError **)error;
-- (NSString *)encodedData:(NSArray *)correctedBits error:(NSError **)error;
-- (NSArray *)extractBits:(ZXBitMatrix *)matrix;
-- (int)readCode:(NSArray *)rawbits startIndex:(int)startIndex length:(unsigned int)length;
-- (ZXBitMatrix *)removeDashedLines:(ZXBitMatrix *)matrix;
-- (int)table:(unichar)t;
 
 @end
 
 @implementation ZXAztecDecoder
 
-@synthesize codewordSize;
-@synthesize ddata;
-@synthesize invertedBitCount;
-@synthesize numCodewords;
-
 - (ZXDecoderResult *)decode:(ZXAztecDetectorResult *)detectorResult error:(NSError **)error {
   self.ddata = detectorResult;
   ZXBitMatrix *matrix = [detectorResult bits];
-  if (![ddata compact]) {
-    matrix = [self removeDashedLines:[ddata bits]];
+  if (![self.ddata compact]) {
+    matrix = [self removeDashedLines:[self.ddata bits]];
   }
-  NSArray *rawbits = [self extractBits:matrix];
-  if (!rawbits) {
+
+  BOOL *rawbits;
+  NSUInteger rawbitsLength = [self extractBits:matrix pBits:&rawbits];
+  if (rawbitsLength == 0) {
     if (error) *error = FormatErrorInstance();
     return nil;
   }
-  NSArray *correctedBits = [self correctBits:rawbits error:error];
-  if (!correctedBits) {
+
+  BOOL *correctedBits;
+  NSUInteger correctedBitsLength = [self correctBits:rawbits bitsLength:rawbitsLength pBits:&correctedBits error:error];
+  free(rawbits);
+  rawbits = NULL;
+  if (correctedBitsLength == 0) {
     return nil;
   }
-  NSString *result = [self encodedData:correctedBits error:error];
+
+  NSString *result = [self encodedData:correctedBits length:correctedBitsLength error:error];
+
+  free(correctedBits);
+  correctedBits = NULL;
+
   if (!result) {
     return nil;
   }
@@ -125,10 +123,11 @@ static NSString *DIGIT_TABLE[] = {
  * 
  * Gets the string encoded in the aztec code bits
  */
-- (NSString *)encodedData:(NSArray *)correctedBits error:(NSError **)error {
+- (NSString *)encodedData:(BOOL *)correctedBits length:(NSUInteger)correctedBitsLength error:(NSError **)error {
   int endIndex = self.codewordSize * [self.ddata nbDatablocks] - self.invertedBitCount;
-  if (endIndex > [correctedBits count]) {
+  if (endIndex > correctedBitsLength) {
     if (error) *error = FormatErrorInstance();
+    return nil;
   }
   int lastTable = UPPER;
   int table = UPPER;
@@ -188,7 +187,7 @@ static NSString *DIGIT_TABLE[] = {
         int size = 5;
 
         if (table == DIGIT) {
-        size = 4;
+          size = 4;
         }
 
         if (endIndex - startIndex < size) {
@@ -280,15 +279,15 @@ static NSString *DIGIT_TABLE[] = {
 /**
  * Performs RS error correction on an array of bits
  */
-- (NSArray *)correctBits:(NSArray *)rawbits error:(NSError **)error {
+- (NSUInteger)correctBits:(BOOL *)rawbits bitsLength:(NSUInteger)rawbitsLength pBits:(BOOL **)pBits error:(NSError **)error {
   ZXGenericGF *gf;
   if ([self.ddata nbLayers] <= 2) {
     self.codewordSize = 6;
     gf = [ZXGenericGF AztecData6];
-  } else if ([ddata nbLayers] <= 8) {
+  } else if ([self.ddata nbLayers] <= 8) {
     self.codewordSize = 8;
     gf = [ZXGenericGF AztecData8];
-  } else if ([ddata nbLayers] <= 22) {
+  } else if ([self.ddata nbLayers] <= 22) {
     self.codewordSize = 10;
     gf = [ZXGenericGF AztecData10];
   } else {
@@ -302,10 +301,10 @@ static NSString *DIGIT_TABLE[] = {
 
   if ([self.ddata compact]) {
     offset = NB_BITS_COMPACT[[self.ddata nbLayers]] - self.numCodewords * self.codewordSize;
-    numECCodewords = NB_DATABLOCK_COMPACT[[ddata nbLayers]] - numDataCodewords;
+    numECCodewords = NB_DATABLOCK_COMPACT[[self.ddata nbLayers]] - numDataCodewords;
   } else {
-    offset = NB_BITS[[ddata nbLayers]] - numCodewords * codewordSize;
-    numECCodewords = NB_DATABLOCK[[ddata nbLayers]] - numDataCodewords;
+    offset = NB_BITS[[self.ddata nbLayers]] - self.numCodewords * self.codewordSize;
+    numECCodewords = NB_DATABLOCK[[self.ddata nbLayers]] - numDataCodewords;
   }
 
   int dataWordsLen = self.numCodewords;
@@ -314,7 +313,7 @@ static NSString *DIGIT_TABLE[] = {
     dataWords[i] = 0;
     int flag = 1;
     for (int j = 1; j <= self.codewordSize; j++) {
-      if ([[rawbits objectAtIndex:codewordSize * i + codewordSize - j + offset] boolValue]) {
+      if (rawbits[self.codewordSize * i + self.codewordSize - j + offset]) {
         dataWords[i] += flag;
       }
       flag <<= 1;
@@ -329,16 +328,15 @@ static NSString *DIGIT_TABLE[] = {
     } else {
       if (error) *error = decodeError;
     }
-    return nil;
+    return 0;
   }
 
   offset = 0;
   self.invertedBitCount = 0;
 
-  NSMutableArray *correctedBits = [NSMutableArray array];
-  for (int i = 0; i < numDataCodewords*codewordSize; i++) {
-    [correctedBits addObject:[NSNumber numberWithBool:NO]];
-  }
+  NSUInteger correctedBitsLength = numDataCodewords * self.codewordSize;
+  BOOL *correctedBits = (BOOL *)malloc(correctedBitsLength * sizeof(BOOL));
+  memset(correctedBits, NO, correctedBitsLength * sizeof(BOOL));
 
   for (int i = 0; i < numDataCodewords; i++) {
     BOOL seriesColor = NO;
@@ -351,7 +349,7 @@ static NSString *DIGIT_TABLE[] = {
       if (seriesCount == self.codewordSize - 1) {
         if (color == seriesColor) {
           if (error) *error = FormatErrorInstance();
-          return nil;
+          return 0;
         }
         seriesColor = NO;
         seriesCount = 0;
@@ -365,41 +363,39 @@ static NSString *DIGIT_TABLE[] = {
           seriesColor = color;
         }
 
-        [correctedBits replaceObjectAtIndex:i * self.codewordSize + j - offset withObject:[NSNumber numberWithBool:color]];
+        correctedBits[i * self.codewordSize + j - offset] = color;
       }
 
-      flag = (int)(((unsigned int)flag) >> 1);
+      flag = (int)(((NSUInteger)flag) >> 1);
     }
   }
 
-  return correctedBits;
+  *pBits = correctedBits;
+  return correctedBitsLength;
 }
 
 
 /**
  * Gets the array of bits from an Aztec Code matrix
  */
-- (NSArray *)extractBits:(ZXBitMatrix *)matrix {
-  NSMutableArray *rawbits;
-  int capacity;
+- (NSUInteger)extractBits:(ZXBitMatrix *)matrix pBits:(BOOL **)pBits {
+  NSUInteger rawBitsLength;
   if ([self.ddata compact]) {
     if ([self.ddata nbLayers] > (sizeof(NB_BITS_COMPACT) / sizeof(int))) {
-      return nil;
+      return 0;
     }
-    capacity = NB_BITS_COMPACT[[self.ddata nbLayers]];
-    self.numCodewords = NB_DATABLOCK_COMPACT[[ddata nbLayers]];
+    rawBitsLength = NB_BITS_COMPACT[[self.ddata nbLayers]];
+    self.numCodewords = NB_DATABLOCK_COMPACT[[self.ddata nbLayers]];
   } else {
     if ([self.ddata nbLayers] > (sizeof(NB_BITS) / sizeof(int))) {
-      return nil;
+      return 0;
     }
-    capacity = NB_BITS[[self.ddata nbLayers]];
+    rawBitsLength = NB_BITS[[self.ddata nbLayers]];
     self.numCodewords = NB_DATABLOCK[[self.ddata nbLayers]];
   }
 
-  rawbits = [NSMutableArray arrayWithCapacity:capacity];
-  for (int i = 0; i < capacity; i++) {
-    [rawbits addObject:[NSNumber numberWithBool:NO]];
-  }
+  BOOL *rawbits = (BOOL *)malloc(rawBitsLength * sizeof(BOOL));
+  memset(rawbits, NO, rawBitsLength * sizeof(BOOL));
 
   int layer = [self.ddata nbLayers];
   int size = matrix.height;
@@ -410,23 +406,19 @@ static NSString *DIGIT_TABLE[] = {
     int flip = 0;
 
     for (int i = 0; i < 2 * size - 4; i++) {
-      [rawbits replaceObjectAtIndex:rawbitsOffset + i
-                         withObject:[NSNumber numberWithBool:[matrix getX:matrixOffset + flip y:matrixOffset + i / 2]]];
+      rawbits[rawbitsOffset + i] = [matrix getX:matrixOffset + flip y:matrixOffset + i / 2];
 
-      [rawbits replaceObjectAtIndex:rawbitsOffset + 2 * size - 4 + i
-                         withObject:[NSNumber numberWithBool:[matrix getX:matrixOffset + i / 2 y:matrixOffset + size - 1 - flip]]];
+      rawbits[rawbitsOffset + 2 * size - 4 + i] = [matrix getX:matrixOffset + i / 2 y:matrixOffset + size - 1 - flip];
 
       flip = (flip + 1) % 2;
     }
 
     flip = 0;
     for (int i = 2 * size + 1; i > 5; i--) {
-      [rawbits replaceObjectAtIndex:rawbitsOffset + 4 * size - 8 + (2 * size - i) + 1
-                         withObject:[NSNumber numberWithBool:[matrix getX:matrixOffset + size - 1 - flip y:matrixOffset + i / 2 - 1]]];
-
-      [rawbits replaceObjectAtIndex:rawbitsOffset + 6 * size - 12 + (2 * size - i) + 1
-                         withObject:[NSNumber numberWithBool:[matrix getX:matrixOffset + i / 2 - 1 y:matrixOffset + flip]]];
-
+      rawbits[rawbitsOffset + 4 * size - 8 + (2 * size - i) + 1] =
+        [matrix getX:matrixOffset + size - 1 - flip y:matrixOffset + i / 2 - 1];
+      rawbits[rawbitsOffset + 6 * size - 12 + (2 * size - i) + 1] =
+        [matrix getX:matrixOffset + i / 2 - 1 y:matrixOffset + flip];
       flip = (flip + 1) % 2;
     }
 
@@ -436,7 +428,8 @@ static NSString *DIGIT_TABLE[] = {
     size -= 4;
   }
 
-  return rawbits;
+  *pBits = rawbits;
+  return rawBitsLength;
 }
 
 
@@ -474,20 +467,17 @@ static NSString *DIGIT_TABLE[] = {
 /**
  * Reads a code of given length and at given index in an array of bits
  */
-- (int)readCode:(NSArray *)rawbits startIndex:(int)startIndex length:(unsigned int)length {
+- (int)readCode:(BOOL *)rawbits startIndex:(int)startIndex length:(int)length {
   int res = 0;
 
   for (int i = startIndex; i < startIndex + length; i++) {
     res <<= 1;
-    if ([[rawbits objectAtIndex:i] boolValue]) {
+    if (rawbits[i]) {
       res++;
     }
   }
 
   return res;
-}
-
-- (void) dealloc {
 }
 
 @end

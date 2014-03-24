@@ -37,20 +37,9 @@ char const ALPHANUMERIC_CHARS[45] = {
 
 int const GB2312_SUBSET = 1;
 
-@interface ZXQRCodeDecodedBitStreamParser ()
-
-+ (BOOL)decodeHanziSegment:(ZXBitSource *)bits result:(NSMutableString *)result count:(int)count;
-+ (BOOL)decodeKanjiSegment:(ZXBitSource *)bits result:(NSMutableString *)result count:(int)count;
-+ (BOOL)decodeByteSegment:(ZXBitSource *)bits result:(NSMutableString *)result count:(int)count currentCharacterSetECI:(ZXCharacterSetECI *)currentCharacterSetECI byteSegments:(NSMutableArray *)byteSegments hints:(ZXDecodeHints *)hints;
-+ (BOOL)decodeAlphanumericSegment:(ZXBitSource *)bits result:(NSMutableString *)result count:(int)count fc1InEffect:(BOOL)fc1InEffect;
-+ (BOOL)decodeNumericSegment:(ZXBitSource *)bits result:(NSMutableString *)result count:(int)count;
-+ (int)parseECIValue:(ZXBitSource *)bits;
-
-@end
-
 @implementation ZXQRCodeDecodedBitStreamParser
 
-+ (ZXDecoderResult *)decode:(unsigned char *)bytes length:(unsigned int)length version:(ZXQRCodeVersion *)version
++ (ZXDecoderResult *)decode:(int8_t *)bytes length:(unsigned int)length version:(ZXQRCodeVersion *)version
                     ecLevel:(ZXErrorCorrectionLevel *)ecLevel hints:(ZXDecodeHints *)hints error:(NSError **)error {
   ZXBitSource *bits = [[ZXBitSource alloc] initWithBytes:bytes length:length];
   NSMutableString *result = [NSMutableString stringWithCapacity:50];
@@ -200,7 +189,7 @@ int const GB2312_SUBSET = 1;
   if (count << 3 > bits.available) {
     return NO;
   }
-  unsigned char readBytes[count];
+  int8_t readBytes[count];
   NSMutableArray *readBytesArray = [NSMutableArray arrayWithCapacity:count];
 
   for (int i = 0; i < count; i++) {
@@ -232,7 +221,7 @@ int const GB2312_SUBSET = 1;
 }
 
 + (BOOL)decodeAlphanumericSegment:(ZXBitSource *)bits result:(NSMutableString *)result count:(int)count fc1InEffect:(BOOL)fc1InEffect {
-  int start = result.length;
+  int start = (int)result.length;
 
   while (count > 1) {
     if ([bits available] < 11) {
@@ -241,10 +230,7 @@ int const GB2312_SUBSET = 1;
     int nextTwoCharsBits = [bits readBits:11];
     unichar next1 = [self toAlphaNumericChar:nextTwoCharsBits / 45];
     unichar next2 = [self toAlphaNumericChar:nextTwoCharsBits % 45];
-    if (next1 == -1 || next2 == -1) {
-      return NO;
-    }
-    
+
     [result appendFormat:@"%C%C", next1, next2];
     count -= 2;
   }
@@ -254,9 +240,6 @@ int const GB2312_SUBSET = 1;
       return NO;
     }
     unichar next1 = [self toAlphaNumericChar:[bits readBits:6]];
-    if (next1 == -1) {
-      return NO;
-    }
     [result appendFormat:@"%C", next1];
   }
   if (fc1InEffect) {
@@ -288,9 +271,6 @@ int const GB2312_SUBSET = 1;
     unichar next1 = [self toAlphaNumericChar:threeDigitsBits / 100];
     unichar next2 = [self toAlphaNumericChar:(threeDigitsBits / 10) % 10];
     unichar next3 = [self toAlphaNumericChar:threeDigitsBits % 10];
-    if (next1 == -1 || next2 == -1 || next3 == -1) {
-      return NO;
-    }
 
     [result appendFormat:@"%C%C%C", next1, next2, next3];
     count -= 3;
@@ -318,9 +298,6 @@ int const GB2312_SUBSET = 1;
       return NO;
     }
     unichar next1 = [self toAlphaNumericChar:digitBits];
-    if (next1 == -1) {
-      return NO;
-    }
     [result appendFormat:@"%C", next1];
   }
   return YES;

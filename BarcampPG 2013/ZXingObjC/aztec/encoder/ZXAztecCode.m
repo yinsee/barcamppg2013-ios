@@ -18,14 +18,4 @@
 
 @implementation ZXAztecCode
 
-@synthesize codeWords;
-@synthesize compact;
-@synthesize matrix;
-@synthesize layers;
-@synthesize size;
-
-- (void)dealloc {
-
-}
-
 @end

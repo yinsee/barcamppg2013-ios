@@ -25,27 +25,23 @@
 
 @implementation ZXEAN8Reader
 
-@synthesize decodeMiddleCounters;
-
 - (id)init {
   if (self = [super init]) {
-    self.decodeMiddleCounters = (int *)malloc(sizeof(4) * sizeof(int));
-    self.decodeMiddleCounters[0] = 0;
-    self.decodeMiddleCounters[1] = 0;
-    self.decodeMiddleCounters[2] = 0;
-    self.decodeMiddleCounters[3] = 0;
+    _decodeMiddleCounters = (int *)malloc(sizeof(4) * sizeof(int));
+    _decodeMiddleCounters[0] = 0;
+    _decodeMiddleCounters[1] = 0;
+    _decodeMiddleCounters[2] = 0;
+    _decodeMiddleCounters[3] = 0;
   }
 
   return self;
 }
 
 - (void)dealloc {
-  if (self.decodeMiddleCounters != NULL) {
-    free(self.decodeMiddleCounters);
-    self.decodeMiddleCounters = NULL;
+  if (_decodeMiddleCounters != NULL) {
+    free(_decodeMiddleCounters);
+    _decodeMiddleCounters = NULL;
   }
-
-  
 }
 
 - (int)decodeMiddle:(ZXBitArray *)row startRange:(NSRange)startRange result:(NSMutableString *)result error:(NSError **)error {
@@ -54,7 +50,7 @@
   memset(counters, 0, countersLen * sizeof(int));
 
   int end = row.size;
-  int rowOffset = NSMaxRange(startRange);
+  int rowOffset = (int)NSMaxRange(startRange);
 
   for (int x = 0; x < 4 && rowOffset < end; x++) {
     int bestMatch = [ZXUPCEANReader decodeDigit:row counters:counters countersLen:countersLen rowOffset:rowOffset patternType:UPC_EAN_PATTERNS_L_PATTERNS error:error];
@@ -71,7 +67,7 @@
   if (middleRange.location == NSNotFound) {
     return -1;
   }
-  rowOffset = NSMaxRange(middleRange);
+  rowOffset = (int)NSMaxRange(middleRange);
 
   for (int x = 0; x < 4 && rowOffset < end; x++) {
     int bestMatch = [ZXUPCEANReader decodeDigit:row counters:counters countersLen:countersLen rowOffset:rowOffset patternType:UPC_EAN_PATTERNS_L_PATTERNS error:error];

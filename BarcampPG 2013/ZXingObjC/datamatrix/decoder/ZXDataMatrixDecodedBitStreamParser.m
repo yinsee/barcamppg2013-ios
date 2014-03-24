@@ -59,22 +59,9 @@ enum {
   BASE256_ENCODE
 };
 
-@interface ZXDataMatrixDecodedBitStreamParser ()
-
-+ (BOOL)decodeAnsiX12Segment:(ZXBitSource *)bits result:(NSMutableString *)result;
-+ (int)decodeAsciiSegment:(ZXBitSource *)bits result:(NSMutableString *)result resultTrailer:(NSMutableString *)resultTrailer;
-+ (BOOL)decodeBase256Segment:(ZXBitSource *)bits result:(NSMutableString *)result byteSegments:(NSMutableArray *)byteSegments;
-+ (BOOL)decodeC40Segment:(ZXBitSource *)bits result:(NSMutableString *)result;
-+ (void)decodeEdifactSegment:(ZXBitSource *)bits result:(NSMutableString *)result;
-+ (BOOL)decodeTextSegment:(ZXBitSource *)bits result:(NSMutableString *)result;
-+ (void)parseTwoBytes:(int)firstByte secondByte:(int)secondByte result:(int[])result;
-+ (int)unrandomize255State:(int)randomizedBase256Codeword base256CodewordPosition:(int)base256CodewordPosition;
-
-@end
-
 @implementation ZXDataMatrixDecodedBitStreamParser
 
-+ (ZXDecoderResult *)decode:(unsigned char *)bytes length:(unsigned int)length error:(NSError **)error {
++ (ZXDecoderResult *)decode:(int8_t *)bytes length:(unsigned int)length error:(NSError **)error {
   ZXBitSource *bits = [[ZXBitSource alloc] initWithBytes:bytes length:length];
   NSMutableString *result = [NSMutableString stringWithCapacity:100];
   NSMutableString *resultTrailer = [NSMutableString string];
@@ -127,10 +114,10 @@ enum {
     [result appendString:resultTrailer];
   }
   return [[ZXDecoderResult alloc] initWithRawBytes:bytes
-                                             length:length
-                                               text:result
-                                       byteSegments:[byteSegments count] == 0 ? nil : byteSegments
-                                            ecLevel:nil];
+                                            length:length
+                                              text:result
+                                      byteSegments:[byteSegments count] == 0 ? nil : byteSegments
+                                           ecLevel:nil];
 }
 
 /**
@@ -482,12 +469,12 @@ enum {
   }
 
   NSMutableArray *bytesArray = [NSMutableArray arrayWithCapacity:count];
-  unsigned char bytes[count];
+  int8_t bytes[count];
   for (int i = 0; i < count; i++) {
     if ([bits available] < 8) {
       return NO;
     }
-    unsigned char byte = (unsigned char)[self unrandomize255State:[bits readBits:8] base256CodewordPosition:codewordPosition++];
+    int8_t byte = (int8_t)[self unrandomize255State:[bits readBits:8] base256CodewordPosition:codewordPosition++];
     bytes[i] = byte;
     [bytesArray addObject:[NSNumber numberWithChar:byte]];
   }

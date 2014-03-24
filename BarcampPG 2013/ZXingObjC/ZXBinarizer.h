@@ -15,7 +15,7 @@
  */
 
 #if TARGET_OS_EMBEDDED || TARGET_IPHONE_SIMULATOR
-#include <ImageIO/ImageIO.h>
+#import <ImageIO/ImageIO.h>
 #else
 #import <QuartzCore/QuartzCore.h>
 #endif
@@ -33,7 +33,7 @@
 
 @interface ZXBinarizer : NSObject
 
-@property (nonatomic, retain, readonly) ZXLuminanceSource *luminanceSource;
+@property (nonatomic, strong, readonly) ZXLuminanceSource *luminanceSource;
 @property (nonatomic, assign, readonly) int width;
 @property (nonatomic, assign, readonly) int height;
 
@@ -42,6 +42,6 @@
 - (ZXBitMatrix *)blackMatrixWithError:(NSError **)error;
 - (ZXBitArray *)blackRow:(int)y row:(ZXBitArray *)row error:(NSError **)error;
 - (ZXBinarizer *)createBinarizer:(ZXLuminanceSource *)source;
-- (CGImageRef)createImage;
+- (CGImageRef)createImage CF_RETURNS_RETAINED;
 
 @end

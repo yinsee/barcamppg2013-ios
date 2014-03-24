@@ -18,12 +18,6 @@
 #import "ZXAddressBookParsedResult.h"
 #import "ZXResult.h"
 
-@interface ZXAddressBookDoCoMoResultParser ()
-
-- (NSString *)parseName:(NSString *)name;
-
-@end
-
 @implementation ZXAddressBookDoCoMoResultParser
 
 - (ZXParsedResult *)parse:(ZXResult *)result {
@@ -35,7 +29,7 @@
   if (rawName == nil) {
     return nil;
   }
-  NSString *name = [self parseName:[rawName objectAtIndex:0]];
+  NSString *name = [self parseName:rawName[0]];
   NSString *pronunciation = [[self class] matchSingleDoCoMoPrefixedField:@"SOUND:" rawText:rawText trim:YES];
   NSArray *phoneNumbers = [[self class] matchDoCoMoPrefixedField:@"TEL:" rawText:rawText trim:YES];
   NSArray *emails = [[self class] matchDoCoMoPrefixedField:@"EMAIL:" rawText:rawText trim:YES];
@@ -67,7 +61,7 @@
 }
 
 - (NSString *)parseName:(NSString *)name {
-  int comma = [name rangeOfString:@","].location;
+  NSUInteger comma = [name rangeOfString:@","].location;
   if (comma != NSNotFound) {
     return [NSString stringWithFormat:@"%@ %@", [name substringFromIndex:comma + 1], [name substringToIndex:comma]];
   }

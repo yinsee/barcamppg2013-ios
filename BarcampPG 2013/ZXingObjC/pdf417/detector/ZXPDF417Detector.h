@@ -19,12 +19,12 @@
  * PDF417 Code is rotated or skewed, or partially obscured.
  */
 
-@class ZXBinaryBitmap, ZXDecodeHints, ZXDetectorResult;
+@class ZXBinaryBitmap, ZXBitArray, ZXBitMatrix, ZXDecodeHints, ZXPDF417DetectorResult;
 
 @interface ZXPDF417Detector : NSObject
 
-- (id)initWithImage:(ZXBinaryBitmap *)image;
-- (ZXDetectorResult *)detectWithError:(NSError **)error;
-- (ZXDetectorResult *)detect:(ZXDecodeHints *)hints error:(NSError **)error;
++ (ZXPDF417DetectorResult *)detect:(ZXBinaryBitmap *)image hints:(ZXDecodeHints *)hints multiple:(BOOL)multiple error:(NSError **)error;
++ (void)rotate180:(ZXBitMatrix *)bitMatrix;
++ (ZXBitArray *)mirror:(ZXBitArray *)input result:(ZXBitArray *)result;
 
 @end

@@ -29,31 +29,23 @@
 
 @interface ZXQRCodeDecoder ()
 
-@property (nonatomic, retain) ZXReedSolomonDecoder *rsDecoder;
-
-- (BOOL)correctErrors:(NSMutableArray *)codewordBytes numDataCodewords:(int)numDataCodewords error:(NSError **)error;
+@property (nonatomic, strong) ZXReedSolomonDecoder *rsDecoder;
 
 @end
 
 @implementation ZXQRCodeDecoder
 
-@synthesize rsDecoder;
-
 - (id)init {
   if (self = [super init]) {
-    self.rsDecoder = [[ZXReedSolomonDecoder alloc] initWithField:[ZXGenericGF QrCodeField256]];
+    _rsDecoder = [[ZXReedSolomonDecoder alloc] initWithField:[ZXGenericGF QrCodeField256]];
   }
 
   return self;
 }
 
-- (void)dealloc {
-}
-
 - (ZXDecoderResult *)decode:(BOOL **)image length:(unsigned int)length error:(NSError **)error {
   return [self decode:image length:length hints:nil error:error];
 }
-
 
 /**
  * Convenience method that can decode a QR Code represented as a 2D array of booleans.
@@ -76,7 +68,6 @@
 - (ZXDecoderResult *)decodeMatrix:(ZXBitMatrix *)bits error:(NSError **)error {
   return [self decodeMatrix:bits hints:nil error:error];
 }
-
 
 /**
  * Decodes a QR Code represented as a {@link BitMatrix}. A 1 or "true" is taken to mean a black module.
@@ -111,7 +102,7 @@
     return nil;
   }
 
-  unsigned char resultBytes[totalBytes];
+  int8_t resultBytes[totalBytes];
   int resultOffset = 0;
 
   for (ZXQRCodeDataBlock *dataBlock in dataBlocks) {
@@ -121,7 +112,7 @@
       return nil;
     }
     for (int i = 0; i < numDataCodewords; i++) {
-      resultBytes[resultOffset++] = [[codewordBytes objectAtIndex:i] charValue];
+      resultBytes[resultOffset++] = [codewordBytes[i] charValue];
     }
   }
 
@@ -134,16 +125,16 @@
  * correct the errors in-place using Reed-Solomon error correction.
  */
 - (BOOL)correctErrors:(NSMutableArray *)codewordBytes numDataCodewords:(int)numDataCodewords error:(NSError **)error {
-  int numCodewords = [codewordBytes count];
+  int numCodewords = (int)[codewordBytes count];
   int codewordsInts[numCodewords];
 
   for (int i = 0; i < numCodewords; i++) {
-    codewordsInts[i] = [[codewordBytes objectAtIndex:i] charValue] & 0xFF;
+    codewordsInts[i] = [codewordBytes[i] charValue] & 0xFF;
   }
 
-  int numECCodewords = [codewordBytes count] - numDataCodewords;
+  int numECCodewords = (int)[codewordBytes count] - numDataCodewords;
   NSError *decodeError = nil;
-  if (![rsDecoder decode:codewordsInts receivedLen:numCodewords twoS:numECCodewords error:&decodeError]) {
+  if (![self.rsDecoder decode:codewordsInts receivedLen:numCodewords twoS:numECCodewords error:&decodeError]) {
     if (decodeError.code == ZXReedSolomonError) {
       if (error) *error = ChecksumErrorInstance();
       return NO;
@@ -154,7 +145,7 @@
   }
 
   for (int i = 0; i < numDataCodewords; i++) {
-    [codewordBytes replaceObjectAtIndex:i withObject:[NSNumber numberWithChar:codewordsInts[i]]];
+    codewordBytes[i] = [NSNumber numberWithChar:codewordsInts[i]];
   }
   return YES;
 }

@@ -28,25 +28,18 @@ const int MATRIX_HEIGHT = 33;
 
 @interface ZXMaxiCodeReader ()
 
-@property (nonatomic, retain) ZXMaxiCodeDecoder *decoder;
-
-- (ZXBitMatrix *)extractPureBits:(ZXBitMatrix *)image;
+@property (nonatomic, strong) ZXMaxiCodeDecoder *decoder;
 
 @end
 
 @implementation ZXMaxiCodeReader
 
-@synthesize decoder;
-
 - (id)init {
   if (self = [super init]) {
-    self.decoder = [[ZXMaxiCodeDecoder alloc] init];
+    _decoder = [[ZXMaxiCodeDecoder alloc] init];
   }
 
   return self;
-}
-
-- (void) dealloc {
 }
 
 /**
@@ -77,7 +70,7 @@ const int MATRIX_HEIGHT = 33;
     return nil;
   }
 
-  NSArray *points = [NSArray array];
+  NSArray *points = @[];
   ZXResult *result = [ZXResult resultWithText:decoderResult.text
                                       rawBytes:decoderResult.rawBytes
                                         length:decoderResult.length
@@ -91,10 +84,9 @@ const int MATRIX_HEIGHT = 33;
   return result;
 }
 
-- (void) reset {
+- (void)reset {
   // do nothing
 }
-
 
 /**
  * This method detects a code in a "pure" image -- that is, pure monochrome image
@@ -108,10 +100,10 @@ const int MATRIX_HEIGHT = 33;
     return nil;
   }
 
-  int left = [[enclosingRectangle objectAtIndex:0] intValue];
-  int top = [[enclosingRectangle objectAtIndex:1] intValue];
-  int width = [[enclosingRectangle objectAtIndex:2] intValue];
-  int height = [[enclosingRectangle objectAtIndex:3] intValue];
+  int left = [enclosingRectangle[0] intValue];
+  int top = [enclosingRectangle[1] intValue];
+  int width = [enclosingRectangle[2] intValue];
+  int height = [enclosingRectangle[3] intValue];
 
   // Now just read off the bits
   ZXBitMatrix *bits = [[ZXBitMatrix alloc] initWithWidth:MATRIX_WIDTH height:MATRIX_HEIGHT];

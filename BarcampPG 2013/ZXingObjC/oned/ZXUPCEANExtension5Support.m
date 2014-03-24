@@ -27,15 +27,6 @@ const int CHECK_DIGIT_ENCODINGS[10] = {
   0x18, 0x14, 0x12, 0x11, 0x0C, 0x06, 0x03, 0x0A, 0x09, 0x05
 };
 
-@interface ZXUPCEANExtension5Support ()
-
-- (int)extensionChecksum:(NSString *)s;
-- (int)determineCheckDigit:(int)lgPatternFound;
-- (NSMutableDictionary *)parseExtensionString:(NSString *)raw;
-- (NSString *)parseExtension5String:(NSString *)raw;
-
-@end
-
 @implementation ZXUPCEANExtension5Support
 
 - (ZXResult *)decodeRow:(int)rowNumber row:(ZXBitArray *)row extensionStartRange:(NSRange)extensionStartRange error:(NSError **)error {
@@ -50,9 +41,8 @@ const int CHECK_DIGIT_ENCODINGS[10] = {
   ZXResult *extensionResult = [[ZXResult alloc] initWithText:resultString
                                                      rawBytes:nil
                                                        length:0
-                                                 resultPoints:[NSArray arrayWithObjects:
-                                                               [[ZXResultPoint alloc] initWithX:(extensionStartRange.location + NSMaxRange(extensionStartRange)) / 2.0f y:rowNumber],
-                                                               [[ZXResultPoint alloc] initWithX:end y:rowNumber], nil]
+                                                 resultPoints:@[[[ZXResultPoint alloc] initWithX:(extensionStartRange.location + NSMaxRange(extensionStartRange)) / 2.0f y:rowNumber],
+                                                                [[ZXResultPoint alloc] initWithX:end y:rowNumber]]
                                                        format:kBarcodeFormatUPCEANExtension];
   if (extensionData != nil) {
     [extensionResult putAllMetadata:extensionData];
@@ -66,7 +56,7 @@ const int CHECK_DIGIT_ENCODINGS[10] = {
   memset(counters, 0, countersLen * sizeof(int));
 
   int end = [row size];
-  int rowOffset = NSMaxRange(startRange);
+  int rowOffset = (int)NSMaxRange(startRange);
 
   int lgPatternFound = 0;
 
@@ -106,7 +96,7 @@ const int CHECK_DIGIT_ENCODINGS[10] = {
 }
 
 - (int)extensionChecksum:(NSString *)s {
-  int length = [s length];
+  int length = (int)[s length];
   int sum = 0;
   for (int i = length - 2; i >= 0; i -= 2) {
     sum += (int)[s characterAtIndex:i] - (int)'0';
@@ -134,7 +124,7 @@ const int CHECK_DIGIT_ENCODINGS[10] = {
   }
   id value = [self parseExtension5String:raw];
   if (value) {
-    return [NSMutableDictionary dictionaryWithObject:value forKey:[NSNumber numberWithInt:kResultMetadataTypeSuggestedPrice]];
+    return [NSMutableDictionary dictionaryWithObject:value forKey:@(kResultMetadataTypeSuggestedPrice)];
   } else {
     return nil;
   }
@@ -166,10 +156,10 @@ const int CHECK_DIGIT_ENCODINGS[10] = {
       break;
   }
   int rawAmount = [[raw substringFromIndex:1] intValue];
-  NSString *unitsString = [[NSNumber numberWithInt:rawAmount / 100] stringValue];
+  NSString *unitsString = [@(rawAmount / 100) stringValue];
   int hundredths = rawAmount % 100;
   NSString *hundredthsString = hundredths < 10 ?
-  [NSString stringWithFormat:@"0%d", hundredths] : [[NSNumber numberWithInt:hundredths] stringValue];
+  [NSString stringWithFormat:@"0%d", hundredths] : [@(hundredths) stringValue];
   return [NSString stringWithFormat:@"%@%@.%@", currency, unitsString, hundredthsString];
 }
 

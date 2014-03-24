@@ -25,44 +25,22 @@
 
 @interface ZXGeneralAppIdDecoder ()
 
-@property (nonatomic, retain) ZXBitArray *information;
-@property (nonatomic, retain) ZXCurrentParsingState *current;
-@property (nonatomic, retain) NSMutableString *buffer;
-
-- (ZXDecodedChar *)decodeAlphanumeric:(int)pos;
-- (ZXDecodedChar *)decodeIsoIec646:(int)pos;
-- (ZXDecodedNumeric *)decodeNumeric:(int)pos;
-- (BOOL)isAlphaOr646ToNumericLatch:(int)pos;
-- (BOOL)isAlphaTo646ToAlphaLatch:(int)pos;
-- (BOOL)isNumericToAlphaNumericLatch:(int)pos;
-- (BOOL)isStillAlpha:(int)pos;
-- (BOOL)isStillIsoIec646:(int)pos;
-- (BOOL)isStillNumeric:(int)pos;
-- (ZXBlockParsedResult *)parseAlphaBlock;
-- (ZXDecodedInformation *)parseBlocks;
-- (ZXBlockParsedResult *)parseIsoIec646Block;
-- (ZXBlockParsedResult *)parseNumericBlock;
+@property (nonatomic, strong) ZXBitArray *information;
+@property (nonatomic, strong) ZXCurrentParsingState *current;
+@property (nonatomic, strong) NSMutableString *buffer;
 
 @end
 
 @implementation ZXGeneralAppIdDecoder
 
-@synthesize information;
-@synthesize current;
-@synthesize buffer;
-
-- (id)initWithInformation:(ZXBitArray *)anInformation {
+- (id)initWithInformation:(ZXBitArray *)information {
   if (self = [super init]) {
-    self.current = [[ZXCurrentParsingState alloc] init];
-    self.buffer = [NSMutableString string];
-    self.information = anInformation;
+    _current = [[ZXCurrentParsingState alloc] init];
+    _buffer = [NSMutableString string];
+    _information = information;
   }
 
   return self;
-}
-
-- (void)dealloc {
-
 }
 
 - (NSString *)decodeAllCodes:(NSMutableString *)buff initialPosition:(int)initialPosition error:(NSError **)error {
@@ -78,7 +56,7 @@
     }
 
     if ([info remaining]) {
-      remaining = [[NSNumber numberWithInt:[info remainingValue]] stringValue];
+      remaining = [@([info remainingValue]) stringValue];
     } else {
       remaining = nil;
     }
@@ -129,7 +107,7 @@
 }
 
 - (int)extractNumericValueFromBitArray:(int)pos bits:(int)bits {
-  return [ZXGeneralAppIdDecoder extractNumericValueFromBitArray:information pos:pos bits:bits];
+  return [ZXGeneralAppIdDecoder extractNumericValueFromBitArray:self.information pos:pos bits:bits];
 }
 
 + (int)extractNumericValueFromBitArray:(ZXBitArray *)information pos:(int)pos bits:(int)bits {
@@ -196,23 +174,23 @@
     self.current.position = numeric.theNewPosition;
 
     if ([numeric firstDigitFNC1]) {
-      ZXDecodedInformation *_information;
+      ZXDecodedInformation *information;
       if ([numeric secondDigitFNC1]) {
-        _information = [[ZXDecodedInformation alloc] initWithNewPosition:self.current.position
-                                                                newString:self.buffer];
+        information = [[ZXDecodedInformation alloc] initWithNewPosition:self.current.position
+                                                              newString:self.buffer];
       } else {
-        _information = [[ZXDecodedInformation alloc] initWithNewPosition:self.current.position
-                                                                newString:self.buffer
-                                                           remainingValue:numeric.secondDigit];
+        information = [[ZXDecodedInformation alloc] initWithNewPosition:self.current.position
+                                                              newString:self.buffer
+                                                         remainingValue:numeric.secondDigit];
       }
-      return [[ZXBlockParsedResult alloc] initWithInformation:_information finished:YES];
+      return [[ZXBlockParsedResult alloc] initWithInformation:information finished:YES];
     }
     [self.buffer appendFormat:@"%d", numeric.firstDigit];
 
     if (numeric.secondDigitFNC1) {
-      ZXDecodedInformation *_information = [[ZXDecodedInformation alloc] initWithNewPosition:self.current.position
-                                                                                     newString:self.buffer];
-      return [[ZXBlockParsedResult alloc] initWithInformation:_information finished:YES];
+      ZXDecodedInformation *information = [[ZXDecodedInformation alloc] initWithNewPosition:self.current.position
+                                                                                  newString:self.buffer];
+      return [[ZXBlockParsedResult alloc] initWithInformation:information finished:YES];
     }
     [self.buffer appendFormat:@"%d", numeric.secondDigit];
   }
@@ -230,9 +208,9 @@
     self.current.position = iso.theNewPosition;
 
     if (iso.fnc1) {
-      ZXDecodedInformation *_information = [[ZXDecodedInformation alloc] initWithNewPosition:self.current.position
-                                                                                     newString:self.buffer];
-      return [[ZXBlockParsedResult alloc] initWithInformation:_information finished:YES];
+      ZXDecodedInformation *information = [[ZXDecodedInformation alloc] initWithNewPosition:self.current.position
+                                                                                  newString:self.buffer];
+      return [[ZXBlockParsedResult alloc] initWithInformation:information finished:YES];
     }
     [self.buffer appendFormat:@"%C", iso.value];
   }
@@ -240,7 +218,7 @@
   if ([self isAlphaOr646ToNumericLatch:self.current.position]) {
     self.current.position += 3;
     [self.current setNumeric];
-  } else if ([self isAlphaTo646ToAlphaLatch:current.position]) {
+  } else if ([self isAlphaTo646ToAlphaLatch:self.current.position]) {
     if (self.current.position + 5 < self.information.size) {
       self.current.position += 5;
     } else {
@@ -258,9 +236,9 @@
     self.current.position = alpha.theNewPosition;
 
     if (alpha.fnc1) {
-      ZXDecodedInformation *_information = [[ZXDecodedInformation alloc] initWithNewPosition:self.current.position
-                                                                                     newString:self.buffer];
-      return [[ZXBlockParsedResult alloc] initWithInformation:_information finished:YES];
+      ZXDecodedInformation *information = [[ZXDecodedInformation alloc] initWithNewPosition:self.current.position
+                                                                                  newString:self.buffer];
+      return [[ZXBlockParsedResult alloc] initWithInformation:information finished:YES];
     }
 
     [self.buffer appendFormat:@"%C", alpha.value];

@@ -11,7 +11,7 @@
 
 @interface QRScannerViewController ()
 @property (nonatomic, retain) ZXCapture* capture;
-- (NSString*)displayForResult:(ZXResult*)result;
+//- (NSString*)displayForResult:(ZXResult*)result;
 @end
 
 @implementation QRScannerViewController
@@ -30,6 +30,14 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     self.screenName = @"QR Scanner";
+    self.capture = [[ZXCapture alloc] init];
+    self.capture.camera = self.capture.back;
+    self.capture.layer.frame = self.view.bounds;
+    
+    [self.view.layer addSublayer:self.capture.layer];
+    for (UIView *view in self.view.subviews) {
+        [self.view bringSubviewToFront:view];
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -38,20 +46,9 @@
     // Dispose of any resources that can be recreated.
 }
 
-
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-
-    self.capture = [[ZXCapture alloc] init];
-//    self.capture.rotation = 90.0f;
-    // Use the back camera
-    self.capture.camera = self.capture.back;
-    self.capture.layer.frame = self.view.bounds;
-    [self.view.layer addSublayer:self.capture.layer];
-    for (UIView *view in self.view.subviews) {
-        [self.view bringSubviewToFront:view];
-    }
-    // seems to be faster if we set delegate at the end
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
     self.capture.delegate = self;
 }
 

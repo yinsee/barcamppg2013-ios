@@ -16,31 +16,16 @@
 
 #import "ZXExpandedRow.h"
 
-@interface ZXExpandedRow ()
-
-@property (nonatomic, retain) NSArray *pairs;
-@property (nonatomic, assign) int rowNumber;
-@property (nonatomic, assign) BOOL wasReversed;
-
-@end
-
 @implementation ZXExpandedRow
 
-@synthesize rowNumber;
-@synthesize wasReversed;
-@synthesize pairs;
-
-- (id)initWithPairs:(NSArray *)_pairs rowNumber:(int)_rowNumber wasReversed:(BOOL)_wasReversed {
+- (id)initWithPairs:(NSArray *)pairs rowNumber:(int)rowNumber wasReversed:(BOOL)wasReversed {
   if (self = [super init]) {
-    self.pairs = [NSArray arrayWithArray:_pairs];
-    self.rowNumber = _rowNumber;
-    self.wasReversed = _wasReversed;
+    _pairs = [NSArray arrayWithArray:pairs];
+    _rowNumber = rowNumber;
+    _wasReversed = wasReversed;
   }
 
   return self;
-}
-
-- (void)dealloc {
 }
 
 - (BOOL)isReversed {
@@ -67,7 +52,7 @@
 }
 
 - (NSUInteger)hash {
-  return self.pairs.hash ^ [NSNumber numberWithBool:self.wasReversed].hash;
+  return self.pairs.hash ^ @(self.wasReversed).hash;
 }
 
 @end

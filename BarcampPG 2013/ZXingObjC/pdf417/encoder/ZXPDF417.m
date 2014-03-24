@@ -508,47 +508,31 @@ static float HEIGHT = 2.0f; //mm
 
 @interface ZXPDF417 ()
 
-@property (nonatomic, retain) ZXBarcodeMatrix *barcodeMatrix;
+@property (nonatomic, strong) ZXBarcodeMatrix *barcodeMatrix;
 @property (nonatomic, assign) int minCols;
 @property (nonatomic, assign) int maxCols;
 @property (nonatomic, assign) int minRows;
 @property (nonatomic, assign) int maxRows;
 
-- (int)calculateNumberOfRowsM:(int)m k:(int)k c:(int)c;
-- (int)numberOfPadCodewordsM:(int)m k:(int)k c:(int)c r:(int)r;
-- (void)encodeCharPattern:(int)pattern len:(int)len logic:(ZXBarcodeRow *)logic;
-- (void)encodeLowLevel:(NSString *)fullCodewords c:(int)c r:(int)r errorCorrectionLevel:(int)aErrorCorrectionLevel logic:(ZXBarcodeMatrix *)logic;
-
 @end
 
 @implementation ZXPDF417
-
-@synthesize barcodeMatrix;
-@synthesize compact;
-@synthesize compaction;
-@synthesize minCols;
-@synthesize maxCols;
-@synthesize minRows;
-@synthesize maxRows;
 
 - (id)init {
   return [self initWithCompact:NO];
 }
 
-- (id)initWithCompact:(BOOL)aCompact {
+- (id)initWithCompact:(BOOL)compact {
   if (self = [super init]) {
-    self.compact = aCompact;
-    self.compaction = ZX_COMPACTION_AUTO;
-    self.minCols = 2;
-    self.maxCols = 30;
-    self.maxRows = 30;
-    self.minRows = 2;
+    _compact = compact;
+    _compaction = ZX_COMPACTION_AUTO;
+    _minCols = 2;
+    _maxCols = 30;
+    _maxRows = 30;
+    _minRows = 2;
   }
 
   return self;
-}
-
-- (void)dealloc {
 }
 
 /**
@@ -571,7 +555,7 @@ static float HEIGHT = 2.0f; //mm
 }
 
 - (void)encodeCharPattern:(int)pattern len:(int)len logic:(ZXBarcodeRow *)logic {
-  int map = 1 << len - 1;
+  int map = 1 << (len - 1);
   BOOL last = (pattern & map) != 0; //Initialize to inverse of first bit
   int width = 0;
   for (int i = 0; i < len; i++) {
@@ -640,7 +624,7 @@ static float HEIGHT = 2.0f; //mm
   if (!highLevel) {
     return NO;
   }
-  int sourceCodeWords = highLevel.length;
+  int sourceCodeWords = (int)highLevel.length;
 
   int dimension[2] = {0};
   if (![self determineDimensions:dimension sourceCodeWords:sourceCodeWords errorCorrectionCodeWords:errorCorrectionCodeWords error:error]) {
@@ -654,8 +638,7 @@ static float HEIGHT = 2.0f; //mm
 
   //2. step: construct data codewords
   if (sourceCodeWords + errorCorrectionCodeWords + 1 > 929) { // +1 for symbol length CW
-    NSDictionary *userInfo = [NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Encoded message contains to many code words, message to big (%d bytes)", msg.length]
-                                                         forKey:NSLocalizedDescriptionKey];
+    NSDictionary *userInfo = @{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Encoded message contains to many code words, message to big (%d bytes)", (int)msg.length]};
 
     if (error) *error = [[NSError alloc] initWithDomain:ZXErrorDomain code:ZXWriterError userInfo:userInfo];
     return NO;
@@ -716,16 +699,15 @@ static float HEIGHT = 2.0f; //mm
 
   // Handle case when min values were larger than necessary
   if (!result) {
-    int rows = [self calculateNumberOfRowsM:sourceCodeWords k:errorCorrectionCodeWords c:minCols];
-    if (rows < minRows) {
-      dimension[0] = minCols;
-      dimension[1] = minRows;
+    int rows = [self calculateNumberOfRowsM:sourceCodeWords k:errorCorrectionCodeWords c:self.minCols];
+    if (rows < self.minRows) {
+      dimension[0] = self.minCols;
+      dimension[1] = self.minRows;
     }
   }
 
   if (!result) {
-    NSDictionary *userInfo = [NSDictionary dictionaryWithObject:@"Unable to fit message in columns"
-                                                         forKey:NSLocalizedDescriptionKey];
+    NSDictionary *userInfo = @{NSLocalizedDescriptionKey: @"Unable to fit message in columns"};
 
     if (error) *error = [[NSError alloc] initWithDomain:ZXErrorDomain code:ZXWriterError userInfo:userInfo];
     return NO;
@@ -737,11 +719,11 @@ static float HEIGHT = 2.0f; //mm
 /**
  * Sets max/min row/col values
  */
-- (void)setDimensionsWithMaxCols:(int)_maxCols minCols:(int)_minCols maxRows:(int)_maxRows minRows:(int)_minRows {
-  self.maxCols = _maxCols;
-  self.minCols = _minCols;
-  self.maxRows = _maxRows;
-  self.minRows = _minRows;
+- (void)setDimensionsWithMaxCols:(int)maxCols minCols:(int)minCols maxRows:(int)maxRows minRows:(int)minRows {
+  self.maxCols = maxCols;
+  self.minCols = minCols;
+  self.maxRows = maxRows;
+  self.minRows = minRows;
 }
 
 @end

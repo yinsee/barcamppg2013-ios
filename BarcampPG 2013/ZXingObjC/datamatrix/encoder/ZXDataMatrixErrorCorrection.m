@@ -67,13 +67,6 @@ const int MODULO_VALUE = 0x12D;
 
 static int LOG[256], ALOG[256];
 
-@interface ZXDataMatrixErrorCorrection ()
-
-+ (NSString *)createECCBlock:(NSString *)codewords numECWords:(int)numECWords;
-+ (NSString *)createECCBlock:(NSString *)codewords start:(int)start len:(int)len numECWords:(int)numECWords;
-
-@end
-
 @implementation ZXDataMatrixErrorCorrection
 
 + (void)initialize {
@@ -131,7 +124,7 @@ static int LOG[256], ALOG[256];
 }
 
 + (NSString *)createECCBlock:(NSString *)codewords numECWords:(int)numECWords {
-  return [self createECCBlock:codewords start:0 len:codewords.length numECWords:numECWords];
+  return [self createECCBlock:codewords start:0 len:(int)codewords.length numECWords:numECWords];
 }
 
 + (NSString *)createECCBlock:(NSString *)codewords start:(int)start len:(int)len numECWords:(int)numECWords {
@@ -147,11 +140,9 @@ static int LOG[256], ALOG[256];
   }
   int *poly = (int *)FACTORS[table];
   unichar ecc[numECWords];
-  for (int i = 0; i < numECWords; i++) {
-    ecc[i] = 0;
-  }
+  memset(ecc, 0, numECWords * sizeof(unichar));
   for (int i = start; i < start + len; i++) {
-    int m = (unsigned char)ecc[numECWords - 1] ^ (unsigned char)[codewords characterAtIndex:i];
+    int m = ecc[numECWords - 1] ^ [codewords characterAtIndex:i];
     for (int k = numECWords - 1; k > 0; k--) {
       if (m != 0 && poly[k] != 0) {
         ecc[k] = (unichar) (ecc[k - 1] ^ ALOG[(LOG[m] + LOG[poly[k]]) % 255]);

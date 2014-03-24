@@ -16,6 +16,12 @@
 
 #import "ZXInvertedLuminanceSource.h"
 
+@interface ZXInvertedLuminanceSource ()
+
+@property (nonatomic, weak) ZXLuminanceSource *delegate;
+
+@end
+
 @implementation ZXInvertedLuminanceSource
 
 - (id)initWithDelegate:(ZXLuminanceSource *)delegate {
@@ -27,53 +33,50 @@
   return self;
 }
 
-- (void)dealloc {
-}
-
-- (unsigned char *)row:(int)y {
-  unsigned char *row = [_delegate row:y];
+- (int8_t *)row:(int)y {
+  int8_t *row = [self.delegate row:y];
   for (int i = 0; i < self.width; i++) {
-    row[i] = (unsigned char) (255 - (row[i] & 0xFF));
+    row[i] = (int8_t) (255 - (row[i] & 0xFF));
   }
   return row;
 }
 
-- (unsigned char *)matrix {
-  unsigned char *matrix = [_delegate matrix];
+- (int8_t *)matrix {
+  int8_t *matrix = [self.delegate matrix];
   int length = self.width * self.height;
-  unsigned char *invertedMatrix = (unsigned char *)malloc(length * sizeof(unsigned char));
+  int8_t *invertedMatrix = (int8_t *)malloc(length * sizeof(int8_t));
   for (int i = 0; i < length; i++) {
-    invertedMatrix[i] = (unsigned char) (255 - (matrix[i] & 0xFF));
+    invertedMatrix[i] = (int8_t) (255 - (matrix[i] & 0xFF));
   }
   free(matrix);
   return invertedMatrix;
 }
 
 - (BOOL)cropSupported {
-  return _delegate.cropSupported;
+  return self.delegate.cropSupported;
 }
 
 - (ZXLuminanceSource *)crop:(int)left top:(int)top width:(int)aWidth height:(int)aHeight {
-  return [[ZXInvertedLuminanceSource alloc] initWithDelegate:[_delegate crop:left top:top width:aWidth height:aHeight]];
+  return [[ZXInvertedLuminanceSource alloc] initWithDelegate:[self.delegate crop:left top:top width:aWidth height:aHeight]];
 }
 
 - (BOOL)rotateSupported {
-  return _delegate.rotateSupported;
+  return self.delegate.rotateSupported;
 }
 
 /**
  * Returns original delegate ZXLuminanceSource since invert undoes itself
  */
 - (ZXLuminanceSource *)invert {
-  return _delegate;
+  return self.delegate;
 }
 
 - (ZXLuminanceSource *)rotateCounterClockwise {
-  return [[ZXInvertedLuminanceSource alloc] initWithDelegate:[_delegate rotateCounterClockwise]];
+  return [[ZXInvertedLuminanceSource alloc] initWithDelegate:[self.delegate rotateCounterClockwise]];
 }
 
 - (ZXLuminanceSource *)rotateCounterClockwise45 {
-  return [[ZXInvertedLuminanceSource alloc] initWithDelegate:[_delegate rotateCounterClockwise45]];
+  return [[ZXInvertedLuminanceSource alloc] initWithDelegate:[self.delegate rotateCounterClockwise45]];
 }
 
 @end

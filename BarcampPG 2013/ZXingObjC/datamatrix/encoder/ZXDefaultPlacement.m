@@ -16,30 +16,7 @@
 
 #import "ZXDefaultPlacement.h"
 
-@interface ZXDefaultPlacement ()
-
-@property (nonatomic, copy) NSString *codewords;
-@property (nonatomic, assign) int numrows;
-@property (nonatomic, assign) int numcols;
-@property (nonatomic, assign) unsigned char *bits;
-@property (nonatomic, assign) int bitsLen;
-
-- (void)moduleAtRow:(int)row col:(int)col pos:(int)pos bit:(int)bit;
-- (void)utahAtRow:(int)row col:(int)col pos:(int)pos;
-- (void)corner1:(int)pos;
-- (void)corner2:(int)pos;
-- (void)corner3:(int)pos;
-- (void)corner4:(int)pos;
-
-@end
-
 @implementation ZXDefaultPlacement
-
-@synthesize codewords = _codewords;
-@synthesize numcols = _numcols;
-@synthesize numrows = _numrows;
-@synthesize bits = _bits;
-@synthesize bitsLen = _bitsLen;
 
 - (id)initWithCodewords:(NSString *)codewords numcols:(int)numcols numrows:(int)numrows {
   if (self = [super init]) {
@@ -47,7 +24,7 @@
     _numcols = numcols;
     _numrows = numrows;
     _bitsLen = numcols * numrows;
-    _bits = (unsigned char *)malloc(_bitsLen * sizeof(unsigned char));
+    _bits = (int8_t *)malloc(_bitsLen * sizeof(int8_t));
     memset(_bits, -1, _bitsLen); //Initialize with "not set" value
   }
 
@@ -66,11 +43,11 @@
 }
 
 - (void)setBitAtCol:(int)col row:(int)row bit:(BOOL)bit {
-  self.bits[row * self.numcols + col] = bit ? (unsigned char) 1 : (unsigned char) 0;
+  self.bits[row * self.numcols + col] = bit ? (int8_t) 1 : (int8_t) 0;
 }
 
 - (BOOL)hasBitAtCol:(int)col row:(int)row {
-  return self.bits[row * self.numcols + col] != 0xFF;
+  return self.bits[row * self.numcols + col] >= 0;
 }
 
 - (void)place {

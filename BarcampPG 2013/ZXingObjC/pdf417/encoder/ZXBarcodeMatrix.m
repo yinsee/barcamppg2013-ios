@@ -20,44 +20,33 @@
 @interface ZXBarcodeMatrix ()
 
 @property (nonatomic, assign) int currentRowIndex;
-@property (nonatomic, assign) int height;
-@property (nonatomic, retain) NSArray *rowMatrix;
-@property (nonatomic, assign) int width;
+@property (nonatomic, strong) NSArray *rowMatrix;
 
 @end
 
 @implementation ZXBarcodeMatrix
 
-@synthesize currentRowIndex;
-@synthesize height;
-@synthesize rowMatrix;
-@synthesize width;
-
-- (id)initWithHeight:(int)aHeight width:(int)aWidth {
+- (id)initWithHeight:(int)height width:(int)width {
   if (self = [super init]) {
-    NSMutableArray *_matrix = [NSMutableArray array];
-    for (int i = 0, matrixLength = aHeight + 2; i < matrixLength; i++) {
-      [_matrix addObject:[ZXBarcodeRow barcodeRowWithWidth:(aWidth + 4) * 17 + 1]];
+    NSMutableArray *matrix = [NSMutableArray array];
+    for (int i = 0, matrixLength = height + 2; i < matrixLength; i++) {
+      [matrix addObject:[ZXBarcodeRow barcodeRowWithWidth:(width + 4) * 17 + 1]];
     }
-    self.rowMatrix = _matrix;
-    self.width = aWidth * 17;
-    self.height = aHeight + 2;
-    self.currentRowIndex = 0;
+    _rowMatrix = matrix;
+    _width = width * 17;
+    _height = height + 2;
+    _currentRowIndex = 0;
   }
 
   return self;
 }
 
-- (void)dealloc {
-
-}
-
-- (void)setX:(int)x y:(int)y value:(unsigned char)value {
-  [[self.rowMatrix objectAtIndex:y] setX:x value:value];
+- (void)setX:(int)x y:(int)y value:(int8_t)value {
+  [self.rowMatrix[y] setX:x value:value];
 }
 
 - (void)setMatrixX:(int)x y:(int)y black:(BOOL)black {
-  [self setX:x y:y value:(unsigned char)(black ? 1 : 0)];
+  [self setX:x y:y value:(int8_t)(black ? 1 : 0)];
 }
 
 - (void)startRow {
@@ -65,27 +54,27 @@
 }
 
 - (ZXBarcodeRow *)currentRow {
-  return [self.rowMatrix objectAtIndex:self.currentRowIndex];
+  return self.rowMatrix[self.currentRowIndex];
 }
 
-- (unsigned char **)matrixWithHeight:(int *)pHeight width:(int *)pWidth {
+- (int8_t **)matrixWithHeight:(int *)pHeight width:(int *)pWidth {
   return [self scaledMatrixWithHeight:pHeight width:pWidth xScale:1 yScale:1];
 }
 
-- (unsigned char **)scaledMatrixWithHeight:(int *)pHeight width:(int *)pWidth scale:(int)scale {
+- (int8_t **)scaledMatrixWithHeight:(int *)pHeight width:(int *)pWidth scale:(int)scale {
   return [self scaledMatrixWithHeight:pHeight width:pWidth xScale:scale yScale:scale];
 }
 
-- (unsigned char **)scaledMatrixWithHeight:(int *)pHeight width:(int *)pWidth xScale:(int)xScale yScale:(int)yScale {
+- (int8_t **)scaledMatrixWithHeight:(int *)pHeight width:(int *)pWidth xScale:(int)xScale yScale:(int)yScale {
   int matrixHeight = self.height * yScale;
 
   if (pHeight) *pHeight = matrixHeight;
   if (pWidth) *pWidth = (self.width + 69) * xScale;
 
-  unsigned char **matrixOut = (unsigned char **)malloc(matrixHeight * sizeof(unsigned char *));
+  int8_t **matrixOut = (int8_t **)malloc(matrixHeight * sizeof(int8_t *));
   int yMax = self.height * yScale;
   for (int ii = 0; ii < yMax; ii++) {
-    matrixOut[yMax - ii - 1] = [[self.rowMatrix objectAtIndex:ii / yScale] scaledRow:xScale];
+    matrixOut[yMax - ii - 1] = [self.rowMatrix[ii / yScale] scaledRow:xScale];
   }
   return matrixOut;
 }

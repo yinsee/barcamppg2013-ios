@@ -63,20 +63,18 @@ static int WORD_SIZE[33] = {
   CHAR_MAP[TABLE_DIGIT][','] = 12;
   CHAR_MAP[TABLE_DIGIT]['.'] = 13;
 
-  const int mixedTableLen = 28;
-  int mixedTable[mixedTableLen] = {
+  int mixedTable[] = {
     '\0', ' ', '\1', '\2', '\3', '\4', '\5', '\6', '\7', '\b', '\t', '\n', '\13', '\f', '\r',
     '\33', '\34', '\35', '\36', '\37', '@', '\\', '^', '_', '`', '|', '~', '\177'
   };
-  for (int i = 0; i < 28; i++) {
+  for (int i = 0; i < sizeof(mixedTable) / sizeof(int); i++) {
     CHAR_MAP[TABLE_MIXED][mixedTable[i]] = i;
   }
-  const int punctTableLen = 31;
-  int punctTable[punctTableLen] = {
+  int punctTable[] = {
     '\0', '\r', '\0', '\0', '\0', '\0', '!', '\'', '#', '$', '%', '&', '\'', '(', ')', '*', '+',
     ',', '-', '.', '/', ':', ';', '<', '=', '>', '?', '[', ']', '{', '}'
   };
-  for (int i = 0; i < punctTableLen; i++) {
+  for (int i = 0; i < sizeof(punctTable) / sizeof(int); i++) {
     if (punctTable[i] > 0) {
       CHAR_MAP[TABLE_PUNCT][punctTable[i]] = i;
     }
@@ -117,14 +115,14 @@ static int WORD_SIZE[33] = {
 /**
  * Encodes the given binary content as an Aztec symbol
  */
-+ (ZXAztecCode *)encode:(unsigned char *)data len:(int)len {
++ (ZXAztecCode *)encode:(int8_t *)data len:(int)len {
   return [self encode:data len:len minECCPercent:ZX_DEFAULT_AZTEC_EC_PERCENT];
 }
 
 /**
  * Encodes the given binary content as an Aztec symbol
  */
-+ (ZXAztecCode *)encode:(unsigned char *)data len:(int)len minECCPercent:(int)minECCPercent {
++ (ZXAztecCode *)encode:(int8_t *)data len:(int)len minECCPercent:(int)minECCPercent {
   // High-level encode
   ZXBitArray *bits = [self highLevelEncode:data len:len];
 
@@ -163,22 +161,25 @@ static int WORD_SIZE[33] = {
       }
     }
   }
-  if (layers == NB_BITS_LEN) {
+  if (layers == NB_BITS_LEN || wordSize == 0) {
     [NSException raise:NSInvalidArgumentException format:@"Data too large for an Aztec code"];
   }
 
   // pad the end
   int messageSizeInWords = (stuffedBits.size + wordSize - 1) / wordSize;
+  // This seems to be redundant?
+  /*
   for (int i = messageSizeInWords * wordSize - stuffedBits.size; i > 0; i--) {
     [stuffedBits appendBit:YES];
   }
+  */
 
   // generate check words
   ZXReedSolomonEncoder *rs = [[ZXReedSolomonEncoder alloc] initWithField:[self getGF:wordSize]];
   int totalSizeInFullWords = totalSymbolBits / wordSize;
 
   int messageWords[totalSizeInFullWords];
-  [self bitsToWords:stuffedBits wordSize:wordSize totalWords:totalSizeInFullWords message:(int **)&messageWords];
+  [self bitsToWords:stuffedBits wordSize:wordSize totalWords:totalSizeInFullWords message:messageWords];
   [rs encode:messageWords toEncodeLen:totalSizeInFullWords ecBytes:totalSizeInFullWords - messageSizeInWords];
 
   // convert to bit array and pad in the beginning
@@ -336,7 +337,7 @@ static int WORD_SIZE[33] = {
   int totalSizeInFullWords = totalSymbolBits / wordSize;
 
   int messageWords[totalSizeInFullWords];
-  [self bitsToWords:stuffedBits wordSize:wordSize totalWords:totalSizeInFullWords message:(int **)&messageWords];
+  [self bitsToWords:stuffedBits wordSize:wordSize totalWords:totalSizeInFullWords message:messageWords];
 
   [rs encode:messageWords toEncodeLen:totalSizeInFullWords ecBytes:totalSizeInFullWords - messageSizeInWords];
   int startPad = totalSymbolBits % wordSize;
@@ -348,15 +349,15 @@ static int WORD_SIZE[33] = {
   return messageBits;
 }
 
-+ (void)bitsToWords:(ZXBitArray *)stuffedBits wordSize:(int)wordSize totalWords:(int)totalWords message:(int **)message {
++ (void)bitsToWords:(ZXBitArray *)stuffedBits wordSize:(int)wordSize totalWords:(int)totalWords message:(int *)message {
   int i;
   int n;
   for (i = 0, n = stuffedBits.size / wordSize; i < n; i++) {
     int value = 0;
     for (int j = 0; j < wordSize; j++) {
-      value |= [stuffedBits get:i * wordSize + j] ? (1 << wordSize - j - 1) : 0;
+      value |= [stuffedBits get:i * wordSize + j] ? (1 << (wordSize - j - 1)) : 0;
     }
-    message[i] = &value;
+    message[i] = value;
   }
 }
 
@@ -402,6 +403,8 @@ static int WORD_SIZE[33] = {
   }
 
   // 2. pad last word to wordSize
+  // This seems to be redundant?
+  /*
   n = arrayOut.size;
   int remainder = n % wordSize;
   if (remainder != 0) {
@@ -416,10 +419,11 @@ static int WORD_SIZE[33] = {
     }
     [arrayOut appendBit:j == 0];
   }
+  */
   return arrayOut;
 }
 
-+ (ZXBitArray *)highLevelEncode:(unsigned char *)data len:(int)len {
++ (ZXBitArray *)highLevelEncode:(int8_t *)data len:(int)len {
   ZXBitArray *bits = [[ZXBitArray alloc] init];
   int mode = TABLE_UPPER;
   int idx[5] = {0, 0, 0, 0, 0};

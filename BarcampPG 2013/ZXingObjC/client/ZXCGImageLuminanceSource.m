@@ -18,15 +18,9 @@
 #import "ZXCGImageLuminanceSource.h"
 #import "ZXImage.h"
 
-@interface ZXCGImageLuminanceSource ()
-
-- (void)initializeWithImage:(CGImageRef)image left:(int)left top:(int)top width:(int)width height:(int)height;
-
-@end
-
 @implementation ZXCGImageLuminanceSource
 
-+ (CGImageRef)createImageFromBuffer:(CVImageBufferRef)buffer {
++ (CGImageRef)createImageFromBuffer:(CVImageBufferRef)buffer CF_RETURNS_RETAINED {
   return [self createImageFromBuffer:buffer
                                 left:0
                                  top:0
@@ -38,32 +32,32 @@
                                       left:(size_t)left
                                        top:(size_t)top
                                      width:(size_t)width
-                                    height:(size_t)height {
-  int bytesPerRow = (int)CVPixelBufferGetBytesPerRow(buffer);
-  int dataWidth = (int)CVPixelBufferGetWidth(buffer);
-  int dataHeight = (int)CVPixelBufferGetHeight(buffer);
+                                    height:(size_t)height CF_RETURNS_RETAINED {
+  size_t bytesPerRow = CVPixelBufferGetBytesPerRow(buffer);
+  size_t dataWidth = CVPixelBufferGetWidth(buffer);
+  size_t dataHeight = CVPixelBufferGetHeight(buffer);
 
   if (left + width > dataWidth ||
       top + height > dataHeight) {
     [NSException raise:NSInvalidArgumentException format:@"Crop rectangle does not fit within image data."];
   }
 
-  int newBytesPerRow = ((width*4+0xf)>>4)<<4;
+  size_t newBytesPerRow = ((width*4+0xf)>>4)<<4;
 
   CVPixelBufferLockBaseAddress(buffer,0); 
 
-  unsigned char *baseAddress =
-  (unsigned char *)CVPixelBufferGetBaseAddress(buffer); 
+  int8_t *baseAddress =
+  (int8_t *)CVPixelBufferGetBaseAddress(buffer); 
 
-  int size = newBytesPerRow*height;
-  unsigned char *bytes = (unsigned char*)malloc(size);
+  size_t size = newBytesPerRow*height;
+  int8_t *bytes = (int8_t *)malloc(size * sizeof(int8_t));
   if (newBytesPerRow == bytesPerRow) {
-    memcpy(bytes, baseAddress+top*bytesPerRow, size);
+    memcpy(bytes, baseAddress+top*bytesPerRow, size * sizeof(int8_t));
   } else {
     for(int y=0; y<height; y++) {
       memcpy(bytes+y*newBytesPerRow,
              baseAddress+left*4+(top+y)*bytesPerRow,
-             newBytesPerRow);
+             newBytesPerRow * sizeof(int8_t));
     }
   }
   CVPixelBufferUnlockBaseAddress(buffer, 0);
@@ -88,156 +82,163 @@
   return result;
 }
 
-- (id)initWithZXImage:(ZXImage *)_image 
-                 left:(size_t)_left
-                  top:(size_t)_top
-                width:(size_t)_width
-               height:(size_t)_height {
-  self = [self initWithCGImage:_image.cgimage left:(int)_left top:(int)_top width:(int)_width height:(int)_height];
-
-  return self;
+- (id)initWithZXImage:(ZXImage *)image
+                 left:(size_t)left
+                  top:(size_t)top
+                width:(size_t)width
+               height:(size_t)height {
+  return [self initWithCGImage:image.cgimage left:left top:top width:width height:height];
 }
 
-- (id)initWithZXImage:(ZXImage *)_image {
-  self = [self initWithCGImage:_image.cgimage];
-
-  return self;
+- (id)initWithZXImage:(ZXImage *)image {
+  return [self initWithCGImage:image.cgimage];
 }
 
-- (id)initWithCGImage:(CGImageRef)_image 
-                 left:(size_t)_left
-                  top:(size_t)_top
-                width:(size_t)_width
-               height:(size_t)_height {
-  if (self = [super init]) {
-    [self initializeWithImage:_image left:(int)_left top:(int)_top width:(int)_width height:(int)_height];
+- (id)initWithCGImage:(CGImageRef)image
+                 left:(size_t)left
+                  top:(size_t)top
+                width:(size_t)width
+               height:(size_t)height {
+  if (self = [super initWithWidth:(int)width height:(int)height]) {
+    [self initializeWithImage:image left:left top:top width:width height:height];
   }
 
   return self;
 }
 
-- (id)initWithCGImage:(CGImageRef)_image {
-  self = [self initWithCGImage:_image left:0 top:0 width:(int)CGImageGetWidth(_image) height:(int)CGImageGetHeight(_image)];
-
-  return self;
+- (id)initWithCGImage:(CGImageRef)image {
+  return [self initWithCGImage:image left:0 top:0 width:CGImageGetWidth(image) height:CGImageGetHeight(image)];
 }
 
 - (id)initWithBuffer:(CVPixelBufferRef)buffer
-                left:(size_t)_left
-                 top:(size_t)_top
-               width:(size_t)_width
-              height:(size_t)_height {
-  CGImageRef _image = [ZXCGImageLuminanceSource createImageFromBuffer:buffer left:(int)_left top:(int)_top width:(int)_width height:(int)_height];
+                left:(size_t)left
+                 top:(size_t)top
+               width:(size_t)width
+              height:(size_t)height {
+  CGImageRef image = [ZXCGImageLuminanceSource createImageFromBuffer:buffer left:left top:top width:width height:height];
 
-  self = [self initWithCGImage:_image];
+  self = [self initWithCGImage:image];
+
+  CGImageRelease(image);
 
   return self;
 }
 
-- (id )initWithBuffer:(CVPixelBufferRef)buffer {
-  CGImageRef _image = [ZXCGImageLuminanceSource createImageFromBuffer:buffer];
+- (id)initWithBuffer:(CVPixelBufferRef)buffer {
+  CGImageRef image = [ZXCGImageLuminanceSource createImageFromBuffer:buffer];
 
-  self = [self initWithCGImage:_image];
+  self = [self initWithCGImage:image];
+
+  CGImageRelease(image);
 
   return self;
 }
 
 - (CGImageRef)image {
-  return image;
+  return _image;
 }
 
 - (void)dealloc {  
-  if (image) {
-    CGImageRelease(image);
+  if (_image) {
+    CGImageRelease(_image);
   }
-  if (data) {
-    free(data);
+  if (_data) {
+    free(_data);
   }
 }
 
-- (unsigned char *)row:(int)y {
+- (int8_t *)row:(int)y {
   if (y < 0 || y >= self.height) {
     [NSException raise:NSInvalidArgumentException format:@"Requested row is outside the image: %d", y];
   }
 
-  unsigned char *row = (unsigned char *)malloc(self.width * sizeof(unsigned char));
+  int8_t *row = (int8_t *)malloc(self.width * sizeof(int8_t));
 
   int offset = y * self.width;
-  memcpy(row, data + offset, self.width);
+  memcpy(row, _data + offset, self.width);
   return row;
 }
 
-- (unsigned char *)matrix {
+- (int8_t *)matrix {
   int area = self.width * self.height;
 
-  unsigned char *result = (unsigned char *)malloc(area * sizeof(unsigned char));
-  memcpy(result, data, area * sizeof(unsigned char));
+  int8_t *result = (int8_t *)malloc(area * sizeof(int8_t));
+  memcpy(result, _data, area * sizeof(int8_t));
   return result;
 }
 
-- (void)initializeWithImage:(CGImageRef)cgimage left:(int)_left top:(int)_top width:(int)_width height:(int)_height {
-  data = 0;
-  image = CGImageRetain(cgimage);
-  left = _left;
-  top = _top;
-  self->width = _width;
-  self->height = _height;
-  int sourceWidth = (int)CGImageGetWidth(cgimage);
-  int sourceHeight = (int)CGImageGetHeight(cgimage);
+- (void)initializeWithImage:(CGImageRef)cgimage left:(size_t)left top:(size_t)top width:(size_t)width height:(size_t)height {
+  _data = 0;
+  _image = CGImageRetain(cgimage);
+  _left = left;
+  _top = top;
+  size_t sourceWidth = CGImageGetWidth(cgimage);
+  size_t sourceHeight = CGImageGetHeight(cgimage);
+  size_t selfWidth = self.width;
+  size_t selfHeight= self.height;
 
-  if (left + self.width > sourceWidth ||
-      top + self.height > sourceHeight ||
-      top < 0 ||
-      left < 0) {
+  if (left + selfWidth > sourceWidth ||
+      top + selfHeight > sourceHeight) {
     [NSException raise:NSInvalidArgumentException format:@"Crop rectangle does not fit within image data."];
   }
 
   CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-  CGContextRef context = CGBitmapContextCreate(0, self.width, self.height, 8, self.width * 4, colorSpace, kCGBitmapByteOrder32Little | kCGImageAlphaPremultipliedLast);
+  CGContextRef context = CGBitmapContextCreate(NULL, selfWidth, selfHeight, 8, selfWidth * 4, colorSpace, kCGBitmapByteOrder32Little | kCGImageAlphaPremultipliedLast);
+  CGColorSpaceRelease(colorSpace);
+
   CGContextSetAllowsAntialiasing(context, FALSE);
   CGContextSetInterpolationQuality(context, kCGInterpolationNone);
 
   if (top || left) {
-    CGContextClipToRect(context, CGRectMake(0, 0, self.width, self.height));
+    CGContextClipToRect(context, CGRectMake(0, 0, selfWidth, selfHeight));
   }
 
-  CGContextDrawImage(context, CGRectMake(-left, -top, self.width, self.height), image);
+  CGContextDrawImage(context, CGRectMake(-left, -top, selfWidth, selfHeight), self.image);
 
-  uint32_t *pixelData = (uint32_t *) malloc(self.width * self.height * sizeof(uint32_t));
-  memcpy(pixelData, CGBitmapContextGetData(context), self.width * self.height * sizeof(uint32_t));
-  CGContextRelease(context);
-  CGColorSpaceRelease(colorSpace);
+  uint32_t *pixelData = CGBitmapContextGetData(context);
 
-  data = (unsigned char *)malloc(self.width * self.height * sizeof(unsigned char));
+  _data = (int8_t *)malloc(selfWidth * selfHeight * sizeof(int8_t));
 
-  for (int i = 0; i < self.height * self.width; i++) {
-    uint32_t rgbPixel=pixelData[i];
+  dispatch_apply(selfHeight, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^(size_t idx) {
+    size_t stripe_start = idx * selfWidth;
+    size_t stripe_stop = stripe_start + selfWidth;
 
-    float red = (rgbPixel>>24)&0xFF;
-    float green = (rgbPixel>>16)&0xFF;
-    float blue = (rgbPixel>>8)&0xFF;
-    float alpha = (float)(rgbPixel & 0xFF) / 255.0f;
+    for (size_t i = stripe_start; i < stripe_stop; i++) {
+      uint32_t rgbPixelIn = pixelData[i];
+      uint32_t rgbPixelOut = 0;
 
-    // ImageIO premultiplies all PNGs, so we have to "un-premultiply them":
-    // http://code.google.com/p/cocos2d-iphone/issues/detail?id=697#c26
-    red = round((red / alpha) - 0.001f);
-    green = round((green / alpha) - 0.001f);
-    blue = round((blue / alpha) - 0.001f);
+      uint32_t red = (rgbPixelIn >> 24) & 0xFF;
+      uint32_t green = (rgbPixelIn >> 16) & 0xFF;
+      uint32_t blue = (rgbPixelIn >> 8) & 0xFF;
+      uint32_t alpha = (rgbPixelIn & 0xFF);
 
-    if (red == green && green == blue) {
-      data[i] = red;
-    } else {
-      data[i] = (306 * (int)red +
-                 601 * (int)green +
-                 117 * (int)blue +
-                (0x200)) >> 10; // 0x200 = 1<<9, half an lsb of the result to force rounding
+      // ImageIO premultiplies all PNGs, so we have to "un-premultiply them":
+      // http://code.google.com/p/cocos2d-iphone/issues/detail?id=697#c26
+      red   =   red > 0 ? ((red   << 20) / (alpha << 2)) >> 10 : 0;
+      green = green > 0 ? ((green << 20) / (alpha << 2)) >> 10 : 0;
+      blue  =  blue > 0 ? ((blue  << 20) / (alpha << 2)) >> 10 : 0;
+
+      if (red == green && green == blue) {
+        rgbPixelOut = red;
+      } else {
+        rgbPixelOut = (306 * red +
+                       601 * green +
+                       117 * blue +
+                       (0x200)) >> 10; // 0x200 = 1<<9, half an lsb of the result to force rounding
+      }
+
+      if (rgbPixelOut > 255) {
+        rgbPixelOut = 255;
+      }
+
+      _data[i] = rgbPixelOut;
     }
-  }
+  });
 
-  free(pixelData);
+  CGContextRelease(context);
 
-  top = _top;
-  left = _left;
+  _top = top;
+  _left = left;
 }
 
 - (BOOL)rotateSupported {
@@ -265,7 +266,7 @@
                                                CGImageGetBitsPerComponent(self.image),
                                                0,
                                                colorSpace,
-                                               kCGImageAlphaPremultipliedFirst);
+                                               kCGBitmapAlphaInfoMask & kCGImageAlphaPremultipliedFirst);
   CGContextSetAllowsAntialiasing(context, FALSE);
   CGContextSetInterpolationQuality(context, kCGInterpolationNone);
   CGColorSpaceRelease(colorSpace);
@@ -285,8 +286,11 @@
 
   CFRelease(context);
 
-  int _width = self.width;
-  return [[ZXCGImageLuminanceSource alloc] initWithCGImage:rotatedImage left:top top:sourceWidth - (left + _width) width:self.height height:_width];
+  ZXCGImageLuminanceSource *result = [[ZXCGImageLuminanceSource alloc] initWithCGImage:rotatedImage left:_top top:sourceWidth - (_left + self.width) width:self.height height:self.width];
+
+  CGImageRelease(rotatedImage);
+
+  return result;
 }
 
 @end

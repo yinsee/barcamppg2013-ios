@@ -18,62 +18,49 @@
 
 @interface ZXResult ()
 
-@property (nonatomic, copy)   NSString *text;
-@property (nonatomic, assign) unsigned char *rawBytes;
-@property (nonatomic, assign) int length;
-@property (nonatomic, retain) NSMutableArray *resultPoints;
-@property (nonatomic, assign) ZXBarcodeFormat barcodeFormat;
-@property (nonatomic, retain) NSMutableDictionary *resultMetadata;
-@property (nonatomic, assign) long timestamp;
+@property (nonatomic, strong) NSMutableDictionary *resultMetadata;
+@property (nonatomic, strong) NSMutableArray *resultPoints;
 
 @end
 
 @implementation ZXResult
 
-@synthesize text;
-@synthesize rawBytes;
-@synthesize length;
-@synthesize resultPoints;
-@synthesize barcodeFormat;
-@synthesize resultMetadata;
-@synthesize timestamp;
-
-- (id)initWithText:(NSString *)aText rawBytes:(unsigned char *)aRawBytes length:(unsigned int)aLength resultPoints:(NSArray *)aResultPoints format:(ZXBarcodeFormat)aFormat {
-  return [self initWithText:aText rawBytes:aRawBytes length:aLength resultPoints:aResultPoints format:aFormat timestamp:CFAbsoluteTimeGetCurrent()];
+- (id)initWithText:(NSString *)text rawBytes:(int8_t *)rawBytes length:(unsigned int)length resultPoints:(NSArray *)resultPoints format:(ZXBarcodeFormat)format {
+  return [self initWithText:text rawBytes:rawBytes length:length resultPoints:resultPoints format:format timestamp:CFAbsoluteTimeGetCurrent()];
 }
 
-- (id)initWithText:(NSString *)aText rawBytes:(unsigned char *)aRawBytes length:(unsigned int)aLength resultPoints:(NSArray *)aResultPoints format:(ZXBarcodeFormat)aFormat timestamp:(long)aTimestamp {
+- (id)initWithText:(NSString *)text rawBytes:(int8_t *)rawBytes length:(unsigned int)length resultPoints:(NSArray *)resultPoints format:(ZXBarcodeFormat)format timestamp:(long)timestamp {
   if (self = [super init]) {
-    self.text = aText;
-    if (aRawBytes != NULL && aLength > 0) {
-      self.rawBytes = (unsigned char *)malloc(aLength * sizeof(unsigned char));
-      memcpy(self.rawBytes, aRawBytes, aLength);
-      self.length = aLength;
+    _text = text;
+    if (rawBytes != NULL && length > 0) {
+      _rawBytes = (int8_t *)malloc(length * sizeof(int8_t));
+      memcpy(_rawBytes, rawBytes, length);
+      _length = length;
     } else {
-      self.rawBytes = NULL;
-      self.length = 0;
+      _rawBytes = NULL;
+      _length = 0;
     }
-    self.resultPoints = [aResultPoints mutableCopy];
-    self.barcodeFormat = aFormat;
-    self.resultMetadata = nil;
-    self.timestamp = aTimestamp;
+    _resultPoints = [resultPoints mutableCopy];
+    _barcodeFormat = format;
+    _resultMetadata = nil;
+    _timestamp = timestamp;
   }
 
   return self;
 }
 
-+ (id)resultWithText:(NSString *)text rawBytes:(unsigned char *)rawBytes length:(unsigned int)length resultPoints:(NSArray *)resultPoints format:(ZXBarcodeFormat)format {
++ (id)resultWithText:(NSString *)text rawBytes:(int8_t *)rawBytes length:(unsigned int)length resultPoints:(NSArray *)resultPoints format:(ZXBarcodeFormat)format {
   return [[self alloc] initWithText:text rawBytes:rawBytes length:length resultPoints:resultPoints format:format];
 }
 
-+ (id)resultWithText:(NSString *)text rawBytes:(unsigned char *)rawBytes length:(unsigned int)length resultPoints:(NSArray *)resultPoints format:(ZXBarcodeFormat)format timestamp:(long)timestamp {
++ (id)resultWithText:(NSString *)text rawBytes:(int8_t *)rawBytes length:(unsigned int)length resultPoints:(NSArray *)resultPoints format:(ZXBarcodeFormat)format timestamp:(long)timestamp {
   return [[self alloc] initWithText:text rawBytes:rawBytes length:length resultPoints:resultPoints format:format timestamp:timestamp];
 }
 
 - (void)dealloc {
-  if (self.rawBytes != NULL) {
-    free(self.rawBytes);
-    self.rawBytes = NULL;
+  if (_rawBytes != NULL) {
+    free(_rawBytes);
+    _rawBytes = NULL;
   }
 }
 
@@ -81,7 +68,7 @@
   if (self.resultMetadata == nil) {
     self.resultMetadata = [NSMutableDictionary dictionary];
   }
-  [self.resultMetadata setObject:[NSNumber numberWithInt:type] forKey:value];
+  self.resultMetadata[@(type)] = value;
 }
 
 - (void)putAllMetadata:(NSMutableDictionary *)metadata {

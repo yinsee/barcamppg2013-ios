@@ -20,42 +20,35 @@
 
 @interface ZXReedSolomonEncoder ()
 
-@property (nonatomic, retain) NSMutableArray *cachedGenerators;
-@property (nonatomic, retain) ZXGenericGF *field;
+@property (nonatomic, strong) NSMutableArray *cachedGenerators;
+@property (nonatomic, strong) ZXGenericGF *field;
 
 @end
 
-
 @implementation ZXReedSolomonEncoder
 
-@synthesize cachedGenerators;
-@synthesize field;
-
-- (id)initWithField:(ZXGenericGF *)aField {
+- (id)initWithField:(ZXGenericGF *)field {
   if (self = [super init]) {
-    self.field = aField;
+    _field = field;
     int one = 1;
-    self.cachedGenerators = [NSMutableArray arrayWithObject:[[ZXGenericGFPoly alloc] initWithField:aField coefficients:&one coefficientsLen:1]];
+    _cachedGenerators = [NSMutableArray arrayWithObject:[[ZXGenericGFPoly alloc] initWithField:field coefficients:&one coefficientsLen:1]];
   }
 
   return self;
 }
 
-- (void)dealloc {
-}
-
 - (ZXGenericGFPoly *)buildGenerator:(int)degree {
   if (degree >= self.cachedGenerators.count) {
-    ZXGenericGFPoly *lastGenerator = [self.cachedGenerators objectAtIndex:[cachedGenerators count] - 1];
-    for (int d = [self.cachedGenerators count]; d <= degree; d++) {
-      int next[2] = { 1, [field exp:d - 1 + field.generatorBase] };
-      ZXGenericGFPoly *nextGenerator = [lastGenerator multiply:[[ZXGenericGFPoly alloc] initWithField:field coefficients:next coefficientsLen:2]];
+    ZXGenericGFPoly *lastGenerator = self.cachedGenerators[[self.cachedGenerators count] - 1];
+    for (NSUInteger d = [self.cachedGenerators count]; d <= degree; d++) {
+      int next[2] = { 1, [self.field exp:(int)d - 1 + self.field.generatorBase] };
+      ZXGenericGFPoly *nextGenerator = [lastGenerator multiply:[[ZXGenericGFPoly alloc] initWithField:self.field coefficients:next coefficientsLen:2]];
       [self.cachedGenerators addObject:nextGenerator];
       lastGenerator = nextGenerator;
     }
   }
 
-  return (ZXGenericGFPoly *)[self.cachedGenerators objectAtIndex:degree];
+  return (ZXGenericGFPoly *)self.cachedGenerators[degree];
 }
 
 - (void)encode:(int *)toEncode toEncodeLen:(int)toEncodeLen ecBytes:(int)ecBytes {
@@ -75,9 +68,9 @@
   for (int i = 0; i < dataBytes; i++) {
     infoCoefficients[i] = toEncode[i];
   }
-  ZXGenericGFPoly *info = [[ZXGenericGFPoly alloc] initWithField:field coefficients:infoCoefficients coefficientsLen:dataBytes];
+  ZXGenericGFPoly *info = [[ZXGenericGFPoly alloc] initWithField:self.field coefficients:infoCoefficients coefficientsLen:dataBytes];
   info = [info multiplyByMonomial:ecBytes coefficient:1];
-  ZXGenericGFPoly *remainder = [[info divide:generator] objectAtIndex:1];
+  ZXGenericGFPoly *remainder = [info divide:generator][1];
   int *coefficients = remainder.coefficients;
   int coefficientsLen = remainder.coefficientsLen;
   int numZeroCoefficients = ecBytes - coefficientsLen;

@@ -88,36 +88,17 @@ const int MAX_PAIRS = 11;
   BOOL startFromEven;
 }
 
-@property (nonatomic, retain) NSMutableArray *pairs;
-@property (nonatomic, retain) NSMutableArray *rows;
-
-- (BOOL)adjustOddEvenCounts:(int)numModules;
-- (ZXResult *)constructResult:(NSMutableArray *)pairs error:(NSError **)error;
-- (BOOL)checkChecksum;
-- (ZXDataCharacter *)decodeDataCharacter:(ZXBitArray *)row pattern:(ZXRSSFinderPattern *)pattern isOddPattern:(BOOL)isOddPattern leftChar:(BOOL)leftChar;
-- (BOOL)findNextPair:(ZXBitArray *)row previousPairs:(NSMutableArray *)previousPairs forcedOffset:(int)forcedOffset;
-- (int)nextSecondBar:(ZXBitArray *)row initialPos:(int)initialPos;
-- (BOOL)isNotA1left:(ZXRSSFinderPattern *)pattern isOddPattern:(BOOL)isOddPattern leftChar:(BOOL)leftChar;
-- (ZXRSSFinderPattern *)parseFoundFinderPattern:(ZXBitArray *)row rowNumber:(int)rowNumber oddPattern:(BOOL)oddPattern;
-- (void)reverseCounters:(int *)counters length:(unsigned int)length;
-- (NSMutableArray *)checkRows:(BOOL)reversed;
-- (NSMutableArray *)checkRows:(NSMutableArray *)rows current:(int)currentRow;
-- (BOOL)isValidSequence:(NSArray *)pairs;
-- (void)storeRow:(int)rowNumber wasReversed:(BOOL)reversed;
-- (BOOL)isPartialRow:(NSArray *)pairs of:(NSArray *)rows;
-- (void)removePartialRows:(NSArray *)pairs from:(NSMutableArray *)rows;
+@property (nonatomic, strong) NSMutableArray *pairs;
+@property (nonatomic, strong) NSMutableArray *rows;
 
 @end
 
 @implementation ZXRSSExpandedReader
 
-@synthesize pairs;
-@synthesize rows;
-
 - (id)init {
   if (self = [super init]) {
-    self.pairs = [NSMutableArray array];
-    self.rows = [NSMutableArray array];
+    _pairs = [NSMutableArray array];
+    _rows = [NSMutableArray array];
     startFromEven = NO;
     startEnd[0] = 0;
     startEnd[1] = 0;
@@ -126,17 +107,14 @@ const int MAX_PAIRS = 11;
   return self;
 }
 
-- (void)dealloc {
-}
-
 - (ZXResult *)decodeRow:(int)rowNumber row:(ZXBitArray *)row hints:(ZXDecodeHints *)hints error:(NSError **)error {
   // Rows can start with even pattern in case in prev rows there where odd number of patters.
   // So lets try twice
   [self.pairs removeAllObjects];
   startFromEven = NO;
-  NSMutableArray* _pairs = [self decodeRow2pairs:rowNumber row:row];
-  if (_pairs) {
-    ZXResult *result = [self constructResult:_pairs error:error];
+  NSMutableArray* pairs = [self decodeRow2pairs:rowNumber row:row];
+  if (pairs) {
+    ZXResult *result = [self constructResult:pairs error:error];
     if (result) {
       return result;
     }
@@ -144,13 +122,13 @@ const int MAX_PAIRS = 11;
 
   [self.pairs removeAllObjects];
   startFromEven = YES;
-  _pairs = [self decodeRow2pairs:rowNumber row:row];
-  if (!_pairs) {
+  pairs = [self decodeRow2pairs:rowNumber row:row];
+  if (!pairs) {
     if (error) *error = NotFoundErrorInstance();
     return nil;
   }
 
-  return [self constructResult:_pairs error:error];
+  return [self constructResult:pairs error:error];
 }
 
 - (void)reset {
@@ -221,11 +199,11 @@ const int MAX_PAIRS = 11;
 // Recursion is used to implement backtracking
 - (NSMutableArray *)checkRows:(NSMutableArray *)collectedRows current:(int)currentRow {
   for (int i = currentRow; i < [self.rows count]; i++) {
-    ZXExpandedRow *row = [self.rows objectAtIndex:i];
+    ZXExpandedRow *row = self.rows[i];
     [self.pairs removeAllObjects];
-    int size = [collectedRows count];
+    NSUInteger size = [collectedRows count];
     for (int j = 0; j < size; j++) {
-      [self.pairs addObjectsFromArray:[[collectedRows objectAtIndex:j] pairs]];
+      [self.pairs addObjectsFromArray:[collectedRows[j] pairs]];
     }
     [self.pairs addObjectsFromArray:row.pairs];
 
@@ -258,7 +236,7 @@ const int MAX_PAIRS = 11;
 
     BOOL stop = YES;
     for (int j = 0; j < [self.pairs count]; j++) {
-      if ([[[self.pairs objectAtIndex:j] finderPattern] value] != FINDER_PATTERN_SEQUENCES[i][j]) {
+      if ([[self.pairs[j] finderPattern] value] != FINDER_PATTERN_SEQUENCES[i][j]) {
         stop = NO;
         break;
       }
@@ -278,7 +256,7 @@ const int MAX_PAIRS = 11;
   BOOL prevIsSame = NO;
   BOOL nextIsSame = NO;
   while (insertPos < [self.rows count]) {
-    ZXExpandedRow *erow = [self.rows objectAtIndex:insertPos];
+    ZXExpandedRow *erow = self.rows[insertPos];
     if (erow.rowNumber > rowNumber) {
       nextIsSame = [erow isEquivalent:self.pairs];
       break;
@@ -305,16 +283,16 @@ const int MAX_PAIRS = 11;
 }
 
 // Remove all the rows that contains only specified pairs
-- (void)removePartialRows:(NSArray *)_pairs from:(NSMutableArray *)_rows {
+- (void)removePartialRows:(NSArray *)pairs from:(NSMutableArray *)rows {
   NSMutableArray *toRemove = [NSMutableArray array];
-  for (ZXExpandedRow *r in _rows) {
-    if ([r.pairs count] == [_pairs count]) {
+  for (ZXExpandedRow *r in rows) {
+    if ([r.pairs count] == [pairs count]) {
       continue;
     }
     BOOL allFound = YES;
     for (ZXExpandedPair *p in r.pairs) {
       BOOL found = NO;
-      for (ZXExpandedPair *pp in _pairs) {
+      for (ZXExpandedPair *pp in pairs) {
         if ([p isEqual:pp]) {
           found = YES;
           break;
@@ -331,14 +309,14 @@ const int MAX_PAIRS = 11;
   }
 
   for (ZXExpandedRow *r in toRemove) {
-    [_rows removeObject:r];
+    [rows removeObject:r];
   }
 }
 
-- (BOOL)isPartialRow:(NSArray *)_pairs of:(NSArray *)_rows {
-  for (ZXExpandedRow *r in _rows) {
+- (BOOL)isPartialRow:(NSArray *)pairs of:(NSArray *)rows {
+  for (ZXExpandedRow *r in rows) {
 		BOOL allFound = YES;
-    for (ZXExpandedPair *p in _pairs) {
+    for (ZXExpandedPair *p in pairs) {
       BOOL found = NO;
       for (ZXExpandedPair *pp in r.pairs) {
         if ([p isEqual:pp]) {
@@ -359,12 +337,8 @@ const int MAX_PAIRS = 11;
   return NO;
 }
 
-- (NSMutableArray *)rows {
-  return rows;
-}
-
-- (ZXResult *)constructResult:(NSMutableArray *)_pairs error:(NSError **)error {
-  ZXBitArray *binary = [ZXBitArrayBuilder buildBitArray:_pairs];
+- (ZXResult *)constructResult:(NSMutableArray *)pairs error:(NSError **)error {
+  ZXBitArray *binary = [ZXBitArrayBuilder buildBitArray:pairs];
 
   ZXAbstractExpandedDecoder *decoder = [ZXAbstractExpandedDecoder createDecoder:binary];
   NSString *resultingString = [decoder parseInformationWithError:error];
@@ -372,18 +346,18 @@ const int MAX_PAIRS = 11;
     return nil;
   }
 
-  NSArray *firstPoints = [[((ZXExpandedPair *)[_pairs objectAtIndex:0]) finderPattern] resultPoints];
+  NSArray *firstPoints = [[((ZXExpandedPair *)_pairs[0]) finderPattern] resultPoints];
   NSArray *lastPoints = [[((ZXExpandedPair *)[_pairs lastObject]) finderPattern] resultPoints];
 
   return [ZXResult resultWithText:resultingString
                          rawBytes:NULL
                            length:0
-                     resultPoints:[NSArray arrayWithObjects:[firstPoints objectAtIndex:0], [firstPoints objectAtIndex:1], [lastPoints objectAtIndex:0], [lastPoints objectAtIndex:1], nil]
+                     resultPoints:@[firstPoints[0], firstPoints[1], lastPoints[0], lastPoints[1]]
                            format:kBarcodeFormatRSSExpanded];
 }
 
 - (BOOL)checkChecksum {
-  ZXExpandedPair *firstPair = [self.pairs objectAtIndex:0];
+  ZXExpandedPair *firstPair = self.pairs[0];
   ZXDataCharacter *checkCharacter = firstPair.leftChar;
   ZXDataCharacter *firstCharacter = firstPair.rightChar;
 
@@ -395,7 +369,7 @@ const int MAX_PAIRS = 11;
   int s = 2;
 
   for (int i = 1; i < self.pairs.count; ++i) {
-    ZXExpandedPair *currentPair = [self.pairs objectAtIndex:i];
+    ZXExpandedPair *currentPair = self.pairs[i];
     checksum += currentPair.leftChar.checksumPortion;
     s++;
     ZXDataCharacter *currentRightChar = currentPair.rightChar;
@@ -480,7 +454,7 @@ const int MAX_PAIRS = 11;
     rowOffset = 0;
   } else {
     ZXExpandedPair *lastPair = [previousPairs lastObject];
-    rowOffset = [[[[lastPair finderPattern] startEnd] objectAtIndex:1] intValue];
+    rowOffset = [[[lastPair finderPattern] startEnd][1] intValue];
   }
   BOOL searchingEvenPair = [previousPairs count] % 2 != 0;
   if (startFromEven) {
@@ -583,7 +557,7 @@ const int MAX_PAIRS = 11;
   if (value == -1) {
     return nil;
   }
-  return [[ZXRSSFinderPattern alloc] initWithValue:value startEnd:[NSMutableArray arrayWithObjects:[NSNumber numberWithInt:start], [NSNumber numberWithInt:end], nil] start:start end:end rowNumber:rowNumber];
+  return [[ZXRSSFinderPattern alloc] initWithValue:value startEnd:[@[@(start), @(end)] mutableCopy] start:start end:end rowNumber:rowNumber];
 }
 
 - (ZXDataCharacter *)decodeDataCharacter:(ZXBitArray *)row pattern:(ZXRSSFinderPattern *)pattern isOddPattern:(BOOL)isOddPattern leftChar:(BOOL)leftChar {
@@ -599,11 +573,11 @@ const int MAX_PAIRS = 11;
   counters[7] = 0;
 
   if (leftChar) {
-    if (![ZXOneDReader recordPatternInReverse:row start:[[[pattern startEnd] objectAtIndex:0] intValue] counters:counters countersSize:countersLen]) {
+    if (![ZXOneDReader recordPatternInReverse:row start:[[pattern startEnd][0] intValue] counters:counters countersSize:countersLen]) {
       return nil;
     }
   } else {
-    if (![ZXOneDReader recordPattern:row start:[[[pattern startEnd] objectAtIndex:1] intValue] counters:counters countersSize:countersLen]) {
+    if (![ZXOneDReader recordPattern:row start:[[pattern startEnd][1] intValue] counters:counters countersSize:countersLen]) {
       return nil;
     }
     // reverse it
@@ -618,7 +592,7 @@ const int MAX_PAIRS = 11;
   float elementWidth = (float)[ZXAbstractRSSReader count:counters arrayLen:countersLen] / (float)numModules;
 
   // Sanity check: element width for pattern and the character should match
-  float expectedElementWidth = ([[pattern.startEnd objectAtIndex:1] intValue] - [[pattern.startEnd objectAtIndex:0] intValue]) / 15.0f;
+  float expectedElementWidth = ([pattern.startEnd[1] intValue] - [pattern.startEnd[0] intValue]) / 15.0f;
   if (fabsf(elementWidth - expectedElementWidth) / expectedElementWidth > 0.3f) {
     return nil;
   }
@@ -663,13 +637,13 @@ const int MAX_PAIRS = 11;
     oddSum += self.oddCounts[i];
   }
   int evenChecksumPortion = 0;
-  int evenSum = 0;
+  //int evenSum = 0;
   for (int i = self.evenCountsLen - 1; i >= 0; i--) {
     if ([self isNotA1left:pattern isOddPattern:isOddPattern leftChar:leftChar]) {
       int weight = WEIGHTS[weightRowNumber][2 * i + 1];
       evenChecksumPortion += self.evenCounts[i] * weight;
     }
-    evenSum += self.evenCounts[i];
+    //evenSum += self.evenCounts[i];
   }
   int checksumPortion = oddChecksumPortion + evenChecksumPortion;
 

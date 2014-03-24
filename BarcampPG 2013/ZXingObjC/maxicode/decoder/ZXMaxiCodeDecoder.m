@@ -30,26 +30,18 @@ const int ODD = 2;
 
 @interface ZXMaxiCodeDecoder ()
 
-@property (nonatomic, retain) ZXReedSolomonDecoder *rsDecoder;
-
-- (BOOL)correctErrors:(NSMutableArray *)codewordBytes start:(int)start dataCodewords:(int)dataCodewords
-          ecCodewords:(int)ecCodewords mode:(int)mode error:(NSError **)error;
+@property (nonatomic, strong) ZXReedSolomonDecoder *rsDecoder;
 
 @end
 
 @implementation ZXMaxiCodeDecoder
 
-@synthesize rsDecoder;
-
 - (id)init {
   if (self = [super init]) {
-    self.rsDecoder = [[ZXReedSolomonDecoder alloc] initWithField:[ZXGenericGF MaxiCodeField64]];
+    _rsDecoder = [[ZXReedSolomonDecoder alloc] initWithField:[ZXGenericGF MaxiCodeField64]];
   }
 
   return self;
-}
-
-- (void)dealloc {
 }
 
 - (ZXDecoderResult *)decode:(ZXBitMatrix *)bits error:(NSError **)error {
@@ -66,7 +58,7 @@ const int ODD = 2;
   if (![self correctErrors:codewords start:0 dataCodewords:10 ecCodewords:10 mode:ALL error:error]) {
     return nil;
   }
-  int mode = [[codewords objectAtIndex:0] charValue] & 0x0F;
+  int mode = [codewords[0] charValue] & 0x0F;
   int datawordsLen;
   switch (mode) {
     case 2:
@@ -94,12 +86,12 @@ const int ODD = 2;
       return nil;
   }
 
-  unsigned char *datawords = (unsigned char *)malloc(datawordsLen * sizeof(unsigned char));
+  int8_t *datawords = (int8_t *)malloc(datawordsLen * sizeof(int8_t));
   for (int i = 0; i < 10; i++) {
-    datawords[i] = [[codewords objectAtIndex:i] charValue];
+    datawords[i] = [codewords[i] charValue];
   }
   for (int i = 20; i < datawordsLen + 10; i++) {
-    datawords[i - 10] = [[codewords objectAtIndex:i] charValue];
+    datawords[i - 10] = [codewords[i] charValue];
   }
 
   ZXDecoderResult *result = [ZXMaxiCodeDecodedBitStreamParser decode:datawords length:datawordsLen mode:mode];
@@ -120,7 +112,7 @@ const int ODD = 2;
   memset(codewordsInts, 0, codewordsIntsLen * sizeof(int));
   for (int i = 0; i < codewords; i++) {
     if ((mode == ALL) || (i % 2 == (mode - 1))) {
-      codewordsInts[i / divisor] = [[codewordBytes objectAtIndex:i + start] charValue] & 0xFF;
+      codewordsInts[i / divisor] = [codewordBytes[i + start] charValue] & 0xFF;
     }
   }
 
@@ -135,7 +127,7 @@ const int ODD = 2;
   // We don't care about errors in the error-correction codewords
   for (int i = 0; i < dataCodewords; i++) {
     if ((mode == ALL) || (i % 2 == (mode - 1))) {
-      [codewordBytes replaceObjectAtIndex:i + start withObject:[NSNumber numberWithChar:codewordsInts[i / divisor]]];
+      codewordBytes[i + start] = [NSNumber numberWithChar:codewordsInts[i / divisor]];
     }
   }
 

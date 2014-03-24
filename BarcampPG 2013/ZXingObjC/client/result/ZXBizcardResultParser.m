@@ -18,13 +18,6 @@
 #import "ZXBizcardResultParser.h"
 #import "ZXResult.h"
 
-@interface ZXBizcardResultParser ()
-
-- (NSString *)buildName:(NSString *)firstName lastName:(NSString *)lastName;
-- (NSArray *)buildPhoneNumbers:(NSString *)number1 number2:(NSString *)number2 number3:(NSString *)number3;
-
-@end
-
 @implementation ZXBizcardResultParser
 
 - (ZXParsedResult *)parse:(ZXResult *)result {
@@ -72,13 +65,13 @@
   if (number3 != nil) {
     [numbers addObject:number3];
   }
-  int size = [numbers count];
+  NSUInteger size = [numbers count];
   if (size == 0) {
     return nil;
   }
   NSMutableArray *result = [NSMutableArray arrayWithCapacity:size];
   for (int i = 0; i < size; i++) {
-    [result addObject:[numbers objectAtIndex:i]];
+    [result addObject:numbers[i]];
   }
   return result;
 }

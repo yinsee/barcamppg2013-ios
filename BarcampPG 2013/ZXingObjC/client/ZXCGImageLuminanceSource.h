@@ -20,18 +20,18 @@
 @class ZXImage;
 
 @interface ZXCGImageLuminanceSource : ZXLuminanceSource {
-  CGImageRef image;
-  unsigned char *data;
-  int left;
-  int top;
+  CGImageRef _image;
+  int8_t *_data;
+  size_t _left;
+  size_t _top;
 }
 
-+ (CGImageRef)createImageFromBuffer:(CVImageBufferRef)buffer;
++ (CGImageRef)createImageFromBuffer:(CVImageBufferRef)buffer CF_RETURNS_RETAINED;
 + (CGImageRef)createImageFromBuffer:(CVImageBufferRef)buffer
                                left:(size_t)left
                                 top:(size_t)top
                               width:(size_t)width
-                             height:(size_t)height;
+                             height:(size_t)height CF_RETURNS_RETAINED;
 
 - (id)initWithZXImage:(ZXImage *)image
                  left:(size_t)left

@@ -111,20 +111,6 @@ int const VERSION_INFO_POLY = 0x1f25;  // 1 1111 0010 0101
 int const TYPE_INFO_POLY = 0x537;
 int const TYPE_INFO_MASK_PATTERN = 0x5412;
 
-@interface ZXMatrixUtil ()
-
-+ (BOOL)isEmpty:(int)value;
-+ (void)embedTimingPatterns:(ZXByteMatrix *)matrix;
-+ (BOOL)embedDarkDotAtLeftBottomCorner:(ZXByteMatrix *)matrix;
-+ (BOOL)embedHorizontalSeparationPattern:(int)xStart yStart:(int)yStart matrix:(ZXByteMatrix *)matrix;
-+ (BOOL)embedVerticalSeparationPattern:(int)xStart yStart:(int)yStart matrix:(ZXByteMatrix *)matrix;
-+ (void)embedPositionAdjustmentPattern:(int)xStart yStart:(int)yStart matrix:(ZXByteMatrix *)matrix;
-+ (void)embedPositionDetectionPattern:(int)xStart yStart:(int)yStart matrix:(ZXByteMatrix *)matrix;
-+ (BOOL)embedPositionDetectionPatternsAndSeparators:(ZXByteMatrix *)matrix;
-+ (void)maybeEmbedPositionAdjustmentPatterns:(ZXQRCodeVersion *)version matrix:(ZXByteMatrix *)matrix;
-
-@end
-
 @implementation ZXMatrixUtil
 
 // Set all cells to -1.  -1 means that the cell is empty (not set yet).
@@ -285,8 +271,7 @@ int const TYPE_INFO_MASK_PATTERN = 0x5412;
   }
   // All bits should be consumed.
   if (bitIndex != [dataBits size]) {
-    NSDictionary *userInfo = [NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"Not all bits consumed: %d/%d", bitIndex, [dataBits size]]
-                                                         forKey:NSLocalizedDescriptionKey];
+    NSDictionary *userInfo = @{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Not all bits consumed: %d/%d", bitIndex, [dataBits size]]};
 
     if (error) *error = [[NSError alloc] initWithDomain:ZXErrorDomain code:ZXNotFoundError userInfo:userInfo];
     return NO;
@@ -352,8 +337,7 @@ int const TYPE_INFO_MASK_PATTERN = 0x5412;
 // JISX0510:2004 (p.45) for details.
 + (BOOL)makeTypeInfoBits:(ZXErrorCorrectionLevel *)ecLevel maskPattern:(int)maskPattern bits:(ZXBitArray *)bits error:(NSError **)error {
   if (![ZXQRCode isValidMaskPattern:maskPattern]) {
-    NSDictionary *userInfo = [NSDictionary dictionaryWithObject:@"Invalid mask pattern"
-                                                         forKey:NSLocalizedDescriptionKey];
+    NSDictionary *userInfo = @{NSLocalizedDescriptionKey: @"Invalid mask pattern"};
 
     if (error) *error = [[NSError alloc] initWithDomain:ZXErrorDomain code:ZXNotFoundError userInfo:userInfo];
     return NO;
@@ -369,8 +353,7 @@ int const TYPE_INFO_MASK_PATTERN = 0x5412;
   [bits xor:maskBits];
 
   if ([bits size] != 15) { // Just in case.
-    NSDictionary *userInfo = [NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"should not happen but we got: %d", [bits size]]
-                                                         forKey:NSLocalizedDescriptionKey];
+    NSDictionary *userInfo = @{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"should not happen but we got: %d", [bits size]]};
 
     if (error) *error = [[NSError alloc] initWithDomain:ZXErrorDomain code:ZXNotFoundError userInfo:userInfo];
     return NO;
@@ -387,8 +370,7 @@ int const TYPE_INFO_MASK_PATTERN = 0x5412;
   [bits appendBits:bchCode numBits:12];
 
   if ([bits size] != 18) { // Just in case.
-    NSDictionary *userInfo = [NSDictionary dictionaryWithObject:[NSString stringWithFormat:@"should not happen but we got: %d", [bits size]]
-                                                         forKey:NSLocalizedDescriptionKey];
+    NSDictionary *userInfo = @{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"should not happen but we got: %d", [bits size]]};
 
     if (error) *error = [[NSError alloc] initWithDomain:ZXErrorDomain code:ZXNotFoundError userInfo:userInfo];
     return NO;

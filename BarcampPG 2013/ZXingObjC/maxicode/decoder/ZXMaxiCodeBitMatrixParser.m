@@ -56,29 +56,24 @@ const int BITNR[33][30] = {
 
 @interface ZXMaxiCodeBitMatrixParser ()
 
-@property (nonatomic, retain) ZXBitMatrix *bitMatrix;
+@property (nonatomic, strong) ZXBitMatrix *bitMatrix;
 
 @end
 
 @implementation ZXMaxiCodeBitMatrixParser
 
-@synthesize bitMatrix;
-
-- (id)initWithBitMatrix:(ZXBitMatrix *)aBitMatrix error:(NSError **)error {
+- (id)initWithBitMatrix:(ZXBitMatrix *)bitMatrix error:(NSError **)error {
   if (self = [super init]) {
-    self.bitMatrix = aBitMatrix;
+    _bitMatrix = bitMatrix;
   }
 
   return self;
 }
 
-- (void)dealloc {
-}
-
 - (NSArray *)readCodewords {
   const int resultLength = 144;
-  unsigned char result[resultLength];
-  memset(result, 0, resultLength * sizeof(unsigned char));
+  int8_t result[resultLength];
+  memset(result, 0, resultLength * sizeof(int8_t));
 
   int height = self.bitMatrix.height;
   int width = self.bitMatrix.width;
@@ -86,8 +81,8 @@ const int BITNR[33][30] = {
     int *bitnrRow = (int *)BITNR[y];
     for (int x = 0; x < width; x++) {
       int bit = bitnrRow[x];
-      if (bit >= 0 && [bitMatrix getX:x y:y]) {
-        result[bit / 6] |= (unsigned char) (1 << (5 - (bit % 6)));
+      if (bit >= 0 && [self.bitMatrix getX:x y:y]) {
+        result[bit / 6] |= (int8_t) (1 << (5 - (bit % 6)));
       }
     }
   }

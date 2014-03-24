@@ -33,9 +33,15 @@
 @property (nonatomic, assign) BOOL assumeCode39CheckDigit;
 
 /**
+ * Assume the barcode is being processed as a GS1 barcode, and modify behavior as needed.
+ * For example this affects FNC1 handling for Code 128 (aka GS1-128).
+ */
+@property (nonatomic, assign) BOOL assumeGS1;
+
+/**
  * Allowed lengths of encoded data -- reject anything else. Maps to an int[].
  */
-@property (nonatomic, retain) NSArray *allowedLengths;
+@property (nonatomic, strong) NSArray *allowedLengths;
 
 /**
  * Specifies what character encoding to use when decoding, where applicable (type String)
@@ -45,7 +51,7 @@
 /**
  * Unspecified, application-specific hint.
  */
-@property (nonatomic, retain) id other;
+@property (nonatomic, strong) id other;
 
 /**
  * Image is a pure monochrome image of a barcode.
@@ -56,7 +62,7 @@
  * The caller needs to be notified via callback when a possible {@link ResultPoint}
  * is found. Maps to a {@link ResultPointCallback}.
  */
-@property (nonatomic, retain) id <ZXResultPointCallback> resultPointCallback;
+@property (nonatomic, strong) id <ZXResultPointCallback> resultPointCallback;
 
 /**
  * Spend more time to try to find a barcode; optimize for accuracy, not speed.

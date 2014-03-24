@@ -24,21 +24,15 @@ int const MAX_DEPTH = 4;
 
 @interface ZXGenericMultipleBarcodeReader ()
 
-@property (nonatomic, assign) id<ZXReader> delegate;
-
-- (BOOL)doDecodeMultiple:(ZXBinaryBitmap *)image hints:(ZXDecodeHints *)hints results:(NSMutableArray *)results
-                 xOffset:(int)xOffset yOffset:(int)yOffset currentDepth:(int)currentDepth error:(NSError **)error;
-- (ZXResult *)translateResultPoints:(ZXResult *)result xOffset:(int)xOffset yOffset:(int)yOffset;
+@property (nonatomic, weak) id<ZXReader> delegate;
 
 @end
 
 @implementation ZXGenericMultipleBarcodeReader
 
-@synthesize delegate;
-
-- (id)initWithDelegate:(id <ZXReader>)aDelegate {
+- (id)initWithDelegate:(id<ZXReader>)delegate {
   if (self = [super init]) {
-    self.delegate = aDelegate;
+    _delegate = delegate;
   }
 
   return self;
@@ -133,7 +127,9 @@ int const MAX_DEPTH = 4;
     [newResultPoints addObject:[[ZXResultPoint alloc] initWithX:[oldPoint x] + xOffset y:[oldPoint y] + yOffset]];
   }
 
-  return [ZXResult resultWithText:result.text rawBytes:result.rawBytes length:result.length resultPoints:newResultPoints format:result.barcodeFormat];
+  ZXResult *newResult = [ZXResult resultWithText:result.text rawBytes:result.rawBytes length:result.length resultPoints:newResultPoints format:result.barcodeFormat];
+  [newResult putAllMetadata:result.resultMetadata];
+  return newResult;
 }
 
 @end

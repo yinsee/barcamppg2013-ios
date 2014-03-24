@@ -20,22 +20,12 @@
 
 @interface ZXEncoderContext ()
 
-@property (nonatomic, retain) ZXDimension *maxSize;
-@property (nonatomic, retain) ZXDimension *minSize;
+@property (nonatomic, strong) ZXDimension *maxSize;
+@property (nonatomic, strong) ZXDimension *minSize;
 
 @end
 
 @implementation ZXEncoderContext
-
-@synthesize codewords = _codewords;
-@synthesize message = _message;
-@synthesize symbolShape = _symbolShape;
-@synthesize newEncoding = _newEncoding;
-@synthesize maxSize = _maxSize;
-@synthesize minSize = _minSize;
-@synthesize skipAtEnd = _skipAtEnd;
-@synthesize pos = _pos;
-@synthesize symbolInfo = _symbolInfo;
 
 - (id)initWithMessage:(NSString *)msg {
   if (self = [super init]) {
@@ -46,7 +36,7 @@
     }
     const char *msgBinary = [msgData bytes];
     NSMutableString *sb = [NSMutableString string];
-    for (int i = 0, c = msg.length; i < c; i++) {
+    for (int i = 0, c = (int)msg.length; i < c; i++) {
       unichar ch = (unichar) (msgBinary[i] & 0xff);
       [sb appendFormat:@"%C", ch];
     }
@@ -58,9 +48,6 @@
   }
 
   return self;
-}
-
-- (void)dealloc {
 }
 
 - (void)setSizeConstraints:(ZXDimension *)minSize maxSize:(ZXDimension *)maxSize {
@@ -85,7 +72,7 @@
 }
 
 - (int)codewordCount {
-  return self.codewords.length;
+  return (int)self.codewords.length;
 }
 
 - (void)signalEncoderChange:(int)encoding {
@@ -101,7 +88,7 @@
 }
 
 - (int)totalMessageCharCount {
-  return self.message.length - self.skipAtEnd;
+  return (int)self.message.length - self.skipAtEnd;
 }
 
 - (int)remainingCharacters {

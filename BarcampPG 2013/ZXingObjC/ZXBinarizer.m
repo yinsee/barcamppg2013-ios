@@ -25,32 +25,23 @@
 #define ZXWhite CGColorGetConstantColor(kCGColorWhite)
 #endif
 
-@interface ZXBinarizer ()
-
-@property (nonatomic, retain) ZXLuminanceSource *luminanceSource;
-
-@end
-
 @implementation ZXBinarizer
-
-@synthesize luminanceSource;
 
 - (id)initWithSource:(ZXLuminanceSource *)source {
   if (self = [super init]) {
-    self.luminanceSource = source;
+    _luminanceSource = source;
   }
 
   return self;
 }
 
+- (id)initWithLuminanceSource:(ZXLuminanceSource *)source {
+  return [self initWithSource:source];
+}
+
 + (id)binarizerWithSource:(ZXLuminanceSource *)source {
-  return [[self alloc] initWithSource:source];
+  return [[self alloc] initWithLuminanceSource:source];
 }
-
-- (void)dealloc {
-
-}
-
 
 /**
  * Converts one row of luminance data to 1 bit data. May actually do the conversion, or return
@@ -91,7 +82,7 @@
                                userInfo:nil];
 }
 
-- (CGImageRef)createImage {
+- (CGImageRef)createImage CF_RETURNS_RETAINED {
   ZXBitMatrix *matrix = [self blackMatrixWithError:nil];
   if (!matrix) {
     return nil;
@@ -111,7 +102,7 @@
                                                 8,      // bits per component
                                                 bytesPerRow,
                                                 gray,
-                                                kCGImageAlphaNone);
+                                                kCGBitmapAlphaInfoMask & kCGImageAlphaNone);
   CGColorSpaceRelease(gray);
 
   CGRect r = CGRectZero;

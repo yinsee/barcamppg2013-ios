@@ -19,31 +19,20 @@
 
 @interface ZXMode ()
 
-@property (nonatomic, assign) int bits;
-@property (nonatomic, retain) NSArray *characterCountBitsForVersions;
-@property (nonatomic, copy) NSString *name;
+@property (nonatomic, strong) NSArray *characterCountBitsForVersions;
 
 @end
 
 @implementation ZXMode
 
-@synthesize bits;
-@synthesize characterCountBitsForVersions;
-@synthesize name;
-
-- (id)initWithCharacterCountBitsForVersions:(NSArray *)aCharacterCountBitsForVersions
-                                       bits:(int)aBits
-                                       name:(NSString *)aName {
+- (id)initWithCharacterCountBitsForVersions:(NSArray *)characterCountBitsForVersions bits:(int)bits name:(NSString *)name {
   if (self = [super init]) {
-    self.characterCountBitsForVersions = aCharacterCountBitsForVersions;
-    self.bits = aBits;
-    self.name = aName;
+    _characterCountBitsForVersions = characterCountBitsForVersions;
+    _bits = bits;
+    _name = name;
   }
 
   return self;
-}
-
-- (void)dealloc {
 }
 
 + (ZXMode *)forBits:(int)bits {
@@ -83,7 +72,7 @@
   } else {
     offset = 2;
   }
-  return [[self.characterCountBitsForVersions objectAtIndex:offset] intValue];
+  return [self.characterCountBitsForVersions[offset] intValue];
 }
 
 - (NSString *)description {
@@ -92,118 +81,82 @@
 
 + (ZXMode *)terminatorMode {
   static ZXMode *thisMode = nil;
-  if (!thisMode) {
-    thisMode = [[ZXMode alloc] initWithCharacterCountBitsForVersions:[NSArray arrayWithObjects:
-                                                                      [NSNumber numberWithInt:0],
-                                                                      [NSNumber numberWithInt:0],
-                                                                      [NSNumber numberWithInt:0], nil]
-                                                                bits:0x00
-                                                                name:@"TERMINATOR"];
-  }
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    thisMode = [[ZXMode alloc] initWithCharacterCountBitsForVersions:@[@0, @0, @0] bits:0x00 name:@"TERMINATOR"];
+  });
   return thisMode;
 }
 
 + (ZXMode *)numericMode {
   static ZXMode *thisMode = nil;
-  if (!thisMode) {
-    thisMode = [[ZXMode alloc] initWithCharacterCountBitsForVersions:[NSArray arrayWithObjects:
-                                                                      [NSNumber numberWithInt:10],
-                                                                      [NSNumber numberWithInt:12],
-                                                                      [NSNumber numberWithInt:14], nil]
-                                                                bits:0x01
-                                                                name:@"NUMERIC"];
-  }
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    thisMode = [[ZXMode alloc] initWithCharacterCountBitsForVersions:@[@10, @12, @14] bits:0x01 name:@"NUMERIC"];
+  });
   return thisMode;
 }
 
 + (ZXMode *)alphanumericMode {
   static ZXMode *thisMode = nil;
-  if (!thisMode) {
-    thisMode = [[ZXMode alloc] initWithCharacterCountBitsForVersions:[NSArray arrayWithObjects:
-                                                                      [NSNumber numberWithInt:9],
-                                                                      [NSNumber numberWithInt:11],
-                                                                      [NSNumber numberWithInt:13], nil]
-                                                                bits:0x02
-                                                                name:@"ALPHANUMERIC"];
-  }
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    thisMode = [[ZXMode alloc] initWithCharacterCountBitsForVersions:@[@9, @11, @13] bits:0x02 name:@"ALPHANUMERIC"];
+  });
   return thisMode;
 }
 
 + (ZXMode *)structuredAppendMode {
   static ZXMode *thisMode = nil;
-  if (!thisMode) {
-    thisMode = [[ZXMode alloc] initWithCharacterCountBitsForVersions:[NSArray arrayWithObjects:
-                                                                      [NSNumber numberWithInt:0],
-                                                                      [NSNumber numberWithInt:0],
-                                                                      [NSNumber numberWithInt:0], nil]
-                                                                bits:0x03
-                                                                name:@"STRUCTURED_APPEND"];
-  }
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    thisMode = [[ZXMode alloc] initWithCharacterCountBitsForVersions:@[@0, @0, @0] bits:0x03 name:@"STRUCTURED_APPEND"];
+  });
   return thisMode;
 }
 
 + (ZXMode *)byteMode {
   static ZXMode *thisMode = nil;
-  if (!thisMode) {
-    thisMode = [[ZXMode alloc] initWithCharacterCountBitsForVersions:[NSArray arrayWithObjects:
-                                                                      [NSNumber numberWithInt:8],
-                                                                      [NSNumber numberWithInt:16],
-                                                                      [NSNumber numberWithInt:16], nil]
-                                                                bits:0x04
-                                                                name:@"BYTE"];
-  }
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    thisMode = [[ZXMode alloc] initWithCharacterCountBitsForVersions:@[@8, @16, @16] bits:0x04 name:@"BYTE"];
+  });
   return thisMode;
 }
 
 + (ZXMode *)eciMode {
   static ZXMode *thisMode = nil;
-  if (!thisMode) {
-    thisMode = [[ZXMode alloc] initWithCharacterCountBitsForVersions:[NSArray arrayWithObjects:
-                                                                      [NSNumber numberWithInt:0],
-                                                                      [NSNumber numberWithInt:0],
-                                                                      [NSNumber numberWithInt:0], nil]
-                                                                bits:0x07
-                                                                name:@"ECI"];
-  }
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    thisMode = [[ZXMode alloc] initWithCharacterCountBitsForVersions:@[@0, @0, @0] bits:0x07 name:@"ECI"];
+  });
   return thisMode;
 }
 
 + (ZXMode *)kanjiMode {
   static ZXMode *thisMode = nil;
-  if (!thisMode) {
-    thisMode = [[ZXMode alloc] initWithCharacterCountBitsForVersions:[NSArray arrayWithObjects:
-                                                                      [NSNumber numberWithInt:8],
-                                                                      [NSNumber numberWithInt:10],
-                                                                      [NSNumber numberWithInt:12], nil]
-                                                                bits:0x08
-                                                                name:@"KANJI"];
-  }
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    thisMode = [[ZXMode alloc] initWithCharacterCountBitsForVersions:@[@8, @10, @12] bits:0x08 name:@"KANJI"];
+  });
   return thisMode;
 }
 
 + (ZXMode *)fnc1FirstPositionMode {
   static ZXMode *thisMode = nil;
-  if (!thisMode) {
-    thisMode = [[ZXMode alloc] initWithCharacterCountBitsForVersions:[NSArray arrayWithObjects:
-                                                                      [NSNumber numberWithInt:0],
-                                                                      [NSNumber numberWithInt:0],
-                                                                      [NSNumber numberWithInt:0], nil]
-                                                                bits:0x05
-                                                                name:@"FNC1_FIRST_POSITION"];
-  }
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    thisMode = [[ZXMode alloc] initWithCharacterCountBitsForVersions:@[@0, @0, @0] bits:0x05 name:@"FNC1_FIRST_POSITION"];
+  });
   return thisMode;
 }
 
 + (ZXMode *)fnc1SecondPositionMode {
   static ZXMode *thisMode = nil;
-  if (!thisMode) {
-    thisMode = [[ZXMode alloc] initWithCharacterCountBitsForVersions:[NSArray arrayWithObjects:
-                                                                      [NSNumber numberWithInt:0],
-                                                                      [NSNumber numberWithInt:0],
-                                                                      [NSNumber numberWithInt:0], nil]
-                                                                bits:0x09
-                                                                name:@"FNC1_SECOND_POSITION"];
-  }
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    thisMode = [[ZXMode alloc] initWithCharacterCountBitsForVersions:@[@0, @0, @0] bits:0x09 name:@"FNC1_SECOND_POSITION"];
+  });
   return thisMode;
 }
 
@@ -212,14 +165,10 @@
  */
 + (ZXMode *)hanziMode {
   static ZXMode *thisMode = nil;
-  if (!thisMode) {
-    thisMode = [[ZXMode alloc] initWithCharacterCountBitsForVersions:[NSArray arrayWithObjects:
-                                                                      [NSNumber numberWithInt:8],
-                                                                      [NSNumber numberWithInt:10],
-                                                                      [NSNumber numberWithInt:12], nil]
-                                                                bits:0x0D
-                                                                name:@"HANZI"];
-  }
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    thisMode = [[ZXMode alloc] initWithCharacterCountBitsForVersions:@[@8, @10, @12] bits:0x0D name:@"HANZI"];
+  });
   return thisMode;
 }
 

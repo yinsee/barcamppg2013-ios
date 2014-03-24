@@ -26,29 +26,14 @@
 #import "ZXQRCodeReader.h"
 #import "ZXResult.h"
 
-@interface ZXQRCodeReader ()
-
-@property (nonatomic, retain) ZXQRCodeDecoder *decoder;
-
-- (ZXBitMatrix *)extractPureBits:(ZXBitMatrix *)image;
-- (float)moduleSize:(NSArray *)leftTopBlack image:(ZXBitMatrix *)image;
-
-@end
-
 @implementation ZXQRCodeReader
-
-@synthesize decoder;
 
 - (id)init {
   if (self = [super init]) {
-    self.decoder = [[ZXQRCodeDecoder alloc] init];
+    _decoder = [[ZXQRCodeDecoder alloc] init];
   }
 
   return self;
-}
-
-- (void)dealloc {
-
 }
 
 /**
@@ -71,17 +56,17 @@
       if (error) *error = NotFoundErrorInstance();
       return nil;
     }
-    decoderResult = [decoder decodeMatrix:bits hints:hints error:error];
+    decoderResult = [self.decoder decodeMatrix:bits hints:hints error:error];
     if (!decoderResult) {
       return nil;
     }
-    points = [NSArray array];
+    points = @[];
   } else {
     ZXDetectorResult *detectorResult = [[[ZXQRCodeDetector alloc] initWithImage:matrix] detect:hints error:error];
     if (!detectorResult) {
       return nil;
     }
-    decoderResult = [decoder decodeMatrix:[detectorResult bits] hints:hints error:error];
+    decoderResult = [self.decoder decodeMatrix:[detectorResult bits] hints:hints error:error];
     if (!decoderResult) {
       return nil;
     }
@@ -108,7 +93,6 @@
   // do nothing
 }
 
-
 /**
  * This method detects a code in a "pure" image -- that is, pure monochrome image
  * which contains only an unrotated, unskewed, image of a code, with some white border
@@ -127,10 +111,15 @@
     return nil;
   }
 
-  int top = [[leftTopBlack objectAtIndex:1] intValue];
-  int bottom = [[rightBottomBlack objectAtIndex:1] intValue];
-  int left = [[leftTopBlack objectAtIndex:0] intValue];
-  int right = [[rightBottomBlack objectAtIndex:0] intValue];
+  int top = [leftTopBlack[1] intValue];
+  int bottom = [rightBottomBlack[1] intValue];
+  int left = [leftTopBlack[0] intValue];
+  int right = [rightBottomBlack[0] intValue];
+
+  // Sanity check!
+  if (left >= right || top >= bottom) {
+    return nil;
+  }
 
   if (bottom - top != right - left) {
     // Special case, where bottom-right module wasn't black so we found something else in the last row
@@ -151,6 +140,25 @@
   top += nudge;
   left += nudge;
 
+  // But careful that this does not sample off the edge
+  int nudgedTooFarRight = left + (int) ((matrixWidth - 1) * moduleSize) - (right - 1);
+  if (nudgedTooFarRight > 0) {
+    if (nudgedTooFarRight > nudge) {
+      // Neither way fits; abort
+      return nil;
+    }
+    left -= nudgedTooFarRight;
+  }
+  int nudgedTooFarDown = top + (int) ((matrixHeight - 1) * moduleSize) - (bottom - 1);
+  if (nudgedTooFarDown > 0) {
+    if (nudgedTooFarDown > nudge) {
+      // Neither way fits; abort
+      return nil;
+    }
+    top -= nudgedTooFarDown;
+  }
+
+  // Now just read off the bits
   ZXBitMatrix *bits = [[ZXBitMatrix alloc] initWithWidth:matrixWidth height:matrixHeight];
   for (int y = 0; y < matrixHeight; y++) {
     int iOffset = top + (int) (y * moduleSize);
@@ -166,8 +174,8 @@
 - (float)moduleSize:(NSArray *)leftTopBlack image:(ZXBitMatrix *)image {
   int height = image.height;
   int width = image.width;
-  int x = [[leftTopBlack objectAtIndex:0] intValue];
-  int y = [[leftTopBlack objectAtIndex:1] intValue];
+  int x = [leftTopBlack[0] intValue];
+  int y = [leftTopBlack[1] intValue];
   BOOL inBlack = YES;
   int transitions = 0;
   while (x < width && y < height) {
@@ -183,7 +191,7 @@
     return -1;
   }
 
-  return (x - [[leftTopBlack objectAtIndex:0] intValue]) / 7.0f;
+  return (x - [leftTopBlack[0] intValue]) / 7.0f;
 }
 
 @end

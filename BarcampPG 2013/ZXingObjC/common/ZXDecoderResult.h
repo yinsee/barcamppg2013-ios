@@ -22,13 +22,16 @@
 
 @interface ZXDecoderResult : NSObject
 
-@property (nonatomic, assign, readonly) unsigned char *rawBytes;
+@property (nonatomic, assign, readonly) int8_t *rawBytes;
 @property (nonatomic, assign, readonly) int length;
 @property (nonatomic, copy, readonly) NSString *text;
-@property (nonatomic, retain, readonly) NSMutableArray *byteSegments;
+@property (nonatomic, strong, readonly) NSMutableArray *byteSegments;
 @property (nonatomic, copy, readonly) NSString *ecLevel;
+@property (nonatomic, copy) NSNumber *errorsCorrected;
+@property (nonatomic, copy) NSNumber *erasures;
+@property (nonatomic, strong) id other;
 
-- (id)initWithRawBytes:(unsigned char *)rawBytes
+- (id)initWithRawBytes:(int8_t *)rawBytes
                 length:(unsigned int)length
                   text:(NSString *)text
           byteSegments:(NSMutableArray *)byteSegments

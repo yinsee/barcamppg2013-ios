@@ -40,30 +40,18 @@ const int CODE93_ASTERISK_ENCODING = 0x15E;
 
 @interface ZXCode93Reader ()
 
-@property (nonatomic, retain) NSMutableString *decodeRowResult;
-
-- (BOOL)checkChecksums:(NSMutableString *)result error:(NSError **)error ;
-- (BOOL)checkOneChecksum:(NSMutableString *)result checkPosition:(int)checkPosition weightMax:(int)weightMax error:(NSError **)error ;
-- (NSString *)decodeExtended:(NSMutableString *)encoded;
-- (BOOL)findAsteriskPattern:(ZXBitArray *)row a:(int *)a b:(int *)b;
-- (unichar)patternToChar:(int)pattern;
-- (int)toPattern:(int *)counters countersLen:(unsigned int)countersLen;
+@property (nonatomic, strong) NSMutableString *decodeRowResult;
 
 @end
 
 @implementation ZXCode93Reader
 
-@synthesize decodeRowResult;
-
 - (id)init {
   if (self = [super init]) {
-    self.decodeRowResult = [NSMutableString stringWithCapacity:20];
+    _decodeRowResult = [NSMutableString stringWithCapacity:20];
   }
 
   return self;
-}
-
-- (void)dealloc {
 }
 
 - (ZXResult *)decodeRow:(int)rowNumber row:(ZXBitArray *)row hints:(ZXDecodeHints *)hints error:(NSError **)error {
@@ -95,7 +83,7 @@ const int CODE93_ASTERISK_ENCODING = 0x15E;
       return nil;
     }
     decodedChar = [self patternToChar:pattern];
-    if (decodedChar == -1) {
+    if (decodedChar == 0) {
       if (error) *error = NotFoundErrorInstance();
       return nil;
     }
@@ -136,9 +124,8 @@ const int CODE93_ASTERISK_ENCODING = 0x15E;
   return [ZXResult resultWithText:resultString
                          rawBytes:nil
                            length:0
-                     resultPoints:[NSArray arrayWithObjects:
-                                   [[ZXResultPoint alloc] initWithX:left y:(float)rowNumber],
-                                   [[ZXResultPoint alloc] initWithX:right y:(float)rowNumber], nil]
+                     resultPoints:@[[[ZXResultPoint alloc] initWithX:left y:(float)rowNumber],
+                                    [[ZXResultPoint alloc] initWithX:right y:(float)rowNumber]]
                            format:kBarcodeFormatCode93];
 }
 
@@ -221,7 +208,7 @@ const int CODE93_ASTERISK_ENCODING = 0x15E;
 }
 
 - (NSString *)decodeExtended:(NSMutableString *)encoded {
-  int length = [encoded length];
+  NSUInteger length = [encoded length];
   NSMutableString *decoded = [NSMutableString stringWithCapacity:length];
   for (int i = 0; i < length; i++) {
     unichar c = [encoded characterAtIndex:i];
@@ -276,11 +263,11 @@ const int CODE93_ASTERISK_ENCODING = 0x15E;
 }
 
 - (BOOL)checkChecksums:(NSMutableString *)result error:(NSError **)error {
-  int length = [result length];
-  if (![self checkOneChecksum:result checkPosition:length - 2 weightMax:20 error:error]) {
+  NSUInteger length = [result length];
+  if (![self checkOneChecksum:result checkPosition:(int)length - 2 weightMax:20 error:error]) {
     return NO;
   }
-  return [self checkOneChecksum:result checkPosition:length - 1 weightMax:15 error:error];
+  return [self checkOneChecksum:result checkPosition:(int)length - 1 weightMax:15 error:error];
 }
 
 - (BOOL)checkOneChecksum:(NSMutableString *)result checkPosition:(int)checkPosition weightMax:(int)weightMax error:(NSError **)error {

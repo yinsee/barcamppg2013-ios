@@ -18,28 +18,15 @@
 #import "ZXQRCodeDataBlock.h"
 #import "ZXQRCodeVersion.h"
 
-@interface ZXQRCodeDataBlock ()
-
-@property (nonatomic, retain) NSMutableArray *codewords;
-@property (nonatomic, assign) int numDataCodewords;
-
-@end
-
 @implementation ZXQRCodeDataBlock
 
-@synthesize codewords;
-@synthesize numDataCodewords;
-
-- (id)initWithNumDataCodewords:(int)theNumDataCodewords codewords:(NSMutableArray *)theCodewords {
+- (id)initWithNumDataCodewords:(int)numDataCodewords codewords:(NSMutableArray *)codewords {
   if (self = [super init]) {
-    self.numDataCodewords = theNumDataCodewords;
-    self.codewords = theCodewords;
+    _numDataCodewords = numDataCodewords;
+    _codewords = codewords;
   }
 
   return self;
-}
-
-- (void)dealloc {
 }
 
 /**
@@ -74,11 +61,11 @@
     }
   }
 
-  int shorterBlocksTotalCodewords = [[[result objectAtIndex:0] codewords] count];
-  int longerBlocksStartAt = [result count] - 1;
+  int shorterBlocksTotalCodewords = (int)[[result[0] codewords] count];
+  int longerBlocksStartAt = (int)[result count] - 1;
 
   while (longerBlocksStartAt >= 0) {
-    int numCodewords = [[[result objectAtIndex:longerBlocksStartAt] codewords] count];
+    int numCodewords = (int)[[result[longerBlocksStartAt] codewords] count];
     if (numCodewords == shorterBlocksTotalCodewords) {
       break;
     }
@@ -88,23 +75,23 @@
   longerBlocksStartAt++;
   int shorterBlocksNumDataCodewords = shorterBlocksTotalCodewords - ecBlocks.ecCodewordsPerBlock;
   int rawCodewordsOffset = 0;
-  int numResultBlocks = [result count];
+  int numResultBlocks = (int)[result count];
 
   for (int i = 0; i < shorterBlocksNumDataCodewords; i++) {
     for (int j = 0; j < numResultBlocks; j++) {
-      [[[result objectAtIndex:j] codewords] replaceObjectAtIndex:i withObject:[rawCodewords objectAtIndex:rawCodewordsOffset++]];
+      [result[j] codewords][i] = rawCodewords[rawCodewordsOffset++];
     }
   }
 
   for (int j = longerBlocksStartAt; j < numResultBlocks; j++) {
-    [[[result objectAtIndex:j] codewords] replaceObjectAtIndex:shorterBlocksNumDataCodewords withObject:[rawCodewords objectAtIndex:rawCodewordsOffset++]];
+    [result[j] codewords][shorterBlocksNumDataCodewords] = rawCodewords[rawCodewordsOffset++];
   }
 
-  int max = [[[result objectAtIndex:0] codewords] count];
+  int max = (int)[[result[0] codewords] count];
   for (int i = shorterBlocksNumDataCodewords; i < max; i++) {
     for (int j = 0; j < numResultBlocks; j++) {
       int iOffset = j < longerBlocksStartAt ? i : i + 1;
-      [[[result objectAtIndex:j] codewords] replaceObjectAtIndex:iOffset withObject:[rawCodewords objectAtIndex:rawCodewordsOffset++]];
+      [result[j] codewords][iOffset] = rawCodewords[rawCodewordsOffset++];
     }
   }
 

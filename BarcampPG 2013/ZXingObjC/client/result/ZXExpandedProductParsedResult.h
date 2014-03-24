@@ -16,8 +16,8 @@
 
 #import "ZXParsedResult.h"
 
-extern NSString *const KILOGRAM;
-extern NSString *const POUND;
+extern NSString * const ZX_KILOGRAM;
+extern NSString * const ZX_POUND;
 
 @interface ZXExpandedProductParsedResult : ZXParsedResult
 
@@ -35,17 +35,20 @@ extern NSString *const POUND;
 @property (nonatomic, copy, readonly) NSString *price;
 @property (nonatomic, copy, readonly) NSString *priceIncrement;
 @property (nonatomic, copy, readonly) NSString *priceCurrency;
-@property (nonatomic, retain, readonly) NSMutableDictionary *uncommonAIs;
+@property (nonatomic, strong, readonly) NSMutableDictionary *uncommonAIs;
 
-- (id)initWithRawText:(NSString *)rawText productID:(NSString *)productID sscc:(NSString *)sscc lotNumber:(NSString *)lotNumber
-       productionDate:(NSString *)productionDate packagingDate:(NSString *)packagingDate bestBeforeDate:(NSString *)bestBeforeDate
+- (id)initWithRawText:(NSString *)rawText productID:(NSString *)productID sscc:(NSString *)sscc
+            lotNumber:(NSString *)lotNumber productionDate:(NSString *)productionDate
+        packagingDate:(NSString *)packagingDate bestBeforeDate:(NSString *)bestBeforeDate
        expirationDate:(NSString *)expirationDate weight:(NSString *)weight weightType:(NSString *)weightType
       weightIncrement:(NSString *)weightIncrement price:(NSString *)price priceIncrement:(NSString *)priceIncrement
         priceCurrency:(NSString *)priceCurrency uncommonAIs:(NSMutableDictionary *)uncommonAIs;
-+ (id)expandedProductParsedResultWithRawText:(NSString *)rawText productID:(NSString *)productID sscc:(NSString *)sscc lotNumber:(NSString *)lotNumber
-                              productionDate:(NSString *)productionDate packagingDate:(NSString *)packagingDate bestBeforeDate:(NSString *)bestBeforeDate
-                              expirationDate:(NSString *)expirationDate weight:(NSString *)weight weightType:(NSString *)weightType
-                             weightIncrement:(NSString *)weightIncrement price:(NSString *)price priceIncrement:(NSString *)priceIncrement
++ (id)expandedProductParsedResultWithRawText:(NSString *)rawText productID:(NSString *)productID sscc:(NSString *)sscc
+                                   lotNumber:(NSString *)lotNumber productionDate:(NSString *)productionDate
+                               packagingDate:(NSString *)packagingDate bestBeforeDate:(NSString *)bestBeforeDate
+                              expirationDate:(NSString *)expirationDate weight:(NSString *)weight
+                                  weightType:(NSString *)weightType weightIncrement:(NSString *)weightIncrement
+                                       price:(NSString *)price priceIncrement:(NSString *)priceIncrement
                                priceCurrency:(NSString *)priceCurrency uncommonAIs:(NSMutableDictionary *)uncommonAIs;
 
 @end

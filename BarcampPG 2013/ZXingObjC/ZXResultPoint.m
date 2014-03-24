@@ -17,24 +17,12 @@
 #import "ZXMathUtils.h"
 #import "ZXResultPoint.h"
 
-@interface ZXResultPoint ()
-
-@property (nonatomic, assign) float x;
-@property (nonatomic, assign) float y;
-
-+ (float)crossProductZ:(ZXResultPoint *)pointA pointB:(ZXResultPoint *)pointB pointC:(ZXResultPoint *)pointC;
-
-@end
-
 @implementation ZXResultPoint
 
-@synthesize x;
-@synthesize y;
-
-- (id)initWithX:(float)anX y:(float)aY {
+- (id)initWithX:(float)x y:(float)y {
   if (self = [super init]) {
-    self.x = anX;
-    self.y = aY;
+    _x = x;
+    _y = y;
   }
 
   return self;
@@ -45,7 +33,7 @@
 }
 
 - (id)copyWithZone:(NSZone *)zone {
-  return [[ZXResultPoint allocWithZone:zone] initWithX:x y:y];
+  return [[ZXResultPoint allocWithZone:zone] initWithX:self.x y:self.y];
 }
 
 - (BOOL)isEqual:(id)other {
@@ -57,37 +45,36 @@
 }
 
 - (NSUInteger)hash {
-  return 31 * *((int *)(&x)) + *((int *)(&y));
+  return 31 * *((int *)(&_x)) + *((int *)(&_y));
 }
 
 - (NSString *)description {
   return [NSString stringWithFormat:@"(%f,%f)", self.x, self.y];
 }
 
-
 /**
  * Orders an array of three ResultPoints in an order [A,B,C] such that AB < AC and
  * BC < AC and the angle between BC and BA is less than 180 degrees.
  */
 + (void)orderBestPatterns:(NSMutableArray *)patterns {
-  float zeroOneDistance = [self distance:[patterns objectAtIndex:0] pattern2:[patterns objectAtIndex:1]];
-  float oneTwoDistance = [self distance:[patterns objectAtIndex:1] pattern2:[patterns objectAtIndex:2]];
-  float zeroTwoDistance = [self distance:[patterns objectAtIndex:0] pattern2:[patterns objectAtIndex:2]];
+  float zeroOneDistance = [self distance:patterns[0] pattern2:patterns[1]];
+  float oneTwoDistance = [self distance:patterns[1] pattern2:patterns[2]];
+  float zeroTwoDistance = [self distance:patterns[0] pattern2:patterns[2]];
   ZXResultPoint *pointA;
   ZXResultPoint *pointB;
   ZXResultPoint *pointC;
   if (oneTwoDistance >= zeroOneDistance && oneTwoDistance >= zeroTwoDistance) {
-    pointB = [patterns objectAtIndex:0];
-    pointA = [patterns objectAtIndex:1];
-    pointC = [patterns objectAtIndex:2];
+    pointB = patterns[0];
+    pointA = patterns[1];
+    pointC = patterns[2];
   } else if (zeroTwoDistance >= oneTwoDistance && zeroTwoDistance >= zeroOneDistance) {
-    pointB = [patterns objectAtIndex:1];
-    pointA = [patterns objectAtIndex:0];
-    pointC = [patterns objectAtIndex:2];
+    pointB = patterns[1];
+    pointA = patterns[0];
+    pointC = patterns[2];
   } else {
-    pointB = [patterns objectAtIndex:2];
-    pointA = [patterns objectAtIndex:0];
-    pointC = [patterns objectAtIndex:1];
+    pointB = patterns[2];
+    pointA = patterns[0];
+    pointC = patterns[1];
   }
 
   if ([self crossProductZ:pointA pointB:pointB pointC:pointC] < 0.0f) {
@@ -95,11 +82,10 @@
     pointA = pointC;
     pointC = temp;
   }
-  [patterns replaceObjectAtIndex:0 withObject:pointA];
-  [patterns replaceObjectAtIndex:1 withObject:pointB];
-  [patterns replaceObjectAtIndex:2 withObject:pointC];
+  patterns[0] = pointA;
+  patterns[1] = pointB;
+  patterns[2] = pointC;
 }
-
 
 /**
  * Returns distance between two points
@@ -107,7 +93,6 @@
 + (float)distance:(ZXResultPoint *)pattern1 pattern2:(ZXResultPoint *)pattern2 {
   return [ZXMathUtils distance:pattern1.x aY:pattern1.y bX:pattern2.x bY:pattern2.y];
 }
-
 
 /**
  * Returns the z component of the cross product between vectors BC and BA.

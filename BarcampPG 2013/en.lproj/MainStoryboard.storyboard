@@ -144,7 +144,6 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="cancel:" destination="S6e-f9-VVA" eventType="touchUpInside" id="Sbq-gw-jKL"/>
                                     <action selector="pop:" destination="dYH-Xu-k4W" eventType="touchUpInside" id="dvu-Eh-bt1"/>
                                 </connections>
                             </button>
@@ -180,7 +179,7 @@
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <action selector="cancel:" destination="S6e-f9-VVA" eventType="touchUpInside" id="RDF-SH-PnS"/>
+                                    <action selector="cancel:" destination="S6e-f9-VVA" eventType="touchUpInside" id="IXz-lc-o3f"/>
                                 </connections>
                             </button>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="SCAN NOW" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="YqU-O2-spm">
@@ -764,7 +763,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <webView contentMode="scaleToFill" id="KAk-52-4r8">
-                                <rect key="frame" x="0.0" y="85" width="320" height="483"/>
+                                <rect key="frame" x="0.0" y="37" width="320" height="531"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             </webView>
@@ -856,11 +855,11 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" id="wQq-9o-xbo">
-                                <rect key="frame" x="10" y="110" width="300" height="379"/>
+                                <rect key="frame" x="10" y="115" width="300" height="331"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="gNp-8b-yu8">
-                                <rect key="frame" x="77" y="497" width="166" height="39"/>
+                                <rect key="frame" x="77" y="463" width="166" height="39"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" image="btn_add_edit_profile.png">
@@ -882,7 +881,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="profile_placeholder.png" id="OIY-wu-dba" customClass="ProfileImageView">
-                                <rect key="frame" x="140" y="280" width="40" height="40"/>
+                                <rect key="frame" x="29" y="462" width="40" height="40"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                             </imageView>
                         </subviews>
@@ -945,6 +944,6 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="rDF-gI-GCa"/>
+        <segue reference="3tX-lR-3DU"/>
     </inferredMetricsTieBreakers>
 </document>

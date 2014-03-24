@@ -22,61 +22,46 @@
 
 @interface ZXAlignmentPatternFinder ()
 
-@property (nonatomic, retain) ZXBitMatrix *image;
-@property (nonatomic, retain) NSMutableArray *possibleCenters;
+@property (nonatomic, strong) ZXBitMatrix *image;
+@property (nonatomic, strong) NSMutableArray *possibleCenters;
 @property (nonatomic, assign) int startX;
 @property (nonatomic, assign) int startY;
 @property (nonatomic, assign) int width;
 @property (nonatomic, assign) int height;
 @property (nonatomic, assign) float moduleSize;
 @property (nonatomic, assign) int *crossCheckStateCount;
-@property (nonatomic, assign) id <ZXResultPointCallback> resultPointCallback;
-
-- (float)centerFromEnd:(int *)stateCount end:(int)end;
-- (BOOL)foundPatternCross:(int *)stateCount;
-- (ZXAlignmentPattern *)handlePossibleCenter:(int *)stateCount i:(int)i j:(int)j;
+@property (nonatomic, weak) id <ZXResultPointCallback> resultPointCallback;
 
 @end
 
 @implementation ZXAlignmentPatternFinder
 
-@synthesize image;
-@synthesize possibleCenters;
-@synthesize startX;
-@synthesize startY;
-@synthesize width;
-@synthesize height;
-@synthesize moduleSize;
-@synthesize crossCheckStateCount;
-@synthesize resultPointCallback;
-
 /**
  * Creates a finder that will look in a portion of the whole image.
  */
-- (id)initWithImage:(ZXBitMatrix *)anImage startX:(int)aStartX startY:(int)aStartY width:(int)aWidth height:(int)aHeight moduleSize:(float)aModuleSize resultPointCallback:(id <ZXResultPointCallback>)aResultPointCallback {
+- (id)initWithImage:(ZXBitMatrix *)image startX:(int)startX startY:(int)startY width:(int)width height:(int)height moduleSize:(float)moduleSize resultPointCallback:(id<ZXResultPointCallback>)resultPointCallback {
   if (self = [super init]) {
-    self.image = anImage;
-    self.possibleCenters = [NSMutableArray arrayWithCapacity:5];
-    self.startX = aStartX;
-    self.startY = aStartY;
-    self.width = aWidth;
-    self.height = aHeight;
-    self.moduleSize = aModuleSize;
-    self.crossCheckStateCount = (int *)malloc(3 * sizeof(int));
-    memset(self.crossCheckStateCount, 0, 3 * sizeof(int));
-    self.resultPointCallback = aResultPointCallback;
+    _image = image;
+    _possibleCenters = [NSMutableArray arrayWithCapacity:5];
+    _startX = startX;
+    _startY = startY;
+    _width = width;
+    _height = height;
+    _moduleSize = moduleSize;
+    _crossCheckStateCount = (int *)malloc(3 * sizeof(int));
+    memset(_crossCheckStateCount, 0, 3 * sizeof(int));
+    _resultPointCallback = resultPointCallback;
   }
 
   return self;
 }
 
-- (void) dealloc {
-  if (self.crossCheckStateCount != NULL) {
-    free(self.crossCheckStateCount);
-    self.crossCheckStateCount = NULL;
+- (void)dealloc {
+  if (_crossCheckStateCount != NULL) {
+    free(_crossCheckStateCount);
+    _crossCheckStateCount = NULL;
   }
 }
-
 
 /**
  * This method attempts to find the bottom-right alignment pattern in the image. It is a bit messy since
@@ -87,12 +72,12 @@
   int middleI = self.startY + (self.height >> 1);
   int stateCount[3];
 
-  for (int iGen = 0; iGen < height; iGen++) {
+  for (int iGen = 0; iGen < self.height; iGen++) {
     int i = middleI + ((iGen & 0x01) == 0 ? (iGen + 1) >> 1 : -((iGen + 1) >> 1));
     stateCount[0] = 0;
     stateCount[1] = 0;
     stateCount[2] = 0;
-    int j = startX;
+    int j = self.startX;
 
     while (j < maxJ && ![self.image getX:j y:i]) {
       j++;
@@ -138,12 +123,11 @@
   }
 
   if ([self.possibleCenters count] > 0) {
-    return [self.possibleCenters objectAtIndex:0];
+    return self.possibleCenters[0];
   }
   if (error) *error = NotFoundErrorInstance();
   return nil;
 }
-
 
 /**
  * Given a count of black/white/black pixels just seen and an end position,
@@ -164,7 +148,6 @@
 
   return YES;
 }
-
 
 /**
  * After a horizontal scan finds a potential alignment pattern, this method
@@ -219,7 +202,6 @@
   return [self foundPatternCross:stateCount] ? [self centerFromEnd:stateCount end:i] : NAN;
 }
 
-
 /**
  * This is called when a horizontal scan finds a possible alignment pattern. It will
  * cross check with a vertical scan, and if successful, will see if this pattern had been
@@ -232,10 +214,10 @@
   float centerI = [self crossCheckVertical:i centerJ:(int)centerJ maxCount:2 * stateCount[1] originalStateCountTotal:stateCountTotal];
   if (!isnan(centerI)) {
     float estimatedModuleSize = (float)(stateCount[0] + stateCount[1] + stateCount[2]) / 3.0f;
-    int max = self.possibleCenters.count;
+    int max = (int)self.possibleCenters.count;
 
     for (int index = 0; index < max; index++) {
-      ZXAlignmentPattern *center = [self.possibleCenters objectAtIndex:index];
+      ZXAlignmentPattern *center = self.possibleCenters[index];
       // Look for about the same center and module size:
       if ([center aboutEquals:estimatedModuleSize i:centerI j:centerJ]) {
         return [center combineEstimateI:centerI j:centerJ newModuleSize:estimatedModuleSize];

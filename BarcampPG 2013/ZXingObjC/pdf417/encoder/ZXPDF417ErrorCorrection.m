@@ -121,8 +121,7 @@ const int EC_COEFFICIENTS[9][512] = {
  */
 + (int)errorCorrectionCodewordCount:(int)errorCorrectionLevel {
   if (errorCorrectionLevel < 0 || errorCorrectionLevel > 8) {
-    [NSException raise:NSInvalidArgumentException
-                format:@"Error correction level must be between 0 and 8!"];
+    [NSException raise:NSInvalidArgumentException format:@"Error correction level must be between 0 and 8!"];
   }
   return 1 << (errorCorrectionLevel + 1);
 }
@@ -133,8 +132,7 @@ const int EC_COEFFICIENTS[9][512] = {
  */
 + (int)recommendedMinimumErrorCorrectionLevel:(int)n error:(NSError **)error {
   if (n <= 0) {
-    [NSException raise:NSInvalidArgumentException
-                format:@"n must be > 0"];
+    [NSException raise:NSInvalidArgumentException format:@"n must be > 0"];
   }
   if (n <= 40) {
     return 2;
@@ -148,8 +146,7 @@ const int EC_COEFFICIENTS[9][512] = {
   if (n <= 863) {
     return 5;
   }
-  NSDictionary *userInfo = [NSDictionary dictionaryWithObject:@"No recommendation possible"
-                                                       forKey:NSLocalizedDescriptionKey];
+  NSDictionary *userInfo = @{NSLocalizedDescriptionKey: @"No recommendation possible"};
 
   if (error) *error = [[NSError alloc] initWithDomain:ZXErrorDomain code:ZXWriterError userInfo:userInfo];
   return -1;
@@ -163,7 +160,7 @@ const int EC_COEFFICIENTS[9][512] = {
   unichar e[k];
   memset(e, 0, k * sizeof(unichar));
 
-  int sld = dataCodewords.length;
+  int sld = (int)dataCodewords.length;
   for (int i = 0; i < sld; i++) {
     int t1 = ([dataCodewords characterAtIndex:i] + e[k - 1]) % 929;
     int t2;

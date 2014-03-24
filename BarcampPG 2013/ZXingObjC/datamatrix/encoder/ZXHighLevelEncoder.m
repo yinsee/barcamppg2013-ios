@@ -45,20 +45,6 @@ static NSString *MACRO_06_HEADER = nil;
  */
 static NSString *MACRO_TRAILER = nil;
 
-@interface ZXHighLevelEncoder ()
-
-+ (unichar)randomize253State:(unichar)ch codewordPosition:(int)codewordPosition;
-+ (int)findMinimums:(float *)charCounts intCharCounts:(int *)intCharCounts min:(int)min mins:(unsigned char *)mins;
-+ (int)minimumCount:(unsigned char *)mins;
-+ (BOOL)isNativeC40:(unichar)ch;
-+ (BOOL)isNativeText:(unichar)ch;
-+ (BOOL)isNativeX12:(unichar)ch;
-+ (BOOL)isX12TermSep:(unichar)ch;
-+ (BOOL)isNativeEDIFACT:(unichar)ch;
-+ (BOOL)isSpecialB256:(unichar)ch;
-
-@end
-
 @implementation ZXHighLevelEncoder
 
 + (void)initialize {
@@ -131,8 +117,8 @@ static NSString *MACRO_TRAILER = nil;
   return 5;
 }
 
-+ (unsigned char *)bytesForMessage:(NSString *)msg {
-  return (unsigned char *)[[msg dataUsingEncoding:(NSStringEncoding) 0x80000400] bytes]; //See 4.4.3 and annex B of ISO/IEC 15438:2001(E)
++ (int8_t *)bytesForMessage:(NSString *)msg {
+  return (int8_t *)[[msg dataUsingEncoding:(NSStringEncoding) 0x80000400] bytes]; //See 4.4.3 and annex B of ISO/IEC 15438:2001(E)
 }
 
 + (unichar)randomize253State:(unichar)ch codewordPosition:(int)codewordPosition {
@@ -148,12 +134,12 @@ static NSString *MACRO_TRAILER = nil;
 + (NSString *)encodeHighLevel:(NSString *)msg shape:(ZXSymbolShapeHint *)shape
                       minSize:(ZXDimension *)minSize maxSize:(ZXDimension *)maxSize {
   //the codewords 0..255 are encoded as Unicode characters
-  NSArray *encoders = [NSArray arrayWithObjects:[[ZXASCIIEncoder alloc] init],
-                       [[ZXC40Encoder alloc] init],
-                       [[ZXTextEncoder alloc] init],
-                       [[ZXX12Encoder alloc] init],
-                       [[ZXEdifactEncoder alloc] init],
-                       [[ZXBase256Encoder alloc] init], nil];
+  NSArray *encoders = @[[[ZXASCIIEncoder alloc] init],
+                        [[ZXC40Encoder alloc] init],
+                        [[ZXTextEncoder alloc] init],
+                        [[ZXX12Encoder alloc] init],
+                        [[ZXEdifactEncoder alloc] init],
+                        [[ZXBase256Encoder alloc] init]];
 
   ZXEncoderContext *context = [[ZXEncoderContext alloc] initWithMessage:msg];
   context.symbolShape = shape;
@@ -162,22 +148,22 @@ static NSString *MACRO_TRAILER = nil;
   if ([msg hasPrefix:MACRO_05_HEADER] && [msg hasSuffix:MACRO_TRAILER]) {
     [context writeCodeword:[self macro05]];
     [context setSkipAtEnd:2];
-    context.pos += MACRO_05_HEADER.length;
+    context.pos += (int)MACRO_05_HEADER.length;
   } else if ([msg hasPrefix:MACRO_06_HEADER] && [msg hasSuffix:MACRO_TRAILER]) {
     [context writeCodeword:[self macro06]];
     [context setSkipAtEnd:2];
-    context.pos += MACRO_06_HEADER.length;
+    context.pos += (int)MACRO_06_HEADER.length;
   }
 
   int encodingMode = [self asciiEncodation]; //Default mode
   while ([context hasMoreCharacters]) {
-    [[encoders objectAtIndex:encodingMode] encode:context];
+    [encoders[encodingMode] encode:context];
     if (context.newEncoding >= 0) {
       encodingMode = context.newEncoding;
       [context resetEncoderSignal];
     }
   }
-  int len = context.codewords.length;
+  NSUInteger len = context.codewords.length;
   [context updateSymbolInfo];
   int capacity = context.symbolInfo.dataCapacity;
   if (len < capacity) {
@@ -191,7 +177,7 @@ static NSString *MACRO_TRAILER = nil;
     [codewords appendFormat:@"%C", PAD_CHAR];
   }
   while (codewords.length < capacity) {
-    [codewords appendFormat:@"%C", [self randomize253State:PAD_CHAR codewordPosition:codewords.length + 1]];
+    [codewords appendFormat:@"%C", [self randomize253State:PAD_CHAR codewordPosition:(int)codewords.length + 1]];
   }
 
   return [NSString stringWithString:context.codewords];
@@ -224,8 +210,8 @@ static NSString *MACRO_TRAILER = nil;
   while (YES) {
     //step K
     if ((startpos + charsProcessed) == msg.length) {
-      int min = NSIntegerMax;
-      unsigned char mins[6];
+      int min = INT_MAX;
+      int8_t mins[6];
       int intCharCounts[6];
       min = [self findMinimums:charCounts intCharCounts:intCharCounts min:min mins:mins];
       int minCount = [self minimumCount:mins];
@@ -308,8 +294,8 @@ static NSString *MACRO_TRAILER = nil;
     //step R
     if (charsProcessed >= 4) {
       int intCharCounts[6];
-      unsigned char mins[6];
-      [self findMinimums:charCounts intCharCounts:intCharCounts min:NSIntegerMax mins:mins];
+      int8_t mins[6];
+      [self findMinimums:charCounts intCharCounts:intCharCounts min:INT_MAX mins:mins];
       int minCount = [self minimumCount:mins];
 
       if (intCharCounts[[self asciiEncodation]] < intCharCounts[[self base256Encodation]]
@@ -358,7 +344,7 @@ static NSString *MACRO_TRAILER = nil;
   }
 }
 
-+ (int)findMinimums:(float *)charCounts intCharCounts:(int *)intCharCounts min:(int)min mins:(unsigned char *)mins {
++ (int)findMinimums:(float *)charCounts intCharCounts:(int *)intCharCounts min:(int)min mins:(int8_t *)mins {
   memset(mins, 0, 6);
   for (int i = 0; i < 6; i++) {
     intCharCounts[i] = (int) ceil(charCounts[i]);
@@ -374,7 +360,7 @@ static NSString *MACRO_TRAILER = nil;
   return min;
 }
 
-+ (int)minimumCount:(unsigned char *)mins {
++ (int)minimumCount:(int8_t *)mins {
   int minCount = 0;
   for (int i = 0; i < 6; i++) {
     minCount += mins[i];
@@ -418,7 +404,7 @@ static NSString *MACRO_TRAILER = nil;
 
 + (int)determineConsecutiveDigitCount:(NSString *)msg startpos:(int)startpos {
   int count = 0;
-  int len = msg.length;
+  NSUInteger len = msg.length;
   int idx = startpos;
   if (idx < len) {
     unichar ch = [msg characterAtIndex:idx];

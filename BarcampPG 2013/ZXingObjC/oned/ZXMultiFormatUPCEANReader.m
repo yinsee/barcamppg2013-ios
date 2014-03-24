@@ -26,45 +26,40 @@
 
 @interface ZXMultiFormatUPCEANReader ()
 
-@property (nonatomic, retain) NSMutableArray *readers;
+@property (nonatomic, strong) NSMutableArray *readers;
 
 @end
 
 @implementation ZXMultiFormatUPCEANReader
 
-@synthesize readers;
-
 - (id)initWithHints:(ZXDecodeHints *)hints {
   if (self = [super init]) {
-    self.readers = [NSMutableArray array];
+    _readers = [NSMutableArray array];
 
     if (hints != nil) {
       if ([hints containsFormat:kBarcodeFormatEan13]) {
-        [self.readers addObject:[[ZXEAN13Reader alloc] init]];
+        [_readers addObject:[[ZXEAN13Reader alloc] init]];
       } else if ([hints containsFormat:kBarcodeFormatUPCA]) {
-        [self.readers addObject:[[ZXUPCAReader alloc] init]];
+        [_readers addObject:[[ZXUPCAReader alloc] init]];
       }
 
       if ([hints containsFormat:kBarcodeFormatEan8]) {
-        [self.readers addObject:[[ZXEAN8Reader alloc] init]];
+        [_readers addObject:[[ZXEAN8Reader alloc] init]];
       }
 
       if ([hints containsFormat:kBarcodeFormatUPCE]) {
-        [self.readers addObject:[[ZXUPCEReader alloc] init]];
+        [_readers addObject:[[ZXUPCEReader alloc] init]];
       }
     }
 
-    if ([self.readers count] == 0) {
-      [self.readers addObject:[[ZXEAN13Reader alloc] init]];
-      [self.readers addObject:[[ZXEAN8Reader alloc] init]];
-      [self.readers addObject:[[ZXUPCEReader alloc] init]];
+    if ([_readers count] == 0) {
+      [_readers addObject:[[ZXEAN13Reader alloc] init]];
+      [_readers addObject:[[ZXEAN8Reader alloc] init]];
+      [_readers addObject:[[ZXUPCEReader alloc] init]];
     }
   }
 
   return self;
-}
-
-- (void)dealloc {
 }
 
 - (ZXResult *)decodeRow:(int)rowNumber row:(ZXBitArray *)row hints:(ZXDecodeHints *)hints error:(NSError **)error {

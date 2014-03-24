@@ -19,13 +19,6 @@
 #import "ZXHighLevelEncoder.h"
 #import "ZXSymbolInfo.h"
 
-@interface ZXC40Encoder ()
-
-- (int)backtrackOneCharacter:(ZXEncoderContext *)context buffer:(NSMutableString *)buffer
-                     removed:(NSMutableString *)removed lastCharSize:(int)lastCharSize;
-
-@end
-
 @implementation ZXC40Encoder
 
 - (int)encodingMode {
@@ -41,7 +34,7 @@
 
     int lastCharSize = [self encodeChar:c buffer:buffer];
 
-    int unwritten = (buffer.length / 3) * 2;
+    int unwritten = ((int)buffer.length / 3) * 2;
 
     int curCodewordCount = context.codewordCount + unwritten;
     [context updateSymbolInfoWithLength:curCodewordCount];
@@ -62,7 +55,7 @@
       break;
     }
 
-    int count = buffer.length;
+    NSUInteger count = buffer.length;
     if ((count % 3) == 0) {
       int newMode = [ZXHighLevelEncoder lookAheadTest:context.message startpos:context.pos currentMode:[self encodingMode]];
       if (newMode != [self encodingMode]) {
@@ -76,7 +69,7 @@
 
 - (int)backtrackOneCharacter:(ZXEncoderContext *)context buffer:(NSMutableString *)buffer
                      removed:(NSMutableString *)removed lastCharSize:(int)lastCharSize {
-  int count = buffer.length;
+  NSUInteger count = buffer.length;
   [buffer deleteCharactersInRange:NSMakeRange(count - lastCharSize, lastCharSize)];
   context.pos--;
   unichar c = context.currentChar;
@@ -94,7 +87,7 @@
  * Handle "end of data" situations
  */
 - (void)handleEOD:(ZXEncoderContext *)context buffer:(NSMutableString *)buffer {
-  int unwritten = (buffer.length / 3) * 2;
+  int unwritten = ((int)buffer.length / 3) * 2;
   int rest = buffer.length % 3;
 
   int curCodewordCount = context.codewordCount + unwritten;
@@ -163,7 +156,7 @@
     [sb appendString:@"\2"]; //Shift 3 Set
     [sb appendFormat:@"%C", (unichar) (c - 96)];
     return 2;
-  } else if (c >= (char)0x0080) {
+  } else if (c >= (unichar)0x0080) {
     [sb appendFormat:@"\1%C", (unichar)0x001e]; //Shift 2, Upper Shift
     int len = 2;
     len += [self encodeChar:(unichar) (c - 128) buffer:sb];

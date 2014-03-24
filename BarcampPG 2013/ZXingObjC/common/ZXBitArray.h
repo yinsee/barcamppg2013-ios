@@ -20,8 +20,8 @@
 
 @interface ZXBitArray : NSObject
 
+@property (nonatomic, readonly) int32_t *bits;
 @property (nonatomic, readonly) int size;
-@property (nonatomic, readonly) int *bits;
 
 - (id)initWithSize:(int)size;
 - (int)sizeInBytes;
@@ -30,15 +30,15 @@
 - (void)flip:(int)i;
 - (int)nextSet:(int)from;
 - (int)nextUnset:(int)from;
-- (void)setBulk:(int)i newBits:(int)newBits;
+- (void)setBulk:(int)i newBits:(int32_t)newBits;
 - (void)setRange:(int)start end:(int)end;
 - (void)clear;
 - (BOOL)isRange:(int)start end:(int)end value:(BOOL)value;
 - (void)appendBit:(BOOL)bit;
-- (void)appendBits:(int)value numBits:(int)numBits;
+- (void)appendBits:(int32_t)value numBits:(int)numBits;
 - (void)appendBitArray:(ZXBitArray *)other;
 - (void)xor:(ZXBitArray *)other;
-- (void)toBytes:(int)bitOffset array:(unsigned char *)array offset:(int)offset numBytes:(int)numBytes;
+- (void)toBytes:(int)bitOffset array:(int8_t *)array offset:(int)offset numBytes:(int)numBytes;
 - (void)reverse;
 
 @end

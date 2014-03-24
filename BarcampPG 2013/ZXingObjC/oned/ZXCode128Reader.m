@@ -16,6 +16,7 @@
 
 #import "ZXBitArray.h"
 #import "ZXCode128Reader.h"
+#import "ZXDecodeHints.h"
 #import "ZXErrors.h"
 #import "ZXOneDReader.h"
 #import "ZXResult.h"
@@ -151,13 +152,6 @@ int const CODE_START_B = 104;
 int const CODE_START_C = 105;
 int const CODE_STOP = 106;
 
-@interface ZXCode128Reader ()
-
-- (int)decodeCode:(ZXBitArray *)row counters:(int[])counters countersCount:(int)countersCount rowOffset:(int)rowOffset;
-- (NSArray *)findStartPattern:(ZXBitArray *)row;
-
-@end
-
 @implementation ZXCode128Reader
 
 + (void)initialize {
@@ -200,7 +194,7 @@ int const CODE_STOP = 106;
         // Look for whitespace before start pattern, >= 50% of width of start pattern
         if (bestMatch >= 0 &&
             [row isRange:MAX(0, patternStart - (i - patternStart) / 2) end:patternStart value:NO]) {
-          return [NSArray arrayWithObjects:[NSNumber numberWithInt:patternStart], [NSNumber numberWithInt:i], [NSNumber numberWithInt:bestMatch], nil];
+          return @[@(patternStart), @(i), @(bestMatch)];
         }
         patternStart += counters[0] + counters[1];
         for (int y = 2; y < patternLength; y++) {
@@ -244,13 +238,15 @@ int const CODE_STOP = 106;
 }
 
 - (ZXResult *)decodeRow:(int)rowNumber row:(ZXBitArray *)row hints:(ZXDecodeHints *)hints error:(NSError **)error {
+  BOOL convertFNC1 = hints && hints.assumeGS1;
+
   NSArray *startPatternInfo = [self findStartPattern:row];
   if (!startPatternInfo) {
     if (error) *error = NotFoundErrorInstance();
     return nil;
   }
 
-  int startCode = [[startPatternInfo objectAtIndex:2] intValue];
+  int startCode = [startPatternInfo[2] intValue];
   int codeSet;
 
   switch (startCode) {
@@ -274,8 +270,8 @@ int const CODE_STOP = 106;
   NSMutableString *result = [NSMutableString stringWithCapacity:20];
   NSMutableArray *rawCodes = [NSMutableArray arrayWithCapacity:20];
 
-  int lastStart = [[startPatternInfo objectAtIndex:0] intValue];
-  int nextStart = [[startPatternInfo objectAtIndex:1] intValue];
+  int lastStart = [startPatternInfo[0] intValue];
+  int nextStart = [startPatternInfo[1] intValue];
 
   const int countersLen = 6;
   int counters[countersLen];
@@ -301,7 +297,7 @@ int const CODE_STOP = 106;
       return nil;
     }
 
-    [rawCodes addObject:[NSNumber numberWithChar:(unsigned char)code]];
+    [rawCodes addObject:[NSNumber numberWithChar:(int8_t)code]];
 
     // Remember whether the last code was printable or not (excluding CODE_STOP)
     if (code != CODE_STOP) {
@@ -344,6 +340,17 @@ int const CODE_STOP = 106;
 
         switch (code) {
         case CODE_FNC_1:
+            if (convertFNC1) {
+              if (result.length == 0) {
+                // GS1 specification 5.4.3.7. and 5.4.6.4. If the first char after the start code
+                // is FNC1 then this is GS1-128. We add the symbology identifier.
+                [result appendString:@"]C1"];
+              } else {
+                // GS1 specification 5.4.7.5. Every subsequent FNC1 is returned as ASCII 29 (GS)
+                [result appendFormat:@"%c", (char) 29];
+              }
+            }
+            break;
         case CODE_FNC_2:
         case CODE_FNC_3:
         case CODE_FNC_4_A:
@@ -374,6 +381,17 @@ int const CODE_STOP = 106;
 
         switch (code) {
         case CODE_FNC_1:
+            if (convertFNC1) {
+              if (result.length == 0) {
+                // GS1 specification 5.4.3.7. and 5.4.6.4. If the first char after the start code
+                // is FNC1 then this is GS1-128. We add the symbology identifier.
+                [result appendString:@"]C1"];
+              } else {
+                // GS1 specification 5.4.7.5. Every subsequent FNC1 is returned as ASCII 29 (GS)
+                [result appendFormat:@"%c", (char) 29];
+              }
+            }
+            break;
         case CODE_FNC_2:
         case CODE_FNC_3:
         case CODE_FNC_4_B:
@@ -407,7 +425,17 @@ int const CODE_STOP = 106;
 
         switch (code) {
         case CODE_FNC_1:
-          break;
+            if (convertFNC1) {
+              if (result.length == 0) {
+                // GS1 specification 5.4.3.7. and 5.4.6.4. If the first char after the start code
+                // is FNC1 then this is GS1-128. We add the symbology identifier.
+                [result appendString:@"]C1"];
+              } else {
+                // GS1 specification 5.4.7.5. Every subsequent FNC1 is returned as ASCII 29 (GS)
+                [result appendFormat:@"%c", (char) 29];
+              }
+            }
+            break;
         case CODE_CODE_A:
           codeSet = CODE_CODE_A;
           break;
@@ -446,7 +474,7 @@ int const CODE_STOP = 106;
   }
 
   // Need to pull out the check digits from string
-  int resultLength = [result length];
+  NSUInteger resultLength = [result length];
   if (resultLength == 0) {
     // false positive
     if (error) *error = NotFoundErrorInstance();
@@ -463,20 +491,20 @@ int const CODE_STOP = 106;
     }
   }
 
-  float left = (float)([[startPatternInfo objectAtIndex:1] intValue] + [[startPatternInfo objectAtIndex:0] intValue]) / 2.0f;
+  float left = (float)([startPatternInfo[1] intValue] + [startPatternInfo[0] intValue]) / 2.0f;
   float right = (float)(nextStart + lastStart) / 2.0f;
 
-  int rawCodesSize = [rawCodes count];
-  unsigned char rawBytes[rawCodesSize];
+  NSUInteger rawCodesSize = [rawCodes count];
+  int8_t rawBytes[rawCodesSize];
   for (int i = 0; i < rawCodesSize; i++) {
-    rawBytes[i] = [[rawCodes objectAtIndex:i] charValue];
+    rawBytes[i] = [rawCodes[i] charValue];
   }
 
   return [ZXResult resultWithText:result
                          rawBytes:rawBytes
-                           length:rawCodesSize
-                     resultPoints:[NSArray arrayWithObjects:[[ZXResultPoint alloc] initWithX:left y:(float)rowNumber],
-                                   [[ZXResultPoint alloc] initWithX:right y:(float)rowNumber], nil]
+                           length:(int)rawCodesSize
+                     resultPoints:@[[[ZXResultPoint alloc] initWithX:left y:(float)rowNumber],
+                                   [[ZXResultPoint alloc] initWithX:right y:(float)rowNumber]]
                            format:kBarcodeFormatCode128];
 }
 
