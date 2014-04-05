@@ -19,9 +19,13 @@
 @property (strong, nonatomic) IBOutlet UIButton *phone;
 @property (strong, nonatomic) IBOutlet UIButton *sms;
 @property (strong, nonatomic) IBOutlet UIButton *facebook;
+@property (strong, nonatomic) IBOutlet UIImageView *businessCard;
+@property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
+@property (strong, nonatomic) IBOutlet UIActivityIndicatorView *loadingbiz;
 - (IBAction)sendmail:(id)sender;
 - (IBAction)sendsms:(id)sender;
 - (IBAction)phonecall:(id)sender;
 - (IBAction)pop:(id)sender;
 - (IBAction)openfacebook:(id)sender;
+- (IBAction)reloadBiz:(id)sender;
 @end

@@ -38,4 +38,5 @@
 - (AsyncConnection *)startDownloadWithURLString:(NSString*)url complete:(void (^)(AsyncConnection *conn))completeBlock failed:(void (^)(AsyncConnection *conn))failedBlock;
 - (AsyncConnection *)startPostJSONWithURL:(NSString *)url params:(NSDictionary *)params complete:(void (^)(AsyncConnection *conn))completeBlock failed:(void (^)(AsyncConnection *conn))failedBlock;
 - (AsyncConnection *)startPostJSONWithURL:(NSString *)url params:(NSDictionary *)params complete:(void (^)(AsyncConnection *conn))completeBlock failed:(void (^)(AsyncConnection *conn))failedBlock finished:(void (^)(AsyncConnection *conn))finishedBlock;
+- (AsyncConnection *)startPostWithURL:(NSString *)url data:(NSData *)data complete:(void (^)(AsyncConnection *conn))completeBlock failed:(void (^)(AsyncConnection *conn))failedBlock finished:(void (^)(AsyncConnection *conn))finishedBlock;
 @end

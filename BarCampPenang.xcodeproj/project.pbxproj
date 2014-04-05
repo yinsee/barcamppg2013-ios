@@ -7,12 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6C0F677A18F06E2500E1FA2C /* UIActionSheet+Blocks.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C0F677918F06E2500E1FA2C /* UIActionSheet+Blocks.m */; };
+		6C0F677E18F0815500E1FA2C /* ProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6C0F677B18F0815500E1FA2C /* ProgressHUD.bundle */; };
+		6C0F677F18F0815500E1FA2C /* ProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C0F677D18F0815500E1FA2C /* ProgressHUD.m */; };
+		6C0F678618F0848900E1FA2C /* Friend.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C0F678518F0848900E1FA2C /* Friend.m */; };
 		6C624AB21775F096008EEAB6 /* Appirater.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C624AAE1775F096008EEAB6 /* Appirater.m */; };
 		6C624AB31775F096008EEAB6 /* AsyncConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C624AB11775F096008EEAB6 /* AsyncConnection.m */; };
 		6C624AB61775F0A4008EEAB6 /* iToast.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C624AB51775F0A4008EEAB6 /* iToast.m */; };
 		6C624ABC1775F0BC008EEAB6 /* SVPullToRefresh.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C624AB81775F0BB008EEAB6 /* SVPullToRefresh.m */; };
 		6C624ABD1775F0BC008EEAB6 /* Utility.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C624ABB1775F0BC008EEAB6 /* Utility.m */; };
-		6C624AC31775F112008EEAB6 /* DSActivityView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C624AC21775F112008EEAB6 /* DSActivityView.m */; };
 		6C624AC51775F11D008EEAB6 /* UIFormViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C624AC41775F11D008EEAB6 /* UIFormViewController.m */; };
 		6C624AC81775F1AC008EEAB6 /* MACIdentifier.m in Sources */ = {isa = PBXBuildFile; fileRef = 6C624AC71775F1AC008EEAB6 /* MACIdentifier.m */; };
 		6C624ACC1775F2CC008EEAB6 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6C624ACB1775F2CC008EEAB6 /* QuartzCore.framework */; };
@@ -328,7 +331,6 @@
 		6CE54D3D17762B3900D434C2 /* IBViewUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CE54D1417762B3900D434C2 /* IBViewUtil.m */; };
 		6CE54D3E17762B3900D434C2 /* IBCoreDataStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CE54D1717762B3900D434C2 /* IBCoreDataStore.m */; };
 		6CE54D4B1776324100D434C2 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6CE54D491776324100D434C2 /* Model.xcdatamodeld */; };
-		6CE54D4E1776329D00D434C2 /* Friend.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CE54D4D1776329D00D434C2 /* Friend.m */; };
 		6CE54D52177635AD00D434C2 /* FriendCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CE54D51177635AD00D434C2 /* FriendCell.m */; };
 		6CE54D5517763F2600D434C2 /* FriendDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CE54D5417763F2500D434C2 /* FriendDetailViewController.m */; };
 		6CE54D6A1776ACD600D434C2 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 6CE54D691776ACD500D434C2 /* libsqlite3.dylib */; };
@@ -350,6 +352,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6C0F677818F06E2500E1FA2C /* UIActionSheet+Blocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIActionSheet+Blocks.h"; sourceTree = "<group>"; };
+		6C0F677918F06E2500E1FA2C /* UIActionSheet+Blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIActionSheet+Blocks.m"; sourceTree = "<group>"; };
+		6C0F677B18F0815500E1FA2C /* ProgressHUD.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = ProgressHUD.bundle; sourceTree = "<group>"; };
+		6C0F677C18F0815500E1FA2C /* ProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProgressHUD.h; sourceTree = "<group>"; };
+		6C0F677D18F0815500E1FA2C /* ProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProgressHUD.m; sourceTree = "<group>"; };
+		6C0F678018F0841E00E1FA2C /* v2014.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = v2014.xcdatamodel; sourceTree = "<group>"; };
+		6C0F678418F0848900E1FA2C /* Friend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Friend.h; path = "BarcampPG 2013/Friend.h"; sourceTree = "<group>"; };
+		6C0F678518F0848900E1FA2C /* Friend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Friend.m; path = "BarcampPG 2013/Friend.m"; sourceTree = "<group>"; };
 		6C624AAD1775F096008EEAB6 /* Appirater.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Appirater.h; sourceTree = "<group>"; };
 		6C624AAE1775F096008EEAB6 /* Appirater.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Appirater.m; sourceTree = "<group>"; };
 		6C624AAF1775F096008EEAB6 /* AppiraterDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppiraterDelegate.h; sourceTree = "<group>"; };
@@ -362,8 +372,6 @@
 		6C624AB91775F0BC008EEAB6 /* UIFormViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIFormViewController.h; sourceTree = "<group>"; };
 		6C624ABA1775F0BC008EEAB6 /* Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utility.h; sourceTree = "<group>"; };
 		6C624ABB1775F0BC008EEAB6 /* Utility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utility.m; sourceTree = "<group>"; };
-		6C624AC11775F112008EEAB6 /* DSActivityView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DSActivityView.h; sourceTree = "<group>"; };
-		6C624AC21775F112008EEAB6 /* DSActivityView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DSActivityView.m; sourceTree = "<group>"; };
 		6C624AC41775F11D008EEAB6 /* UIFormViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIFormViewController.m; sourceTree = "<group>"; };
 		6C624AC61775F1AC008EEAB6 /* MACIdentifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MACIdentifier.h; sourceTree = "<group>"; };
 		6C624AC71775F1AC008EEAB6 /* MACIdentifier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MACIdentifier.m; sourceTree = "<group>"; };
@@ -954,8 +962,6 @@
 		6CE54D1717762B3900D434C2 /* IBCoreDataStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IBCoreDataStore.m; sourceTree = "<group>"; };
 		6CE54D1817762B3900D434C2 /* InnerBand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InnerBand.h; sourceTree = "<group>"; };
 		6CE54D4A1776324100D434C2 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
-		6CE54D4C1776329D00D434C2 /* Friend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Friend.h; path = "BarcampPG 2013/Friend.h"; sourceTree = "<group>"; };
-		6CE54D4D1776329D00D434C2 /* Friend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Friend.m; path = "BarcampPG 2013/Friend.m"; sourceTree = "<group>"; };
 		6CE54D50177635AD00D434C2 /* FriendCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendCell.h; sourceTree = "<group>"; };
 		6CE54D51177635AD00D434C2 /* FriendCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendCell.m; sourceTree = "<group>"; };
 		6CE54D5317763F2500D434C2 /* FriendDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendDetailViewController.h; sourceTree = "<group>"; };
@@ -1020,6 +1026,9 @@
 		6C624ABE1775F0C5008EEAB6 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				6C0F677B18F0815500E1FA2C /* ProgressHUD.bundle */,
+				6C0F677C18F0815500E1FA2C /* ProgressHUD.h */,
+				6C0F677D18F0815500E1FA2C /* ProgressHUD.m */,
 				6C6C615618E0188D00C5D036 /* ZXingObjC */,
 				6C6C614C18E00A9400C5D036 /* GAI */,
 				6C6C610D18DFFDF900C5D036 /* SDWebImage */,
@@ -1029,6 +1038,8 @@
 				6C624AAF1775F096008EEAB6 /* AppiraterDelegate.h */,
 				6C624AB01775F096008EEAB6 /* AsyncConnection.h */,
 				6C624AB11775F096008EEAB6 /* AsyncConnection.m */,
+				6C0F677818F06E2500E1FA2C /* UIActionSheet+Blocks.h */,
+				6C0F677918F06E2500E1FA2C /* UIActionSheet+Blocks.m */,
 				6C624AB41775F0A4008EEAB6 /* iToast.h */,
 				6C624AB51775F0A4008EEAB6 /* iToast.m */,
 				6C624AC61775F1AC008EEAB6 /* MACIdentifier.h */,
@@ -1037,8 +1048,6 @@
 				6C624AB81775F0BB008EEAB6 /* SVPullToRefresh.m */,
 				6C624AB91775F0BC008EEAB6 /* UIFormViewController.h */,
 				6C624AC41775F11D008EEAB6 /* UIFormViewController.m */,
-				6C624AC11775F112008EEAB6 /* DSActivityView.h */,
-				6C624AC21775F112008EEAB6 /* DSActivityView.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -1961,8 +1970,8 @@
 			isa = PBXGroup;
 			children = (
 				6CE54D491776324100D434C2 /* Model.xcdatamodeld */,
-				6CE54D4C1776329D00D434C2 /* Friend.h */,
-				6CE54D4D1776329D00D434C2 /* Friend.m */,
+				6C0F678418F0848900E1FA2C /* Friend.h */,
+				6C0F678518F0848900E1FA2C /* Friend.m */,
 			);
 			name = CoreData;
 			sourceTree = "<group>";
@@ -2099,7 +2108,7 @@
 				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = chimou;
 			};
-			buildConfigurationList = 6CF3FD871749E1760051A2F1 /* Build configuration list for PBXProject "BarcampPenang" */;
+			buildConfigurationList = 6CF3FD871749E1760051A2F1 /* Build configuration list for PBXProject "BarCampPenang" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -2137,6 +2146,7 @@
 				6C7395BB177C220400DAD59B /* btn_next.png in Resources */,
 				6C7395BC177C220400DAD59B /* btn_refresh.png in Resources */,
 				6C7395BD177C220400DAD59B /* btn_save_update_profile.png in Resources */,
+				6C0F677E18F0815500E1FA2C /* ProgressHUD.bundle in Resources */,
 				6C7395BE177C220400DAD59B /* btn_scan.png in Resources */,
 				6C7395BF177C220400DAD59B /* btn_search.png in Resources */,
 				6C7395C0177C220400DAD59B /* btn_sms.png in Resources */,
@@ -2197,6 +2207,7 @@
 				6C6C637418E0188F00C5D036 /* ZXDataMatrixErrorCorrection.m in Sources */,
 				6C624AB21775F096008EEAB6 /* Appirater.m in Sources */,
 				6C6C639618E0188F00C5D036 /* ZXDecodedChar.m in Sources */,
+				6C0F677A18F06E2500E1FA2C /* UIActionSheet+Blocks.m in Sources */,
 				6C6C633B18E0188F00C5D036 /* ZXExpandedProductParsedResult.m in Sources */,
 				6C6C63E718E0189000C5D036 /* ZXQRCodeFinderPattern.m in Sources */,
 				6C6C634E18E0188F00C5D036 /* ZXURLTOResultParser.m in Sources */,
@@ -2224,11 +2235,11 @@
 				6C624ABD1775F0BC008EEAB6 /* Utility.m in Sources */,
 				6C6C634818E0188F00C5D036 /* ZXSMTPResultParser.m in Sources */,
 				6C6C638318E0188F00C5D036 /* ZXMaxiCodeReader.m in Sources */,
-				6C624AC31775F112008EEAB6 /* DSActivityView.m in Sources */,
 				6C6C63F718E0189000C5D036 /* ZXLuminanceSource.m in Sources */,
 				6C6C63B018E0188F00C5D036 /* ZXEAN8Writer.m in Sources */,
 				6C6C637118E0188F00C5D036 /* ZXASCIIEncoder.m in Sources */,
 				6C6C63D318E0189000C5D036 /* ZXPDF417ErrorCorrection.m in Sources */,
+				6C0F677F18F0815500E1FA2C /* ProgressHUD.m in Sources */,
 				6C6C633E18E0188F00C5D036 /* ZXGeoResultParser.m in Sources */,
 				6C6C63B318E0188F00C5D036 /* ZXITFWriter.m in Sources */,
 				6C6C637C18E0188F00C5D036 /* ZXTextEncoder.m in Sources */,
@@ -2266,6 +2277,7 @@
 				6C6C634F18E0188F00C5D036 /* ZXVCardResultParser.m in Sources */,
 				6C6C637D18E0188F00C5D036 /* ZXX12Encoder.m in Sources */,
 				6C6C633818E0188F00C5D036 /* ZXEmailAddressParsedResult.m in Sources */,
+				6C0F678618F0848900E1FA2C /* Friend.m in Sources */,
 				6C6C638418E0188F00C5D036 /* ZXMultiDetector.m in Sources */,
 				6C6C63F918E0189000C5D036 /* ZXMultiFormatWriter.m in Sources */,
 				6C6C63E318E0189000C5D036 /* ZXAlignmentPatternFinder.m in Sources */,
@@ -2432,7 +2444,6 @@
 				6C6C634618E0188F00C5D036 /* ZXSMSParsedResult.m in Sources */,
 				6CE54D4B1776324100D434C2 /* Model.xcdatamodeld in Sources */,
 				6C6C63F318E0189000C5D036 /* ZXDimension.m in Sources */,
-				6CE54D4E1776329D00D434C2 /* Friend.m in Sources */,
 				6C6C63CF18E0189000C5D036 /* ZXBarcodeMatrix.m in Sources */,
 				6C6C637218E0188F00C5D036 /* ZXBase256Encoder.m in Sources */,
 				6C6C638D18E0188F00C5D036 /* ZXAI01393xDecoder.m in Sources */,
@@ -2581,7 +2592,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		6CF3FD871749E1760051A2F1 /* Build configuration list for PBXProject "BarcampPenang" */ = {
+		6CF3FD871749E1760051A2F1 /* Build configuration list for PBXProject "BarCampPenang" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6CF3FDB81749E1760051A2F1 /* Debug */,
@@ -2605,9 +2616,10 @@
 		6CE54D491776324100D434C2 /* Model.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				6C0F678018F0841E00E1FA2C /* v2014.xcdatamodel */,
 				6CE54D4A1776324100D434C2 /* Model.xcdatamodel */,
 			);
-			currentVersion = 6CE54D4A1776324100D434C2 /* Model.xcdatamodel */;
+			currentVersion = 6C0F678018F0841E00E1FA2C /* v2014.xcdatamodel */;
 			path = Model.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

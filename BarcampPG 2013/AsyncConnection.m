@@ -132,7 +132,28 @@
     return self;
 }
 
-                    
+- (AsyncConnection *)startPostWithURL:(NSString *)url data:(NSData *)data complete:(void (^)(AsyncConnection *conn))completeBlock failed:(void (^)(AsyncConnection *conn))failedBlock finished:(void (^)(AsyncConnection *conn))finishedBlock
+{
+    _complete = (__bridge void (^)(__strong id))Block_copy((__bridge void*) completeBlock);
+    _failed = (__bridge void (^)(__strong id))Block_copy((__bridge void*) failedBlock);
+    _finished = (__bridge void (^)(__strong id))Block_copy((__bridge void*) finishedBlock);
+    
+    _url = url;
+
+    _data = [[NSMutableData alloc] init];
+    
+    NSMutableURLRequest *urlRequest=[NSMutableURLRequest requestWithURL:[NSURL URLWithString:url] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:30.0];
+    urlRequest.HTTPMethod = @"POST";
+    urlRequest.HTTPBody = data;
+    
+    _conn = [[NSURLConnection alloc] initWithRequest:urlRequest delegate:self]; // release later
+    
+    usingBlocks = YES;
+    
+    return self;
+}
+
+
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
     [[UIApplication sharedApplication]  setNetworkActivityIndicatorVisible:YES];
@@ -148,7 +169,6 @@
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-    
     self.json = [NSJSONSerialization JSONObjectWithData:self.data options:NSJSONReadingMutableContainers error:nil];
 
     if (usingBlocks)

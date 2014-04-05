@@ -12,11 +12,12 @@
 #import "AppDelegate.h"
 #import "UIFormViewController.h"
 #import "AsyncConnection.h"
-#import "DSActivityView.h"
+#import "ProgressHUD.h"
 #import "iToast.h"
 #import "SDWebImage/UIImageView+WebCache.h"
 #import "SDWebImage/UIButton+WebCache.h"
 #import "GAI.h"
+#import "UIActionSheet+Blocks.h"
 #import <FacebookSDK/FacebookSDK.h>
 
 #define kAppStoreURL @"https://itunes.apple.com/app/id665652007"
@@ -37,6 +38,8 @@
 #define kURLSponsor __DOMAIN__ @"sponsors.html"
 #define kURLLeaderboard @"http://chimou.com/barcamppg/leaderboard.php"
 #define kURLLeaderboardUpdate @"http://chimou.com/barcamppg/leaderboard.php?a=update"
+#define kURLBusinessCard @"http://chimou.com/barcamppg/namecard.php?get&email=%@"
+#define kURLBusinessCardUpdate @"http://chimou.com/barcamppg/namecard.php?email=%@"
 
 #define kMapLocationCoordinate CLLocationCoordinate2DMake(5.333756, 100.306691)
 #define kMapPinTitle @"Info Trek Penang"

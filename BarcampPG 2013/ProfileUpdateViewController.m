@@ -9,7 +9,9 @@
 #import "ProfileUpdateViewController.h"
 
 @interface ProfileUpdateViewController ()
-
+{
+    UIImagePickerController *picker;
+}
 @end
 
 @implementation ProfileUpdateViewController
@@ -30,7 +32,6 @@
     NSDictionary *profile = [[NSUserDefaults standardUserDefaults] objectForKey:kUserDefaultProfile];
     
     self.screenName = @"Update Profile";
-
     
     self.txtName.text = [profile valueForKey:@"name"];
     if (!self.txtName.text) self.txtName.text = @"";
@@ -43,6 +44,9 @@
     self.fbuid.text = [profile valueForKey:@"fbuid"];
     if (!self.fbuid.text) self.fbuid.text = @"";
     
+    [self.businessCard setImage:[UIImage imageWithContentsOfFile:[Utility pathForFile:@"businesscard.jpg"]]];
+    
+    
     if ([profile valueForKey:@"fbuid"])
     {
         [self.photo setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:kURLFacebookPicture, [profile valueForKey:@"fbuid"]]]  placeholderImage:[UIImage imageNamed:@"profile_placeholder.png"] options:SDWebImageRefreshCached];
@@ -52,7 +56,7 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self.scrollView setContentSize:CGSizeMake(320, 500)];
+    [self.scrollView setContentSize:CGSizeMake(320, 780)];
 }
 
 - (void)didReceiveMemoryWarning
@@ -85,7 +89,21 @@
 
 //    [[[GAI sharedInstance] defaultTracker] trackEventWithCategory:@"Profile" withAction:@"Update" withLabel:@"" withValue:nil];
     
-    [[self navigationController] popViewControllerAnimated:YES];
+    // upload
+    NSData *data = [NSData dataWithContentsOfFile:[Utility pathForFile:@"businesscard.jpg"]];
+    NSString *url = [NSString stringWithFormat:kURLBusinessCardUpdate, [self.txtEmail.text stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    [ProgressHUD show:@"Uploading Card" Interaction:NO];
+    [[AsyncConnection alloc] startPostWithURL:url data:data complete:^(AsyncConnection *conn) {
+        //
+        [[iToast makeText:@"Upload done"] show];
+        [[self navigationController] popViewControllerAnimated:YES];
+    } failed:^(AsyncConnection *conn) {
+        //
+        [[iToast makeText:@"Upload failed, please try again"] show];
+    } finished:^(AsyncConnection *conn) {
+        //
+        [ProgressHUD dismiss];
+    }];
 }
 
 - (void)viewDidUnload {
@@ -102,14 +120,14 @@
 -(void)getFBuserid
 {
     
-    [DSBezelActivityView newActivityViewForView:[DSActivityView viewTopView] withLabel:@"Updating"];
+    [ProgressHUD show:@"Updating" Interaction:NO];
     
     [FBRequestConnection
      startForMeWithCompletionHandler:^(FBRequestConnection *connection,
                                        id<FBGraphUser> user,
                                        NSError *error) {
          
-         [DSBezelActivityView removeViewAnimated:YES];
+         [ProgressHUD dismiss];
          
          if (!error) {
              self.fbuid.text = user.id;
@@ -222,5 +240,47 @@
 
 - (IBAction)pop:(id)sender {
     [[self navigationController] popViewControllerAnimated:YES];
+}
+
+- (IBAction)updateBusinessCard:(id)sender {
+    [UIActionSheet showInView:self.view withTitle:@"Business Card" cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@[@"Camera", @"Photos"] tapBlock:^(UIActionSheet *actionSheet, NSInteger buttonIndex) {
+
+        if (buttonIndex==actionSheet.cancelButtonIndex || buttonIndex < 1) return; // cancel button
+        
+        
+        picker = [[UIImagePickerController alloc] init];
+        if (buttonIndex==1)
+        {
+            // camera
+            picker.sourceType = UIImagePickerControllerSourceTypeCamera;
+        }
+        else
+        {
+            // photos
+            picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        }
+        picker.allowsEditing = YES;
+        picker.delegate = self;
+        [actionSheet dismissWithClickedButtonIndex:buttonIndex animated:NO];
+        [self presentViewController:picker animated:YES completion:nil];
+    }];
+}
+
+-(void)imagePickerController:(UIImagePickerController *)pickerx didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    UIImage *result = [info objectForKey:UIImagePickerControllerEditedImage];
+    [self.businessCard setImage:result];
+    
+    NSData *data = UIImageJPEGRepresentation(result, 90);
+    [data writeToFile:[Utility pathForFile:@"businesscard.jpg"] atomically:YES];
+
+    [picker dismissViewControllerAnimated:YES completion:nil];
+    picker = nil;
+}
+
+-(void)imagePickerControllerDidCancel:(UIImagePickerController *)pickerx
+{
+    [picker dismissViewControllerAnimated:YES completion:nil];
+    picker = nil;
 }
 @end

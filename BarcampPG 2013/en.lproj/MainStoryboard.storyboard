@@ -212,7 +212,7 @@
                                 <inset key="contentInset" minX="0.0" minY="100" maxX="0.0" maxY="0.0"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="FriendCell" rowHeight="72" id="et8-gD-49p" customClass="FriendCell">
-                                        <rect key="frame" x="0.0" y="22" width="320" height="72"/>
+                                        <rect key="frame" x="0.0" y="86" width="320" height="72"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="et8-gD-49p" id="bMP-oH-j87">
                                             <rect key="frame" x="0.0" y="0.0" width="287" height="72"/>
@@ -246,7 +246,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="NoFriendCell" rowHeight="158" id="X5h-f5-69v">
-                                        <rect key="frame" x="0.0" y="94" width="320" height="158"/>
+                                        <rect key="frame" x="0.0" y="158" width="320" height="158"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="X5h-f5-69v" id="ARI-87-vL2">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="158"/>
@@ -338,11 +338,11 @@
             <objects>
                 <viewController id="BZR-cF-pmk" customClass="FriendDetailViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="aQq-CP-7ed">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="760"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="pw1-G8-JyK">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="760"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="profile_placeholder.png" id="BGe-fM-1L3" customClass="ProfileImageView">
@@ -427,6 +427,29 @@
                                             <action selector="openfacebook:" destination="BZR-cF-pmk" eventType="touchUpInside" id="zj8-3p-MRq"/>
                                         </connections>
                                     </button>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="84d-T2-rgE">
+                                        <rect key="frame" x="20" y="422" width="280" height="280"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </imageView>
+                                    <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="gray" id="82E-Ny-1Vi">
+                                        <rect key="frame" x="150" y="422" width="20" height="20"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </activityIndicatorView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="wOF-Qt-RR9">
+                                        <rect key="frame" x="140" y="681" width="40" height="41"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                        <state key="normal" image="btn_refresh.png">
+                                            <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="reloadBiz:" destination="BZR-cF-pmk" eventType="touchUpInside" id="4Yv-mK-ylM"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                             </scrollView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="top-Friends.png" id="uiq-OY-HTl">
@@ -452,13 +475,18 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" title="Profile" id="AKf-Ll-YKR"/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="320" height="760"/>
                     <connections>
+                        <outlet property="businessCard" destination="84d-T2-rgE" id="aG5-Ie-a43"/>
                         <outlet property="email" destination="KJJ-sT-enp" id="TlS-eA-SRx"/>
                         <outlet property="facebook" destination="nVp-AV-ZGK" id="60F-UP-1uK"/>
+                        <outlet property="loadingbiz" destination="82E-Ny-1Vi" id="zMD-za-gDL"/>
                         <outlet property="name" destination="o6R-0S-vTu" id="UTm-Xz-tIU"/>
                         <outlet property="phone" destination="f2X-Y9-44l" id="65m-mc-lzL"/>
                         <outlet property="photo" destination="BGe-fM-1L3" id="g4x-XW-JKc"/>
                         <outlet property="profession" destination="uFh-yZ-rdA" id="2kv-mz-Smx"/>
+                        <outlet property="scrollView" destination="pw1-G8-JyK" id="2Po-wI-Hca"/>
                         <outlet property="sms" destination="XEE-Rw-40G" id="iAx-RB-lct"/>
                     </connections>
                 </viewController>
@@ -471,11 +499,11 @@
             <objects>
                 <viewController id="Uub-6o-QVp" customClass="ProfileUpdateViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="9EU-cI-xVq">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="820"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="7E7-yh-0Cm">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="820"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" id="4hm-YZ-s9X">
@@ -537,6 +565,13 @@
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     </label>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Business Card" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" id="1hp-gA-V5n">
+                                        <rect key="frame" x="24" y="393" width="112" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="RuG-pK-OLr">
                                         <rect key="frame" x="182" y="111" width="92" height="27"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -553,18 +588,40 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="fbid" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" id="LfN-3w-f3L">
-                                        <rect key="frame" x="175" y="348" width="122" height="21"/>
+                                        <rect key="frame" x="153" y="348" width="144" height="21"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     </label>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="profile_placeholder.png" id="yZA-81-AhC" customClass="ProfileImageView">
-                                        <rect key="frame" x="113" y="338" width="54" height="54"/>
+                                        <rect key="frame" x="113" y="343" width="32" height="32"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Use your Facebook profile to update" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" id="b3O-LX-Lvk">
+                                        <rect key="frame" x="46" y="108" width="128" height="33"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="bA0-Wa-oU8">
+                                        <rect key="frame" x="20" y="422" width="280" height="280"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                    </imageView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="suI-qT-Yd5">
+                                        <rect key="frame" x="20" y="422" width="280" height="280"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="updateBusinessCard:" destination="Uub-6o-QVp" eventType="touchUpInside" id="qWh-3X-kpj"/>
+                                        </connections>
+                                    </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="L4p-3H-stt">
-                                        <rect key="frame" x="76" y="425" width="168" height="39"/>
+                                        <rect key="frame" x="76" y="710" width="168" height="39"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                         <state key="normal" image="btn_save_update_profile.png">
@@ -578,13 +635,6 @@
                                             <action selector="saveProfile:" destination="Uub-6o-QVp" eventType="touchUpInside" id="bt1-DI-7fa"/>
                                         </connections>
                                     </button>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Use your Facebook profile to update" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" id="b3O-LX-Lvk">
-                                        <rect key="frame" x="46" y="108" width="128" height="33"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
                                 </subviews>
                             </scrollView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="top-Profile.png" id="deJ-eh-o02">
@@ -617,7 +667,10 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="320" height="820"/>
                     <connections>
+                        <outlet property="businessCard" destination="bA0-Wa-oU8" id="l6N-FF-9NE"/>
                         <outlet property="fbuid" destination="LfN-3w-f3L" id="6x4-f5-ksf"/>
                         <outlet property="photo" destination="yZA-81-AhC" id="l9D-aR-Ys0"/>
                         <outlet property="scrollView" destination="7E7-yh-0Cm" id="WYw-0m-pUz"/>
@@ -629,7 +682,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OAb-ZN-E5T" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1654" y="868"/>
+            <point key="canvasLocation" x="1657" y="1058"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="15">
@@ -656,7 +709,7 @@
         <!--Navigation Controller - Profile-->
         <scene sceneID="i3L-kH-bLd">
             <objects>
-                <navigationController navigationBarHidden="YES" id="GKF-EW-BEf" sceneMemberID="viewController">
+                <navigationController id="GKF-EW-BEf" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Profile" id="5Yu-UY-Nqf"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="tyF-OL-dU1">
@@ -822,7 +875,7 @@
         <!--Navigation Controller - Friends-->
         <scene sceneID="eko-PC-77d">
             <objects>
-                <navigationController navigationBarHidden="YES" id="Dlr-YK-1UH" sceneMemberID="viewController">
+                <navigationController id="Dlr-YK-1UH" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Friends" id="cwY-O7-qNP"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Z5K-DP-jTp">
@@ -841,7 +894,7 @@
         <!--Navigation Controller - Info-->
         <scene sceneID="rLP-Ye-doV">
             <objects>
-                <navigationController navigationBarHidden="YES" id="JJu-Tv-Ce4" sceneMemberID="viewController">
+                <navigationController id="JJu-Tv-Ce4" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Info" id="7"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="1hS-Qg-rg0">
@@ -916,7 +969,7 @@
         <!--Navigation Controller - Agenda-->
         <scene sceneID="AEt-gJ-xzE">
             <objects>
-                <navigationController navigationBarHidden="YES" id="okO-J8-2Oq" sceneMemberID="viewController">
+                <navigationController id="okO-J8-2Oq" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Agenda" id="1q3-lF-4Eh"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="byz-18-L8a">

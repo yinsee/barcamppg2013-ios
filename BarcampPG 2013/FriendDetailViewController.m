@@ -7,6 +7,7 @@
 //
 
 #import "FriendDetailViewController.h"
+#import "NSManagedObject+InnerBand.h"
 
 @interface FriendDetailViewController ()
 
@@ -32,6 +33,47 @@
     [self.email setTitle:self.data.email  forState:UIControlStateNormal];
     
     [self.photo setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:kURLFacebookPicture, self.data.fbuid]]  placeholderImage:[UIImage imageNamed:@"profile_placeholder.png"] options:SDWebImageRefreshCached];
+    
+    // if have biz card, juz load
+    if (self.data.businesscard)
+    {
+        [self.businessCard setHidden:NO];
+        [self.scrollView setContentSize:CGSizeMake(320, 760)];
+        [self.businessCard setImage:[UIImage imageWithData:self.data.businesscard]];
+    }
+    else
+    {
+        [self.businessCard setHidden:YES];
+        [self.scrollView setContentSize:CGSizeMake(320, 500)];
+        [self loadBusinessCard];
+    }
+}
+
+-(void)loadBusinessCard
+{
+    [self.loadingbiz startAnimating];
+    // load business card if have
+    [[AsyncConnection alloc] startDownloadWithURLString:[NSString stringWithFormat:kURLBusinessCard, [self.data.email stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]] complete:^(AsyncConnection *conn) {
+        // downloaded
+        UIImage *image = [UIImage imageWithData:conn.data];
+        if (image)// save if valid image
+        {
+            self.data.businesscard = conn.data;
+            [[IBCoreDataStore mainStore] save];
+            [self.businessCard setImage:image];
+            [self.businessCard setHidden:NO];
+            [self.scrollView setContentSize:CGSizeMake(320, 760)];
+        }
+        else
+        {
+            [self.businessCard setHidden:YES];
+            [self.scrollView setContentSize:CGSizeMake(320, 500)];
+        }
+        [self.loadingbiz stopAnimating];
+    } failed:^(AsyncConnection *conn) {
+        // no namecard
+        [self.loadingbiz stopAnimating];
+    }];
 }
 
 - (void)viewDidLoad
@@ -107,5 +149,9 @@
     } else {
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://facebook.com/%@", self.data.fbuid]]];
     }
+}
+
+- (IBAction)reloadBiz:(id)sender {
+    [self loadBusinessCard];
 }
 @end

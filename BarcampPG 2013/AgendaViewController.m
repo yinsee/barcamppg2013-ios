@@ -20,8 +20,8 @@
     self = [super initWithCoder:aDecoder];
     if (self) {
         // Custom initialization
-        self.tabBarItem = [[UITabBarItem alloc] init];
-        [[self tabBarItem] setFinishedSelectedImage:[UIImage imageNamed:@"tab_agenda_down"] withFinishedUnselectedImage:[UIImage imageNamed:@"tab_agenda"]];
+//        self.tabBarItem = [[UITabBarItem alloc] init];
+//        [[self tabBarItem] setFinishedSelectedImage:[UIImage imageNamed:@"tab_agenda_down"] withFinishedUnselectedImage:[UIImage imageNamed:@"tab_agenda"]];
         
     }
     return self;

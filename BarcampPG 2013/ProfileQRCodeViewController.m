@@ -20,8 +20,8 @@
     self = [super initWithCoder:aDecoder];
     if (self) {
         // Custom initialization
-        self.tabBarItem = [[UITabBarItem alloc] init];
-        [[self tabBarItem] setFinishedSelectedImage:[UIImage imageNamed:@"tab_profile_down"] withFinishedUnselectedImage:[UIImage imageNamed:@"tab_profile"]];
+//        self.tabBarItem = [[UITabBarItem alloc] init];
+//        [[self tabBarItem] setFinishedSelectedImage:[UIImage imageNamed:@"tab_profile_down"] withFinishedUnselectedImage:[UIImage imageNamed:@"tab_profile"]];
         
     }
     return self;

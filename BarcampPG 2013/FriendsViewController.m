@@ -23,8 +23,8 @@
     self = [super initWithCoder:aDecoder];
     if (self) {
         // Custom initialization
-        self.tabBarItem = [[UITabBarItem alloc] init];
-        [[self tabBarItem] setFinishedSelectedImage:[UIImage imageNamed:@"tab_friends_down"] withFinishedUnselectedImage:[UIImage imageNamed:@"tab_friends"]];
+//        self.tabBarItem = [[UITabBarItem alloc] init];
+//        [[self tabBarItem] setFinishedSelectedImage:[UIImage imageNamed:@"tab_friends_down"] withFinishedUnselectedImage:[UIImage imageNamed:@"tab_friends"]];
 
     }
     return self;
