@@ -150,7 +150,7 @@
     else
     {
         self.mapView.region = MKCoordinateRegionMakeWithDistance(coordinate, 1000, 1000);
-        coordinate.latitude -= 0.0035;
+        coordinate.latitude -= 0.005;
     }
     
     [self.mapView setCenterCoordinate:coordinate animated:YES];
@@ -165,8 +165,11 @@
         } 
     }
     
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
+    [self.tabBarController.tabBar setHidden:NO];
+    
     [UIView animateWithDuration:0.25 animations:^{
-        self.mapView.frame = CGRectMake(0, 0, 320, 340);
+//        self.mapView.frame = CGRectMake(0, 0, 320, 480);
 
         CGRect f = self.scrollView.frame;
         f.origin.y = 0;
@@ -180,8 +183,11 @@
 
 - (IBAction)tapDetected:(id)sender
 {
+    [self.navigationController setNavigationBarHidden:YES animated:YES];
+    [self.tabBarController.tabBar setHidden:YES];
+
     [UIView animateWithDuration:0.25 animations:^{
-        self.mapView.frame = self.view.frame;
+//        self.mapView.frame = self.view.frame;
         
         CGRect f = self.scrollView.frame;
         f.origin.y = self.view.frame.size.height;
@@ -241,7 +247,7 @@
 #pragma mark -- webview
 -(void)webViewDidFinishLoad:(UIWebView *)webView
 {
-    int height = [[webView stringByEvaluatingJavaScriptFromString:@"document.height"] intValue];
+    int height = [[webView stringByEvaluatingJavaScriptFromString:@"document.height"] intValue] + 60;
     
     // resize frame and scroll
     CGRect f = self.webView.frame;
@@ -256,7 +262,7 @@
 {    
 //    if (scrollView.contentOffset.y>=0)
     {
-        CGRect f = CGRectMake(0, -80, 320, 480);
+        CGRect f = self.view.frame;
 
         f.origin.y -= scrollView.contentOffset.y/3;
         if (f.origin.y<-f.size.height) f.origin.y = 0;
