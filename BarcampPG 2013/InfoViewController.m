@@ -43,6 +43,8 @@
         }
     }
 
+    // swap header
+    self.navigationItem.titleView = self.header;
     
     // place map pin
     self.mapView.delegate = self;
@@ -150,7 +152,14 @@
     else
     {
         self.mapView.region = MKCoordinateRegionMakeWithDistance(coordinate, 1000, 1000);
-        coordinate.latitude -= 0.005;
+        if (self.view.frame.size.height>480)
+        {
+            coordinate.latitude -= 0.005;
+        }
+        else
+        {
+            coordinate.latitude -= 0.0035;
+        }
     }
     
     [self.mapView setCenterCoordinate:coordinate animated:YES];
@@ -210,15 +219,15 @@
     
     pinView.canShowCallout=YES;
     
-    UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
-    pinView.rightCalloutAccessoryView = rightButton;
+//    UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+//    pinView.rightCalloutAccessoryView = rightButton;
     
     return pinView;
 }
 
-- (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control{
-    [self performSegueWithIdentifier:@"showIndoorMap" sender:view];
-}
+//- (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control{
+//    [self performSegueWithIdentifier:@"showIndoorMap" sender:view];
+//}
 
 #pragma mark -- html
 
@@ -247,13 +256,13 @@
 #pragma mark -- webview
 -(void)webViewDidFinishLoad:(UIWebView *)webView
 {
-    int height = [[webView stringByEvaluatingJavaScriptFromString:@"document.height"] intValue] + 60;
+    int height = [[webView stringByEvaluatingJavaScriptFromString:@"document.height"] intValue];
     
     // resize frame and scroll
     CGRect f = self.webView.frame;
     f.size.height = height;
     self.webView.frame = f;
-    self.scrollView.contentSize = CGSizeMake(webView.frame.size.width, webView.frame.origin.y+height);
+    self.scrollView.contentSize = CGSizeMake(webView.frame.size.width, webView.frame.origin.y+height+60);
     
 }
 

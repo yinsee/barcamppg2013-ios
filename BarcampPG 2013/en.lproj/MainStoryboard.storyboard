@@ -32,23 +32,27 @@
                                     <action selector="resume:" destination="2" eventType="touchUpInside" id="DO1-Wy-vnt"/>
                                 </connections>
                             </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="header" id="KTa-9l-zOF">
+                                <rect key="frame" x="97" y="20" width="125" height="35"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="ECq-ck-ykl">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" image="info_countdown.jpg" id="gWf-Lh-bqu">
-                                        <rect key="frame" x="10" y="162" width="300" height="238"/>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="countdown.png" id="gWf-Lh-bqu">
+                                        <rect key="frame" x="10" y="157" width="300" height="244"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="26" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" id="kT5-OE-tHg">
-                                        <rect key="frame" x="55" y="273" width="121" height="108"/>
+                                        <rect key="frame" x="55" y="276" width="121" height="108"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="56"/>
-                                        <color key="textColor" red="0.14901961389999999" green="0.54509806630000002" blue="0.82352942230000004" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="textColor" red="0.82352942230000004" green="0.12934958834300256" blue="0.11960985057483019" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="11" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" id="8lC-11-9Ns">
-                                        <rect key="frame" x="160" y="266" width="121" height="122"/>
+                                        <rect key="frame" x="160" y="269" width="121" height="122"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="56"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -87,6 +91,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="header" destination="KTa-9l-zOF" id="lCI-e7-eKq"/>
                         <outlet property="lblDays" destination="kT5-OE-tHg" id="wgi-mE-3TK"/>
                         <outlet property="lblHours" destination="8lC-11-9Ns" id="HTx-M2-KWk"/>
                         <outlet property="mapButton" destination="E6w-PY-mdV" id="9qK-2O-Moz"/>
@@ -241,10 +246,6 @@
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="157"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="mike.png" id="Jpt-jf-7KQ">
-                                                    <rect key="frame" x="102" y="11" width="116" height="116"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                </imageView>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Add friends by scanning their QR Code" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" id="BPg-Qx-Fcg">
                                                     <rect key="frame" x="10" y="117" width="301" height="34"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -252,6 +253,18 @@
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </label>
+                                                <imageView userInteractionEnabled="NO" alpha="0.89999999999999991" contentMode="scaleAspectFit" image="character2.png" id="16w-FD-Bwc">
+                                                    <rect key="frame" x="180" y="11" width="100" height="100"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </imageView>
+                                                <imageView userInteractionEnabled="NO" alpha="0.74999999999999978" contentMode="scaleAspectFit" image="character2.png" id="7dH-Z2-Kdz">
+                                                    <rect key="frame" x="52" y="11" width="91" height="91"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </imageView>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" image="character2.png" id="Jpt-jf-7KQ">
+                                                    <rect key="frame" x="102" y="11" width="116" height="116"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </imageView>
                                             </subviews>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -300,18 +313,18 @@
                                         <rect key="frame" x="20" y="84" width="64" height="64"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" id="o6R-0S-vTu">
-                                        <rect key="frame" x="92" y="77" width="208" height="30"/>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Name" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" id="o6R-0S-vTu">
+                                        <rect key="frame" x="92" y="77" width="208" height="41"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                        <color key="textColor" red="0.29019609089999998" green="0.4784313738" blue="0.61568629740000003" alpha="1" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" name="GillSans" family="Gill Sans" pointSize="20"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     </label>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Profession" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" id="uFh-yZ-rdA">
-                                        <rect key="frame" x="92" y="108" width="208" height="45"/>
+                                        <rect key="frame" x="92" y="118" width="208" height="35"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" red="0.4431372549" green="0.1764705882" blue="0.61176470589999998" alpha="1" colorSpace="deviceRGB"/>
+                                        <fontDescription key="fontDescription" name="GillSans" family="Gill Sans" pointSize="17"/>
+                                        <color key="textColor" red="0.94117653369999998" green="0.35294118520000001" blue="0.15686275059999999" alpha="1" colorSpace="deviceRGB"/>
                                         <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="f2X-Y9-44l">
@@ -320,7 +333,7 @@
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                         <inset key="titleEdgeInsets" minX="20" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         <state key="normal" title="+60124830212" image="btn_call.png">
-                                            <color key="titleColor" red="0.4431372549" green="0.1764705882" blue="0.61176470589999998" alpha="1" colorSpace="deviceRGB"/>
+                                            <color key="titleColor" red="0.82352942230000004" green="0.12934958830000001" blue="0.1196098506" alpha="1" colorSpace="calibratedRGB"/>
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <state key="highlighted">
@@ -336,7 +349,7 @@
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                         <inset key="titleEdgeInsets" minX="20" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         <state key="normal" title="+60124830212" image="btn_sms.png">
-                                            <color key="titleColor" red="0.4431372549" green="0.1764705882" blue="0.61176470589999998" alpha="1" colorSpace="deviceRGB"/>
+                                            <color key="titleColor" red="0.82352942230000004" green="0.12934958830000001" blue="0.1196098506" alpha="1" colorSpace="calibratedRGB"/>
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <state key="highlighted">
@@ -352,7 +365,7 @@
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                         <inset key="titleEdgeInsets" minX="20" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         <state key="normal" title="yinsee@gmail.com" image="btn_email.png">
-                                            <color key="titleColor" red="0.4431372549" green="0.1764705882" blue="0.61176470589999998" alpha="1" colorSpace="deviceRGB"/>
+                                            <color key="titleColor" red="0.82352942230000004" green="0.12934958830000001" blue="0.1196098506" alpha="1" colorSpace="calibratedRGB"/>
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <state key="highlighted">
@@ -368,7 +381,7 @@
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                         <inset key="titleEdgeInsets" minX="20" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         <state key="normal" title="Facebook Profile" image="btn_facebook.png">
-                                            <color key="titleColor" red="0.4431372549" green="0.1764705882" blue="0.61176470589999998" alpha="1" colorSpace="deviceRGB"/>
+                                            <color key="titleColor" red="0.82352942230000004" green="0.12934958830000001" blue="0.1196098506" alpha="1" colorSpace="calibratedRGB"/>
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <state key="highlighted">
@@ -580,7 +593,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OAb-ZN-E5T" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2183" y="1058"/>
+            <point key="canvasLocation" x="1663" y="1122"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="15">
@@ -592,6 +605,7 @@
                         <rect key="frame" x="0.0" y="431" width="320" height="49"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <color key="tintColor" red="0.82352942230000004" green="0.12934958830000001" blue="0.1196098506" alpha="1" colorSpace="calibratedRGB"/>
                     </tabBar>
                     <connections>
                         <segue destination="JJu-Tv-Ce4" kind="relationship" relationship="viewControllers" id="26"/>
@@ -614,6 +628,11 @@
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="tyF-OL-dU1">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="barTintColor" red="0.82352942230000004" green="0.12934958830000001" blue="0.1196098506" alpha="1" colorSpace="calibratedRGB"/>
+                        <textAttributes key="titleTextAttributes">
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </textAttributes>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
@@ -622,7 +641,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qzR-BV-0Jm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1209" y="868"/>
+            <point key="canvasLocation" x="689" y="932"/>
         </scene>
         <!--View Controller - Badges-->
         <scene sceneID="FnU-U9-Se4">
@@ -721,36 +740,56 @@
             </objects>
             <point key="canvasLocation" x="183" y="1869"/>
         </scene>
-        <!--View Controller - Share-->
+        <!--Share View Controller - Share #BarCampPenang-->
         <scene sceneID="K4b-jz-gqu">
             <objects>
-                <viewController id="hoy-d7-Pgx" sceneMemberID="viewController">
+                <viewController id="hoy-d7-Pgx" customClass="ShareViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="0Vf-65-fGQ">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="JwF-cF-3du">
-                                <rect key="frame" x="60" y="100" width="200" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Facebook">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="v18-yj-ftn">
-                                <rect key="frame" x="60" y="147" width="200" height="43"/>
+                                <rect key="frame" x="60" y="305" width="200" height="43"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Twtitter">
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <state key="normal" title="Post to Twtitter">
+                                    <color key="titleColor" red="0.82352942230000004" green="0.12934958830000001" blue="0.1196098506" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="shareTwitter:" destination="hoy-d7-Pgx" eventType="touchUpInside" id="daY-47-MpX"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="YOM-6b-1ho">
+                                <rect key="frame" x="20" y="84" width="280" height="122"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <string key="text">Having fun? Don't forget to share your experience in BarCamp Penang with folks who didn't make it!
+
+Our official hastag is #BarCampPenang</string>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="JwF-cF-3du">
+                                <rect key="frame" x="60" y="247" width="200" height="33"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <state key="normal" title="Post to Facebook">
+                                    <color key="titleColor" red="0.82352942230000004" green="0.12934958830000001" blue="0.1196098506" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="shareFB:" destination="hoy-d7-Pgx" eventType="touchUpInside" id="Ymj-aa-Sz4"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Share" id="Lll-rd-bd7"/>
+                    <navigationItem key="navigationItem" title="Share #BarCampPenang" id="Lll-rd-bd7"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BAz-W2-dDe" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-491" y="-1364"/>
+            <point key="canvasLocation" x="1348" y="2380"/>
         </scene>
         <!--Agenda View Controller - Agenda-->
         <scene sceneID="8Qf-0Z-9DC">
@@ -781,7 +820,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6Ml-zU-a48" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1647" y="1578"/>
+            <point key="canvasLocation" x="1127" y="1642"/>
         </scene>
         <!--Navigation Controller - Friends-->
         <scene sceneID="eko-PC-77d">
@@ -792,6 +831,11 @@
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Z5K-DP-jTp">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="barTintColor" red="0.82352942230000004" green="0.12934958830000001" blue="0.1196098506" alpha="1" colorSpace="calibratedRGB"/>
+                        <textAttributes key="titleTextAttributes">
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </textAttributes>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
@@ -811,6 +855,7 @@
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="1hS-Qg-rg0">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" red="0.82352942230000004" green="0.12934958830000001" blue="0.1196098506" alpha="1" colorSpace="calibratedRGB"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
@@ -856,7 +901,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bWj-Fk-xVm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1647" y="868"/>
+            <point key="canvasLocation" x="1127" y="932"/>
         </scene>
         <!--Navigation Controller - Agenda-->
         <scene sceneID="AEt-gJ-xzE">
@@ -867,6 +912,11 @@
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="byz-18-L8a">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="barTintColor" red="0.82352942230000004" green="0.12934958830000001" blue="0.1196098506" alpha="1" colorSpace="calibratedRGB"/>
+                        <textAttributes key="titleTextAttributes">
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </textAttributes>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
@@ -875,7 +925,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ob9-Vv-ceW" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1209" y="1578"/>
+            <point key="canvasLocation" x="689" y="1642"/>
         </scene>
         <!--Leaderboard View Controller - Leaderboard-->
         <scene sceneID="oJN-Vl-sN1">
@@ -917,6 +967,11 @@
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="B5b-45-u2b">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="barTintColor" red="0.82352942230000004" green="0.12934958830000001" blue="0.1196098506" alpha="1" colorSpace="calibratedRGB"/>
+                        <textAttributes key="titleTextAttributes">
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </textAttributes>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
@@ -925,7 +980,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BAh-i7-QJg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1150" y="-1364"/>
+            <point key="canvasLocation" x="689" y="2380"/>
         </scene>
     </scenes>
     <resources>
@@ -936,12 +991,14 @@
         <image name="btn_facebookconnect.png" width="155" height="42"/>
         <image name="btn_refresh.png" width="79" height="79"/>
         <image name="btn_sms.png" width="40" height="40"/>
+        <image name="character2.png" width="206" height="300"/>
         <image name="contact_card.png" width="25" height="25"/>
+        <image name="countdown.png" width="640" height="520"/>
         <image name="display.png" width="25" height="25"/>
         <image name="group.png" width="25" height="25"/>
+        <image name="header" width="249" height="70"/>
         <image name="indoormap.png" width="600" height="400"/>
         <image name="info.png" width="25" height="25"/>
-        <image name="info_countdown.jpg" width="640" height="517"/>
         <image name="mike.png" width="294" height="332"/>
         <image name="profile_placeholder.png" width="103" height="103"/>
         <image name="speech_bubble.png" width="25" height="25"/>

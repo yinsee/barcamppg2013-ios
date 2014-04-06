@@ -41,11 +41,11 @@
 #define kURLBusinessCard @"http://chimou.com/barcamppg/namecard.php?get&email=%@"
 #define kURLBusinessCardUpdate @"http://chimou.com/barcamppg/namecard.php?email=%@"
 
-#define kMapLocationCoordinate CLLocationCoordinate2DMake(5.333756, 100.306691)
-#define kMapPinTitle @"Info Trek Penang"
-#define kMapPinSubTitle @"Queensbay Mall. Tel: ‎04-646 8488"
+#define kMapLocationCoordinate CLLocationCoordinate2DMake(5.339429,100.281334)
+#define kMapPinTitle @"INTI Intl College Penang"
+#define kMapPinSubTitle @"10 Persiaran Bukit Jambul. +604-6310138"
 #define kURLFacebookPicture @"http://graph.facebook.com/%@/picture"
-//
+
 #define FBSessionStateChangedNotification @"FBSessionStateChangedNotification"
 
 #define kUserDefaultProfile @"profile"

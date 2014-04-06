@@ -28,6 +28,9 @@
     [GAI sharedInstance].trackUncaughtExceptions = YES;
     [GAI sharedInstance].dispatchInterval = 30;
     
+    [[UINavigationBar appearance] setTitleTextAttributes: @{ NSFontAttributeName: [UIFont fontWithName:@"GillSans-Italic" size:26.0], NSForegroundColorAttributeName: [UIColor whiteColor]}];
+
+    [[UITabBar appearance] setTintColor:[UIColor colorWithRed:210.0/255 green:33.0/255 blue:31.0/255 alpha:1.0]];
     return YES;
 }
 
